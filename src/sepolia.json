@@ -494,24 +494,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
     "name": "checkCanMint",
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "addr",
-        "type": "address"
-      }
-    ],
     "outputs": [
       {
         "internalType": "bool",
         "name": "canMint",
         "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "mintType",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -643,18 +632,7 @@
       }
     ],
     "name": "mint",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "mintType",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -949,13 +927,7 @@
       }
     ],
     "name": "withdraw",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },

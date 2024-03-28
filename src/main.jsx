@@ -25,7 +25,7 @@ export const merlinTest = defineChain({
 const config = getDefaultConfig({
     appName: 'Owl',
     projectId: 'ae928899b66286a771031a02c9ac00d9',
-    chains: [merlin, merlinTest],
+    chains: [merlin, merlinTest, sepolia],
 });
 const queryClient = new QueryClient();
 

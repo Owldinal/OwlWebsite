@@ -165,6 +165,9 @@
   .flexW {
     flex-wrap: wrap !important;
   }
+  .flexS{
+    justify-content: flex-start !important;
+  }
   .width60 {
     width: 60% !important;
     margin-right: 0px !important;
@@ -172,6 +175,9 @@
   }
   .width90 {
     width: 90% !important;
+  }
+  .width100{
+    width: 100% !important;
   }
   .infoKey,
   .infoText1,
@@ -200,7 +206,7 @@
   }
 
   .infoItem2 {
-    min-width: unset !important;
+    /*min-width: unset !important;*/
   }
   .tableWrapper {
     width: 100% !important;

@@ -6,195 +6,291 @@ import HomeHeader from "./components/Header";
 
 import b1 from "./assets/b1.png";
 import b2 from "./assets/b2.png";
-import dot from "./assets/dot.png";
-import n1 from "./assets/01.png";
-import n2 from "./assets/02.png";
-import n3 from "./assets/03.png";
-import n4 from "./assets/04.png";
+
 import circle1 from "./assets/01circle.png";
 import circle2 from "./assets/02circle.png";
 import circle3 from "./assets/03circle.png";
 import circle4 from "./assets/04circle.png";
 import vector from "./assets/vector.png";
-import icon from "./assets/icon.png";
-
-import { useNavigate } from "react-router-dom";
 
 import { useAccountModal, useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import {
     useAccount,
-    useReadContract,
-    useSendTransaction,
+    useReadContracts,
     useSwitchChain,
     useWaitForTransactionReceipt,
-    useWriteContract
+    useWriteContract,
 } from "wagmi";
-import { Modal } from "antd";
 import { merlin, sepolia } from "viem/chains";
-import abi from "./abi.json";
+import mabi from "./abi.json";
 import { merlinTest } from "@/main.jsx";
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 
 
 function App() {
-    
+
+    const navigate = useNavigate();
     const {openConnectModal, connectModalOpen} = useConnectModal();
     const {openAccountModal, accountModalOpen} = useAccountModal();
-    const {openChainModal, chainModalOpen} = useChainModal();
+    // const {openChainModal, chainModalOpen} = useChainModal();
     const {isConnected, address, chain} = useAccount();
     const {chains, switchChain} = useSwitchChain();
     const {data: hash, writeContract, isPending, error} = useWriteContract()
-    
-    const navigate = useNavigate();
-    
+
+    const environment = "test";
+    const targetChain = environment === "test" ? merlinTest : merlin;
+    const abi = mabi;
+    const contractAddress = environment === "test" ?
+        // test
+        "0x6a8a00E25A388162Bf1C495225D1046243666607" :
+        // prod
+        "";
+    const totalNFT = 999;
+    const price = 0.0045;
+    const maxMint = 1;
+    const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
+
+    const [check, setCheck] = useState(1);
+    const [passHcaptcha, setPassHcaptcha] = useState("");
+    const [alreadyMinted, setAlreadyMinted] = useState(0);
     const [tab, setTab] = useState(1);
     const [dialogVisible, setDialogVisible] = useState(false);
-    // const [scrollDirection, setScrollDirection] = useState(null);
-    // const [open, setOpen] = useState(true);
-    
+    const [modalText, setModalText] = useState("");
+    const [modalImg, setModalImg] = useState("");
+    const [tokenID, setTokenID] = useState(-1);
+
     let open = true;
     let exec;
-    
-    function addListener() {
-        window.addEventListener("wheel", handleScrollNew);
-    }
-    
-    const handleScrollNew = (event) => {
-        
-        // window.removeEventListener("wheel", handleScrollNew);
-        exec && clearTimeout(exec);
-        // console.log("window.onwheel: ", event.deltaY);
-        
-        if (open) {
-            
-            let next;
-            if (event.deltaY > 0) {
-                next = Math.min(3, tab + 1);
-            } else if (event.deltaY < 0) {
-                next = Math.max(1, tab - 1);
-            }
-            
-            if (next !== tab) {
-                setTab(next);
-                window.removeEventListener("wheel", handleScrollNew);
-                open = false;
-            }
-            
-        }
-        
-        exec = setTimeout(() => {
-            open = true;
-            // window.addEventListener("wheel", handleScrollNew);
-            // addListener();
-        }, 50);
-        
-    };
-    
+
+    const ipfsURL = "https://ipfs.io/ipfs/QmZPvN9YwEjLkrczWgRiPFshBxgx8Z4WXwheoErSKjJiGi/Owldinal";
+
     useEffect(() => {
-        
-        setTimeout(() => {
-            window.addEventListener("wheel", handleScrollNew);
-        }, 800);
-        return () => {
-            window.removeEventListener("wheel", handleScrollNew);
+        console.log("account:", address);
+        console.log("chain:", chain);
+    }, [address, chain])
+
+    // const handleScrollNew = (event) => {
+    //
+    //     // window.removeEventListener("wheel", handleScrollNew);
+    //     exec && clearTimeout(exec);
+    //     // console.log("window.onwheel: ", event.deltaY);
+    //
+    //     if (open) {
+    //
+    //         let next;
+    //         if (event.deltaY > 0) {
+    //             next = Math.min(3, tab + 1);
+    //         } else if (event.deltaY < 0) {
+    //             next = Math.max(1, tab - 1);
+    //         }
+    //
+    //         if (next && next !== tab) {
+    //             setTab(next);
+    //             window.removeEventListener("wheel", handleScrollNew);
+    //             open = false;
+    //         }
+    //
+    //     }
+    //
+    //     exec = setTimeout(() => {
+    //         open = true;
+    //         // window.addEventListener("wheel", handleScrollNew);
+    //         // addListener();
+    //     }, 50);
+    //
+    // };
+
+    // just pause for now
+    // useEffect(() => {
+    //
+    //     setTimeout(() => {
+    //         window.addEventListener("wheel", handleScrollNew);
+    //     }, 800);
+    //     return () => {
+    //         window.removeEventListener("wheel", handleScrollNew);
+    //     };
+    //
+    // }, [tab]);
+
+    // const gas = useEstimateGas({
+    //     address: contractAddress,
+    //     abi,
+    //     functionName: 'mint',
+    //     args: [
+    //         // response.data.signature,
+    //         "0x883eda3a9a8011029728b5a78a4a2278e0edc66368335dcc82e7a4e49f8e21c417247a1b587d8cda4a7a722f2a242c7cd8b69cf71740b846aa6e689b2eadb7551b",
+    //     ],
+    // });
+    // console.log("gas: ", gas);
+
+    const mintNFT = async () => {
+
+        setDialogVisible(true);
+
+        console.log("hcaptcha: ", passHcaptcha);
+
+        const url = 'https://api.owldinal.xyz/api/generateSignature';
+        const data = {
+            wallet: address,
+            hcaptcha: passHcaptcha
         };
-        
-    }, [tab]);
-    
-    const targetChain = merlin;
-    const contractAddress = "0xB355F8BcE17f946CC267B2D8632DbD9Dd8242297";
-    const totalNFT = 999;
-    const price = "0.0045BTC";
-    const maxMint = 1;
-    
-    const {
-        data,
-    } = useReadContract({
-        address: contractAddress,
-        abi: abi,
-        functionName: 'tokenIdCounter',
-    })
-    
-    const alreadyMinted = data || 0;
-    
-    
-    const {isLoading: isConfirming, isSuccess: isConfirmed} =
-        useWaitForTransactionReceipt({
-            hash,
-        })
-    
-    const mintNFT = () => {
-        
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const resData = await response.json();
+        console.log("response: ", resData);
+
+        if (!response.ok) {
+            console.warn(resData);
+            return response;
+        }
+
+        const value = Math.ceil((price) * 10 ** 18);
+        console.log("value:", value);
+
         writeContract({
             address: contractAddress,
-            abi: abi,
-            functionName: 'mintByWhiteList',
+            abi,
+            functionName: 'mint',
+            args: [
+                resData.data.signature,
+            ],
+            value: BigInt(value),
         })
-        
+
+        // console.log("hash: ", hash);
+
     }
-    
+
+    const {isLoading: isConfirming, isSuccess: isConfirmed, data: receipt} =
+        useWaitForTransactionReceipt({
+            hash
+        })
+
+    const {
+        data,
+    } = useReadContracts({
+        contracts: [
+            {
+                address: contractAddress,
+                abi: abi,
+                functionName: 'checkCanMint',
+                args: [address]
+            },
+            {
+                address: contractAddress,
+                abi: abi,
+                functionName: 'tokenIdCounter',
+            },
+        ],
+    })
+
     const handleOk = () => {
         setDialogVisible(false);
     };
-    
+
     const handleCancel = () => {
         setDialogVisible(false);
     };
-    
+
     const showModal = () => {
         setDialogVisible(true);
     };
-    
-    const debounce = (fn, wait) => {
-        let timeout = null;
-        return function () {
-            let context = this;
-            let args = arguments;
-            if (timeout) clearTimeout(timeout);
-            let callNow = !timeout;
-            timeout = setTimeout(() => {
-                timeout = null;
-            }, wait);
-            if (callNow) fn.apply(context, args);
-        };
-    };
-    
-    const handleScroll = (e) => {
-        console.log("e: ", e);
-        console.log("tab: ", tab);
-        let fn = debounce(() => {
-            if (tab === 1) {
-                setTab(2)
-            } else if (tab === 2) {
-                setTab(3)
-            } else {
-                setTab(1)
+
+    useEffect(() => {
+        console.log("data: ", data);
+
+        const [checkCanMint, tokenIdCounter] = data || [];
+
+        if (checkCanMint && checkCanMint.result && checkCanMint.result && tokenIdCounter) {
+            if (checkCanMint.result[0] === true) {
+                const mintType = Number(checkCanMint?.result[1]);
+                if (mintType === 3) {
+                    // token 1
+                    setCheck(3);
+                } else if (mintType === 1) {
+                    // white list
+                    setCheck(4);
+                } else if (mintType === 2) {
+                    // voya
+                    setCheck(5);
+                }
+            } else if (checkCanMint.result[0] === false) {
+                // not eligible
+                setCheck(2);
             }
-        }, 1000)
-        fn()
-        
-        
-    };
-    
-    // useEffect(() => {
-    //
-    //     let scrollTimeout
-    //     document.addEventListener('wheel', () => {
-    //         scrollTimeout && clearTimeout(scrollTimeout);
-    //         console.log('clearTimeout: ', clearTimeout);
-    //
-    //         scrollTimeout = setTimeout(() => {
-    //             console.log('滚轮停止滚动');
-    //             if (tab === 1) {
-    //                 setTab(2)
-    //             } else if (tab === 2) {
-    //                 setTab(3)
-    //             } else {
-    //                 setTab(1)
-    //             }
-    //         }, 50);
-    //     });
-    // }, [tab]);
-    
+
+            setAlreadyMinted(Number(tokenIdCounter?.result) - 1 || 0);
+            // console.log("address: ", address);
+            // console.log("checkCanMint: ", checkCanMint);
+            // console.log("alreadyMinted: ", alreadyMinted);
+        }
+    }, [data]);
+
+    useEffect(() => {
+
+        if (!address) {
+            setCheck(1);
+        }
+
+    }, [address])
+
+    useEffect(() => {
+
+        if (error) {
+            const e = error.toString();
+            console.warn(e);
+            if (e.includes("You have already minted a box")) {
+                setModalText("You have already minted a box");
+            } else if (e.includes("Not eligible to mint")) {
+                setModalText("Not eligible to mint");
+            } else if (e.includes("Insufficient BTC sent")) {
+                setModalText("Insufficient BTC sent");
+            } else if (e.includes("Invalid signature")) {
+                setModalText("Please verify the captcha again");
+                setPassHcaptcha(null);
+            } else {
+                setModalText(error.toString());
+            }
+        }
+        if (isConfirmed) {
+            setModalText("Transaction confirmed");
+        }
+        if (isConfirming) {
+            setModalText("Waiting for transaction...");
+        }
+        if (isPending) {
+            setModalText("Confirming...");
+        }
+
+        if (receipt) {
+            setTokenID(Number(receipt.logs[0].topics[3]));
+        }
+
+        console.log("write contract: ");
+
+        console.log("hash: ", hash, receipt);
+
+        console.log("isConfirmed: ", isConfirming, isConfirmed);
+
+        console.log("isPending: ", isPending, error);
+
+    }, [hash, receipt, isConfirming, isPending, error]);
+
+    useEffect(() => {
+
+        setModalImg(ipfsURL + tokenID + ".png");
+
+    }, [tokenID])
+
     return (
         <div className="rootInnerWrapper">
             <HomeHeader/>
@@ -236,8 +332,9 @@ function App() {
                             </div>
                         </div>
                     )}
-                    
+
                     {tab === 2 && (
+
                         <div className="tabItem flexCenter flexC">
                             <img
                                 width="45%"
@@ -254,14 +351,27 @@ function App() {
                                     </div>
                                     <div className="tabInfoItem flexBetween">
                                         <div className="infoKey">Price:</div>
-                                        <div className="infoValue">{price}</div>
+                                        <div className="infoValue">{price + " BTC"}</div>
                                     </div>
                                     <div className="tabInfoItem flexBetween">
                                         <div className="infoKey">Max Mint Per Address:</div>
                                         <div className="infoValue">{maxMint}</div>
                                     </div>
                                     <div className="infoLine"></div>
-                                    <div className="infoText1">You are eligible</div>
+                                    <div
+                                        className="infoText1">{
+                                        check === 1 ?
+                                            (address ? "Checking your eligibility..." : "Please connect your wallet...") :
+                                            check === 2 ?
+                                                "You are not eligible." :
+                                                check === 3 ?
+                                                    "You can mint token one." :
+                                                    check === 4 ?
+                                                        "You are whitelisted." :
+                                                        check === 5 ?
+                                                            "You are eligible." :
+                                                            ""}
+                                    </div>
                                 </div>
                                 <div style={{width: "100%"}}>
                                     <div className="flexBetween">
@@ -269,26 +379,39 @@ function App() {
                                         <div className="infoKey">{(alreadyMinted / totalNFT * 100).toFixed(2)}%</div>
                                     </div>
                                     <div className="progress"></div>
-                                    
-                                    <OwlButton
-                                        // text="Mint"
-                                        size="big"
-                                        text={"Mint (Coming soon)"}
-                                        style={{cursor: "not-allowed", color: "grey"}}
-                                        isConfirmed={isConfirmed}
-                                        isConfirming={isConfirming}
-                                        hash={hash}
-                                        // func={mintNFT}
-                                        error={error}/>
+
+                                    {check > 2 && (
+                                        <>
+                                            <form>
+                                                <HCaptcha
+                                                    sitekey={hKey}
+                                                    onVerify={(token, ekey) => setPassHcaptcha(token)}
+                                                />
+                                            </form>
+
+                                            <OwlButton
+                                                size="big"
+                                                text={passHcaptcha ? "Mint" : "Mint (please verify)"}
+                                                style={passHcaptcha || hash || isConfirming ? {} : {
+                                                    cursor: "not-allowed",
+                                                    color: "grey"
+                                                }}
+                                                isConfirming={isConfirming}
+                                                check={check}
+                                                // func={mintNFT}
+                                                func={passHcaptcha ? mintNFT : null}
+                                                error={error}/>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     )}
-                    
+
                     {tab === 3 && (
-                        
+
                         <div className="tabItem flexBetween">
-                            
+
                             <div className="tabCard flexColumnCenter">
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="circle">
@@ -296,15 +419,15 @@ function App() {
                                              style={{alignSelf: "center", padding: "30%"}}/>
                                     </div>
                                 </div>
-                                
+
                                 <div className="cardTitle">Gen0 Box Mint</div>
                             </div>
-                            
+
                             <div className="">
                                 <img src={vector} alt=""
                                      style={{flexFlow: "column", position: "relative", width: "80%"}}/>
                             </div>
-                            
+
                             <div className="tabCard flexColumnCenter">
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="circle">
@@ -312,15 +435,15 @@ function App() {
                                              style={{alignSelf: "center", padding: "30%"}}/>
                                     </div>
                                 </div>
-                                
+
                                 <div className="cardTitle">Staking Gameplay</div>
                             </div>
-                            
+
                             <div className="">
                                 <img src={vector} alt=""
                                      style={{flexFlow: "column", position: "relative", width: "80%"}}/>
                             </div>
-                            
+
                             <div className="tabCard flexColumnCenter">
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="circle">
@@ -328,15 +451,15 @@ function App() {
                                              style={{alignSelf: "center", padding: "30%"}}/>
                                     </div>
                                 </div>
-                                
+
                                 <div className="cardTitle">Breeding Gameplay</div>
                             </div>
-                            
+
                             <div className="">
                                 <img src={vector} alt=""
                                      style={{flexFlow: "column", position: "relative", width: "80%"}}/>
                             </div>
-                            
+
                             <div className="tabCard flexColumnCenter">
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="circle">
@@ -344,72 +467,81 @@ function App() {
                                              style={{alignSelf: "center", padding: "30%"}}/>
                                     </div>
                                 </div>
-                                
+
                                 <div className="cardTitle">Cave Gameplay</div>
                             </div>
-                        
+
                         </div>
                     )}
                 </div>
-                
+
                 <div className="tabs flexColumnCenter">
-                    
-                    
+
+
                     {!isConnected && <div
                         className="tab flexCenter"
                         onClick={openConnectModal}
                     >
                         Connect wallet
                     </div>}
-                    
+
                     {(isConnected && chain !== targetChain) && <div
                         className="tab flexCenter"
                         onClick={() => switchChain({chainId: targetChain.id})}
                     >
                         Switch to Merlin
                     </div>}
-                    
+
                     {(isConnected && chain === targetChain) && <div
                         className="tab flexCenter"
                         onClick={openAccountModal}
                     >
                         {address.slice(0, 6) + "..." + address.slice(-4)}
                     </div>}
-                    
-                    
+
+
                     <div
                         onClick={() => setTab(2)}
                         className={cn("tab flexCenter", tab === 2 && "activeTab")}
                     >
                         Mint
                     </div>
-                    
-                    
+
+
                     {/*<div className="tab flexCenter" onClick={() => navigate("/treasury")}>*/}
                     {/*    Play*/}
                     {/*</div>*/}
                     <div className="disabledTab flexCenter">Play</div>
-                
-                
+
+
                 </div>
-                
+
                 <Modal
                     title={null}
                     open={dialogVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={null}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100vh",
+                        top: 0,
+                        width: "70%",
+                        overflow: "auto"
+                    }}
                 >
-                    <h4 className="dialogTitle">Choose wallet</h4>
-                    
-                    <div className="dItem">
-                        <img width="24" src={icon} alt="" className="dIcon"/> OKX
-                    </div>
-                    <div className="dItem">UniSat</div>
+                    <h4 className="dialogTitle">{modalText}</h4>
+                    {isConfirmed && (
+                        <img style={{width: "100%"}} src={modalImg} alt=""/>
+                    )}
                 </Modal>
+
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default App;

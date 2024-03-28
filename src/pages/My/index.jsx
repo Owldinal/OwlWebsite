@@ -29,9 +29,9 @@ function App() {
                     <div className="flexBetween flexC" style={{margin: "24px 0"}}>
                         <div className="infoCard inputCard width100" style={{minWidth: ""}}>
                             <div className="text1 flexStartCenter">
-                <span>
-                  <img src={a1} width="48" alt="" className="boderRadius50"/>
-                </span>{" "}
+                                <span>
+                                  <img src={a1} width="48" alt="" className="boderRadius50"/>
+                                </span>{" "}
                                 <span style={{margin: "0 8px 0 16px"}}>0x1234...5678</span>{" "}
                                 <img src={copy} width="12" alt=""/>
                             </div>
@@ -52,7 +52,7 @@ function App() {
                                 />
                                 <img src={bage3} width="48" alt=""/>
                             </div>
-                            <div className="flexBetween">
+                            <div className="flexBetween flexS">
                                 <div className="infoItem2" style={{textAlign: "center", marginRight: '12px'}}>
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
@@ -141,72 +141,72 @@ function App() {
                             </div>
 
 
-                            <div className="tableWrapper">
-                                <Tabs defaultActiveKey="1">
-                                    <TabPane tab="Treasury Revenue" key="1">
-                                        <div className="tableItem flexBetween tableHeader">
-                                            <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
-                                            <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
-                                            <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
-                                            <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
-                                            <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
-                                        </div>
-                                        {tableData.map((item, index) => {
-                                            let {img, b, c, d, e} = item;
-                                            return (
-                                                <div className="tableItem flexBetween" key={index}
-                                                     onClick={() => navigate("/my-item")}>
+                        </div>
+                        <div className="tableWrapper">
+                            <Tabs defaultActiveKey="1">
+                                <TabPane tab="Treasury Revenue" key="1">
+                                    <div className="tableItem flexBetween tableHeader">
+                                        <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
+                                        <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
+                                        <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
+                                        <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
+                                        <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
+                                    </div>
+                                    {tableData.map((item, index) => {
+                                        let {img, b, c, d, e} = item;
+                                        return (
+                                            <div className="tableItem flexBetween" key={index}
+                                                 onClick={() => navigate("/my-item")}>
 
-                                                    <div className="flexCenter"><img src={img} width="32" alt=""
-                                                                                     style={{marginRight: '12px'}}/>{b}
-                                                    </div>
-                                                    <div>{c}</div>
-                                                    <div>{d}</div>
-                                                    <div>{e}</div>
-                                                    <div>
-                                                        {index > 5 ? (
-                                                            <OwlButton text="Claim" size="small"/>
-                                                        ) : (
-                                                            <OwlButton text="Claim" type="light" size="small"/>
-                                                        )}
-                                                    </div>
+                                                <div className="flexCenter"><img src={img} width="32" alt=""
+                                                                                 style={{marginRight: '12px'}}/>{b}
                                                 </div>
-                                            );
-                                        })}
-                                    </TabPane>
-                                    <TabPane tab="My Owldinal" key="2">
-                                        <div className="tableItem flexBetween tableHeader">
-                                            <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
-                                            <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
-                                            <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
-                                            <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
-                                            <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
-                                        </div>
-                                        {tableData.map((item, index) => {
-                                            let {img, b, c, d, e} = item;
-                                            return (
-                                                <div className="tableItem flexBetween" key={index}
-                                                     onClick={() => navigate("/my-item")}>
-                                                    <div className="flexCenter"><img src={img} width="32" alt=""
-                                                                                     style={{marginRight: '12px'}}/>{b}
-                                                    </div>
+                                                <div>{c}</div>
+                                                <div>{d}</div>
+                                                <div>{e}</div>
+                                                <div>
+                                                    {index > 5 ? (
+                                                        <OwlButton text="Claim" size="small"/>
+                                                    ) : (
+                                                        <OwlButton text="Claim" type="light" size="small"/>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </TabPane>
+                                <TabPane tab="My Owldinal" key="2">
+                                    <div className="tableItem flexBetween tableHeader">
+                                        <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
+                                        <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
+                                        <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
+                                        <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
+                                        <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
+                                    </div>
+                                    {tableData.map((item, index) => {
+                                        let {img, b, c, d, e} = item;
+                                        return (
+                                            <div className="tableItem flexBetween" key={index}
+                                                 onClick={() => navigate("/my-item")}>
+                                                <div className="flexCenter"><img src={img} width="32" alt=""
+                                                                                 style={{marginRight: '12px'}}/>{b}
+                                                </div>
 
-                                                    <div>{c}</div>
-                                                    <div>{d}</div>
-                                                    <div>{e}</div>
-                                                    <div>
-                                                        {index > 5 ? (
-                                                            <OwlButton text="Claim" size="small"/>
-                                                        ) : (
-                                                            <OwlButton text="Claim" type="light" size="small"/>
-                                                        )}
-                                                    </div>
+                                                <div>{c}</div>
+                                                <div>{d}</div>
+                                                <div>{e}</div>
+                                                <div>
+                                                    {index > 5 ? (
+                                                        <OwlButton text="Claim" size="small"/>
+                                                    ) : (
+                                                        <OwlButton text="Claim" type="light" size="small"/>
+                                                    )}
                                                 </div>
-                                            );
-                                        })}
-                                    </TabPane>
-                                </Tabs>
-                            </div>
+                                            </div>
+                                        );
+                                    })}
+                                </TabPane>
+                            </Tabs>
                         </div>
                     </div>
                 </div>

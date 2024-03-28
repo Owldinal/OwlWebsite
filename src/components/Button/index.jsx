@@ -3,6 +3,8 @@ import cn from "classnames";
 
 
 export default function (props) {
+    // console.log("props: ", props);
+
     const typeClassMap = {
         dark: "darkBtn", light: "lightBtn", primary: "primaryBtn",
     };
@@ -11,14 +13,11 @@ export default function (props) {
     };
     const typeClassName = typeClassMap[props.type || "primary"];
     const sizeClassName = sizeClassMap[props.size || "normal"];
-    
-    const displayContent =
-        props.isConfirmed ? props.hash :
-            props.isConfirming ? 'Confirming...' :
-                props.error ? 'You can\'t mint more' :
-                    props.text;
-    
+
+    const displayContent = props.text;
+
     return <div className={cn("owlBtn", typeClassName, sizeClassName)}
                 style={props.style}
-                onClick={props.isConfirmed ? null : props.func}>{displayContent}</div>;
+                onClick={props.func}>{displayContent}</div>;
+
 }
