@@ -1,0 +1,21 @@
+
+.imgItem{
+  width: 122px;
+  height: 122px;
+  border-radius: 8px;
+  margin-right: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border:2px transparent solid;
+}
+
+.imgItemActive{
+  border:2px #9EFF00 solid;
+}
+
+.flexWrap{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}

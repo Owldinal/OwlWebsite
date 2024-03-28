@@ -1,0 +1,241 @@
+#root {
+    min-height: 100vh;
+    background-color: #000000;
+
+}
+
+.rootInnerWrapper {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    color: white;
+    font-family: BIG SHOT;
+    font-weight: 400;
+    word-wrap: break-word;
+
+    overscroll-behavior: none;
+
+}
+
+.owlApp {
+    min-height: 100vh;
+    background-color: #000000;
+}
+
+.flexCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.flexStartCenter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.flexStart {
+  display: flex;
+  justify-content: flex-start;
+}
+.flexBetween {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.flexBetweenStart {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.flexColumnCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexColumnStart {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.flexColumnBetween {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ant-modal-content {
+  background-color: #000000 !important;
+  border: 1px rgba(255, 255, 255, 0.12) solid !important;
+  border-radius: 16px !important;
+  padding: 32px !important;
+}
+
+.el-overlay {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+
+
+
+
+.homeHead {
+    font-size: 48px;
+    text-align: center;
+    padding: 68px 0 28px 0;
+    position: relative;
+
+}
+
+.star1 {
+    position: absolute;
+    top: 32px;
+    left: 90px;
+}
+
+.star2 {
+    position: absolute;
+    top: 18px;
+    left: 70%;
+}
+
+.star3 {
+    position: absolute;
+    bottom: 20px;
+    left: 30%;
+}
+
+.star4 {
+    position: absolute;
+    bottom: 40px;
+    right: 150px;
+}
+
+.boderRadius50 {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.text7 {
+  font-size: 28px;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #ffffff !important;
+}
+.ant-tabs-ink-bar {
+  background-color: #ffffff !important;
+}
+
+.ant-tabs-top > .ant-tabs-nav::before {
+  border: none !important;
+}
+
+
+.nwrap{
+  width: 90%;
+  margin: 0 auto;
+}
+
+
+
+@media screen and (max-width: 1200px) {
+  /* .home {
+    height: calc(100vh - 120px) !important;
+  } */
+  .tabText {
+    font-size: 18px !important;
+    line-height: 1.2 !important;
+  }
+  .tab {
+    font-size: 20px !important;
+  }
+  .flexC {
+    flex-direction: column !important;
+  }
+  .flexW {
+    flex-wrap: wrap !important;
+  }
+  .width60 {
+    width: 60% !important;
+    margin-right: 0px !important;
+    margin-top: 100px !important;
+  }
+  .width90 {
+    width: 90% !important;
+  }
+  .infoKey,
+  .infoText1,
+  .infoValue {
+    font-size: 14px !important;
+  }
+
+  /* .tabCard {
+    width: 49% !important;
+    background-color: #151515 !important;
+    padding: 16px !important;
+    height: 300px !important;
+    overflow: auto !important;
+    margin-bottom: 24px !important;
+  } */
+
+
+  .homeHead {
+    font-size: 36px !important;
+    padding: 38px 0 18px 0 !important;
+  }
+  .rightInfo {
+    width: 100% !important;
+    margin-top: 24px !important;
+    margin-left: 0 !important;
+  }
+
+  .infoItem2 {
+    min-width: unset !important;
+  }
+  .tableWrapper {
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-top: 12px !important;
+  }
+  .leftInfo {
+    width: 100% !important;
+  }
+  .tabInfo {
+    width: 100% !important;
+  }
+
+  .margin0{
+    margin: 0 !important;
+  }
+
+}
+
+
+@media screen and (max-width: 1000px) {
+  .cardText {
+    font-size: 12px !important;
+    line-height: 14px !important;
+}
+.cardTitle{
+  font-size: 14px !important;
+  line-height: 16px !important;
+}
+/*.tabCard{*/
+/*  padding: 6px !important;*/
+/*}*/
+}
+
+
+
+
+
