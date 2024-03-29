@@ -59,7 +59,7 @@ function App() {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [modalText, setModalText] = useState("");
     const [modalImg, setModalImg] = useState("");
-    const [tokenID, setTokenID] = useState(-1);
+    const [urlId, setUrlId] = useState(-1);
 
     let open = true;
     let exec;
@@ -205,6 +205,30 @@ function App() {
         setDialogVisible(true);
     };
 
+    const convertHexToAscii = (hexString) => {
+        // --LLM
+        // 跳过前两个uint256，每个uint256占64个十六进制字符
+        const trimmedHexString = hexString.slice(128);
+
+        // 初始化一个空字符串用于存储最终的ASCII结果
+        let asciiString = '';
+
+        // 每次处理两个字符（一个字节）
+        for (let i = 0; i < trimmedHexString.length; i += 2) {
+            // 获取十六进制表示的字节
+            const hexByte = trimmedHexString.substr(i, 2);
+            // 将十六进制转换为十进制
+            const decimal = parseInt(hexByte, 16);
+            // 跳过解码后为0的字符，因为它们可能是填充的空字符
+            if (decimal === 0) continue;
+            // 将十进制转换为ASCII字符并添加到结果字符串
+            asciiString += String.fromCharCode(decimal);
+        }
+
+        return asciiString;
+
+    }
+
     useEffect(() => {
         console.log("data: ", data);
 
@@ -272,7 +296,9 @@ function App() {
         }
 
         if (receipt) {
-            setTokenID(Number(receipt.logs[0].topics[3]));
+            let url = convertHexToAscii(receipt.logs[2].data);
+            console.log(url);
+            setUrlId(Number( url.substring(url.lastIndexOf('/') + 1)));
         }
 
         console.log("write contract: ");
@@ -287,9 +313,9 @@ function App() {
 
     useEffect(() => {
 
-        setModalImg(ipfsURL + tokenID + ".png");
+        setModalImg(ipfsURL + urlId + ".png");
 
-    }, [tokenID])
+    }, [urlId])
 
     return (
         <div className="rootInnerWrapper">
