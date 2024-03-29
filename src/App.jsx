@@ -46,8 +46,7 @@ function App() {
         // test
         "0x6a8a00E25A388162Bf1C495225D1046243666607" :
         // prod
-        // "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
-        ""
+        "0x6B18e87beb44a72eB48dA76a881F9104cb97A180";
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
@@ -253,7 +252,7 @@ function App() {
                 setCheck(2);
             }
 
-            setAlreadyMinted(Number(tokenIdCounter?.result) - 1 || 0);
+            setAlreadyMinted(Number(tokenIdCounter?.result) || 0);
             // console.log("address: ", address);
             // console.log("checkCanMint: ", checkCanMint);
             // console.log("alreadyMinted: ", alreadyMinted);
@@ -387,7 +386,7 @@ function App() {
                                     <div className="infoLine"></div>
                                     <div
                                         className="infoText1">
-                     {/*                   {
+                                        {
                                             check === 1 ?
                                                 (address ? "Checking your eligibility..." : "Please connect your wallet...") :
                                                 check === 2 ?
@@ -398,8 +397,7 @@ function App() {
                                                             "You are whitelisted." :
                                                             check === 5 ?
                                                                 "You are eligible." :
-                                                                ""}*/}
-                                        {"Please wait..."}
+                                                                ""}
 
                                     </div>
                                 </div>
@@ -410,29 +408,29 @@ function App() {
                                     </div>
                                     <div className="progress"></div>
 
-                                    {/*{check > 2 && (*/}
-                                    {/*    <>*/}
-                                    {/*        <form>*/}
-                                    {/*            <HCaptcha*/}
-                                    {/*                sitekey={hKey}*/}
-                                    {/*                onVerify={(token, ekey) => setPassHcaptcha(token)}*/}
-                                    {/*            />*/}
-                                    {/*        </form>*/}
+                                    {check > 2 && (
+                                        <>
+                                            <form>
+                                                <HCaptcha
+                                                    sitekey={hKey}
+                                                    onVerify={(token, ekey) => setPassHcaptcha(token)}
+                                                />
+                                            </form>
 
-                                    {/*        <OwlButton*/}
-                                    {/*            size="big"*/}
-                                    {/*            text={passHcaptcha ? "Mint" : "Mint (please verify)"}*/}
-                                    {/*            style={passHcaptcha || hash || isConfirming ? {} : {*/}
-                                    {/*                cursor: "not-allowed",*/}
-                                    {/*                color: "grey"*/}
-                                    {/*            }}*/}
-                                    {/*            isConfirming={isConfirming}*/}
-                                    {/*            check={check}*/}
-                                    {/*            // func={mintNFT}*/}
-                                    {/*            func={passHcaptcha ? mintNFT : null}*/}
-                                    {/*            error={error}/>*/}
-                                    {/*    </>*/}
-                                    {/*)}*/}
+                                            <OwlButton
+                                                size="big"
+                                                text={passHcaptcha ? "Mint" : "Mint (please verify)"}
+                                                style={passHcaptcha || hash || isConfirming ? {} : {
+                                                    cursor: "not-allowed",
+                                                    color: "grey"
+                                                }}
+                                                isConfirming={isConfirming}
+                                                check={check}
+                                                // func={mintNFT}
+                                                func={passHcaptcha ? mintNFT : null}
+                                                error={error}/>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
