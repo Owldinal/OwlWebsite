@@ -39,7 +39,7 @@ function App() {
     const {chains, switchChain} = useSwitchChain();
     const {data: hash, writeContract, isPending, error} = useWriteContract()
 
-    const environment = "test";
+    const environment = "prod";
     const targetChain = environment === "test" ? merlinTest : merlin;
     const abi = mabi;
     const contractAddress = environment === "test" ?
