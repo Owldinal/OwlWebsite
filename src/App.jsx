@@ -46,7 +46,8 @@ function App() {
         // test
         "0x6a8a00E25A388162Bf1C495225D1046243666607" :
         // prod
-        "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
+        // "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
+        ""
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
@@ -298,7 +299,7 @@ function App() {
         if (receipt) {
             let url = convertHexToAscii(receipt.logs[2].data);
             console.log(url);
-            setUrlId(Number( url.substring(url.lastIndexOf('/') + 1)));
+            setUrlId(Number(url.substring(url.lastIndexOf('/') + 1)));
         }
 
         console.log("write contract: ");
@@ -406,29 +407,29 @@ function App() {
                                     </div>
                                     <div className="progress"></div>
 
-                                    {check > 2 && (
-                                        <>
-                                            <form>
-                                                <HCaptcha
-                                                    sitekey={hKey}
-                                                    onVerify={(token, ekey) => setPassHcaptcha(token)}
-                                                />
-                                            </form>
+                                    {/*{check > 2 && (*/}
+                                    {/*    <>*/}
+                                    {/*        <form>*/}
+                                    {/*            <HCaptcha*/}
+                                    {/*                sitekey={hKey}*/}
+                                    {/*                onVerify={(token, ekey) => setPassHcaptcha(token)}*/}
+                                    {/*            />*/}
+                                    {/*        </form>*/}
 
-                                            <OwlButton
-                                                size="big"
-                                                text={passHcaptcha ? "Mint" : "Mint (please verify)"}
-                                                style={passHcaptcha || hash || isConfirming ? {} : {
-                                                    cursor: "not-allowed",
-                                                    color: "grey"
-                                                }}
-                                                isConfirming={isConfirming}
-                                                check={check}
-                                                // func={mintNFT}
-                                                func={passHcaptcha ? mintNFT : null}
-                                                error={error}/>
-                                        </>
-                                    )}
+                                    {/*        <OwlButton*/}
+                                    {/*            size="big"*/}
+                                    {/*            text={passHcaptcha ? "Mint" : "Mint (please verify)"}*/}
+                                    {/*            style={passHcaptcha || hash || isConfirming ? {} : {*/}
+                                    {/*                cursor: "not-allowed",*/}
+                                    {/*                color: "grey"*/}
+                                    {/*            }}*/}
+                                    {/*            isConfirming={isConfirming}*/}
+                                    {/*            check={check}*/}
+                                    {/*            // func={mintNFT}*/}
+                                    {/*            func={passHcaptcha ? mintNFT : null}*/}
+                                    {/*            error={error}/>*/}
+                                    {/*    </>*/}
+                                    {/*)}*/}
                                 </div>
                             </div>
                         </div>
