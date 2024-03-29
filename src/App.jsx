@@ -386,18 +386,21 @@ function App() {
                                     </div>
                                     <div className="infoLine"></div>
                                     <div
-                                        className="infoText1">{
-                                        check === 1 ?
-                                            (address ? "Checking your eligibility..." : "Please connect your wallet...") :
-                                            check === 2 ?
-                                                "You are not eligible." :
-                                                check === 3 ?
-                                                    "You can mint token one." :
-                                                    check === 4 ?
-                                                        "You are whitelisted." :
-                                                        check === 5 ?
-                                                            "You are eligible." :
-                                                            ""}
+                                        className="infoText1">
+                     {/*                   {
+                                            check === 1 ?
+                                                (address ? "Checking your eligibility..." : "Please connect your wallet...") :
+                                                check === 2 ?
+                                                    "You are not eligible." :
+                                                    check === 3 ?
+                                                        "You can mint token one." :
+                                                        check === 4 ?
+                                                            "You are whitelisted." :
+                                                            check === 5 ?
+                                                                "You are eligible." :
+                                                                ""}*/}
+                                        {"Please wait..."}
+
                                     </div>
                                 </div>
                                 <div style={{width: "100%"}}>
