@@ -46,7 +46,7 @@ function App() {
         // test
         "0x6a8a00E25A388162Bf1C495225D1046243666607" :
         // prod
-        "";
+        "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
