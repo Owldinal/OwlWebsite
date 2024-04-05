@@ -29,8 +29,11 @@ export const merlinTest = defineChain({
     },
 })
 
-const connectors = connectorsForWallets(
-    [{
+const config = getDefaultConfig({
+    appName: 'Owl',
+    projectId: 'ae928899b66286a771031a02c9ac00d9',
+    chains: [merlin, merlinTest, sepolia],
+    wallets: [{
         groupName: 'Recommended',
         wallets: [
             metaMaskWallet,
@@ -40,17 +43,6 @@ const connectors = connectorsForWallets(
             // walletConnectWallet
         ],
     }],
-    {
-        appName: 'Owl',
-        projectId: 'ae928899b66286a771031a02c9ac00d9'
-    }
-)
-
-const config = createConfig({
-    // appName: 'Owl',
-    // projectId: 'ae928899b66286a771031a02c9ac00d9',
-    chains: [merlin, merlinTest, sepolia],
-    connectors
 });
 const queryClient = new QueryClient();
 
