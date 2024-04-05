@@ -1,14 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets, darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import "@rainbow-me/rainbowkit/styles.css"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider } from 'wagmi';
+import { createConfig, WagmiProvider } from 'wagmi';
 import { merlin, sepolia } from "viem/chains";
 import { RouterProvider } from 'react-router-dom';
 import router from './router/index';
 import { defineChain } from "viem";
+import {
+    injectedWallet,
+    metaMaskWallet,
+    okxWallet,
+    rainbowWallet,
+    walletConnectWallet
+} from "@rainbow-me/rainbowkit/wallets";
 
 export const merlinTest = defineChain({
     id: 686868,
@@ -22,10 +29,28 @@ export const merlinTest = defineChain({
     },
 })
 
-const config = getDefaultConfig({
-    appName: 'Owl',
-    projectId: 'ae928899b66286a771031a02c9ac00d9',
+const connectors = connectorsForWallets(
+    [{
+        groupName: 'Recommended',
+        wallets: [
+            metaMaskWallet,
+            okxWallet,
+            rainbowWallet,
+            // injectedWallet,
+            // walletConnectWallet
+        ],
+    }],
+    {
+        appName: 'Owl',
+        projectId: 'ae928899b66286a771031a02c9ac00d9'
+    }
+)
+
+const config = createConfig({
+    // appName: 'Owl',
+    // projectId: 'ae928899b66286a771031a02c9ac00d9',
     chains: [merlin, merlinTest, sepolia],
+    connectors
 });
 const queryClient = new QueryClient();
 
@@ -33,7 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider theme={darkTheme()}>
+                <RainbowKitProvider theme={darkTheme()} modalSize={"compact"}>
                     <RouterProvider router={router}/>
                     {/*<App/>*/}
                 </RainbowKitProvider>
