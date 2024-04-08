@@ -11,13 +11,16 @@ import share from "@/assets/share.png";
 import * as echarts from "echarts";
 
 import { Input } from "antd";
+import { useAccount } from "wagmi";
 
 function App(props) {
+
+    const {contractAddress, targetChain} = props;
+    const {isConnected, address, chain} = useAccount();
+
     useEffect(() => {
         initChart();
     });
-
-    const {contractAddress, targetChain} = props;
 
     const tableData = [
         {
@@ -165,7 +168,7 @@ function App(props) {
 
     return (
         <div className="rootInnerWrapper">
-            <TopHeader tagetChain={targetChain}/>
+            <TopHeader targetChain={targetChain}/>
             <div className="flexStart">
                 <Sider/>
                 <div className="treasuryContent">

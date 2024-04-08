@@ -25,6 +25,7 @@ import abi from "./abi.json";
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
+import { hKey, list } from "./config.js";
 
 
 function App(props) {
@@ -42,7 +43,6 @@ function App(props) {
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
-    const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
     const [check, setCheck] = useState(1);
     const [passHcaptcha, setPassHcaptcha] = useState("");
@@ -124,7 +124,7 @@ function App(props) {
 
         console.log("hcaptcha: ", passHcaptcha);
 
-        const url = 'https://api.owldinal.xyz/api/generateSignature';
+        const url = list.GENERATE_SIGNATURE
         const data = {
             wallet: address,
             hcaptcha: passHcaptcha

@@ -2,7 +2,10 @@ import { defineChain } from "viem";
 
 const API_URL = 'https://api.owldinal.xyz/api';
 
-const list = {
+export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
+
+export const list = {
+    GENERATE_SIGNATURE: `${API_URL}/generateSignature`,
     USER_INFO: `${API_URL}/user/info`,
     USER_OWLDINALS: `${API_URL}/user/owldinals`,
     USER_BOXES: `${API_URL}/user/boxes`,
@@ -12,7 +15,7 @@ const list = {
     REWARDS_HISTORY: `${API_URL}/game/rewards_history`,
 }
 
-const URL = {
+export const getData = {
     getUserInfo: async (address) => {
         const request = list.USER_INFO + "?wallet=" + address;
         const response = await fetch(list.USER_INFO);
@@ -56,5 +59,3 @@ export const merlinTest = defineChain({
         default: {name: 'Merlin-scan', url: 'https://testnet-scan.merlinchain.io'},
     },
 })
-
-export default {URL, merlinTest};

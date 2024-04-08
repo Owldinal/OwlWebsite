@@ -10,12 +10,14 @@ import ar13 from "@/assets/ar13.png";
 
 import { tableData } from "./data.jsx";
 
-function App() {
+function App(props) {
     const [activeImg, setActiveImg] = useState(1);
+
+    const {contractAddress, targetChain} = props;
 
     return (
         <div className="rootInnerWrapper">
-            <TopHeader/>
+            <TopHeader targetChain={targetChain}/>
             <div className="flexStart">
                 <Sider/>
                 <div className="" style={{width: '100%', padding: '16px'}}>
