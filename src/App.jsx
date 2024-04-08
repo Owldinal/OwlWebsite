@@ -298,7 +298,7 @@ function App() {
         if (receipt) {
             let url = convertHexToAscii(receipt.logs[2].data);
             console.log(url);
-            setUrlId(Number( url.substring(url.lastIndexOf('/') + 1)));
+            setUrlId(Number(url.substring(url.lastIndexOf('/') + 1)));
         }
 
         console.log("write contract: ");
@@ -534,10 +534,10 @@ function App() {
                     </div>
 
 
-                    {/*<div className="tab flexCenter" onClick={() => navigate("/treasury")}>*/}
-                    {/*    Play*/}
-                    {/*</div>*/}
-                    <div className="disabledTab flexCenter">Play</div>
+                    <div className="tab flexCenter" onClick={() => navigate("/treasury")}>
+                        Play
+                    </div>
+                    {/*<div className="disabledTab flexCenter">Play</div>*/}
 
 
                 </div>
