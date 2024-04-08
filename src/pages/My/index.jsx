@@ -12,17 +12,19 @@ import bage2 from "@/assets/bage2.png";
 import bage3 from "@/assets/bage3.png";
 import { useNavigate } from "react-router-dom";
 
-
 import { Tabs } from "antd";
 
 const {TabPane} = Tabs;
 import { tableData } from "./data.jsx";
 
-function App() {
+function App(props) {
+
+    const {contractAddress, targetChain} = props;
+
     const navigate = useNavigate()
     return (
         <div className="rootInnerWrapper">
-            <TopHeader/>
+            <TopHeader targetChain={targetChain}/>
             <div className="flexStart">
                 <Sider/>
                 <div className="" style={{width: '100%', padding: '16px'}}>

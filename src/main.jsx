@@ -8,39 +8,24 @@ import { createConfig, WagmiProvider } from 'wagmi';
 import { merlin, sepolia } from "viem/chains";
 import { RouterProvider } from 'react-router-dom';
 import router from './router/index';
-import { defineChain } from "viem";
 import {
-    injectedWallet,
     metaMaskWallet,
     okxWallet,
     rainbowWallet,
-    walletConnectWallet
 } from "@rainbow-me/rainbowkit/wallets";
+import { merlinTest } from "@/config.js";
 
-export const merlinTest = defineChain({
-    id: 686868,
-    name: 'Merlin Testnet ',
-    nativeCurrency: {name: 'BTC', symbol: 'BTC', decimals: 18},
-    rpcUrls: {
-        default: {http: ['https://testnet-rpc.merlinchain.io']},
-    },
-    blockExplorers: {
-        default: {name: 'Merlin-scan', url: 'https://testnet-scan.merlinchain.io'},
-    },
-})
 
 const config = getDefaultConfig({
     appName: 'Owl',
     projectId: 'ae928899b66286a771031a02c9ac00d9',
-    chains: [merlin, merlinTest, sepolia],
+    chains: [merlin, merlinTest],
     wallets: [{
         groupName: 'Recommended',
         wallets: [
             metaMaskWallet,
             okxWallet,
             rainbowWallet,
-            // injectedWallet,
-            // walletConnectWallet
         ],
     }],
 });

@@ -21,15 +21,15 @@ import {
     useWaitForTransactionReceipt,
     useWriteContract,
 } from "wagmi";
-import { merlin, sepolia } from "viem/chains";
-import mabi from "./abi.json";
-import { merlinTest } from "@/main.jsx";
+import abi from "./abi.json";
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
 
 
-function App() {
+function App(props) {
+
+    const {contractAddress, targetChain} = props;
 
     const navigate = useNavigate();
     const {openConnectModal, connectModalOpen} = useConnectModal();
@@ -39,14 +39,6 @@ function App() {
     const {chains, switchChain} = useSwitchChain();
     const {data: hash, writeContract, isPending, error} = useWriteContract()
 
-    const environment = "prod";
-    const targetChain = environment === "test" ? merlinTest : merlin;
-    const abi = mabi;
-    const contractAddress = environment === "test" ?
-        // test
-        "0x6a8a00E25A388162Bf1C495225D1046243666607" :
-        // prod
-        "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
@@ -66,53 +58,54 @@ function App() {
 
     const ipfsURL = "https://ipfs.io/ipfs/QmZPvN9YwEjLkrczWgRiPFshBxgx8Z4WXwheoErSKjJiGi/Owldinal";
 
-    useEffect(() => {
-        console.log("account:", address);
-        console.log("chain:", chain);
-    }, [address, chain])
-
-    // const handleScrollNew = (event) => {
-    //
-    //     // window.removeEventListener("wheel", handleScrollNew);
-    //     exec && clearTimeout(exec);
-    //     // console.log("window.onwheel: ", event.deltaY);
-    //
-    //     if (open) {
-    //
-    //         let next;
-    //         if (event.deltaY > 0) {
-    //             next = Math.min(3, tab + 1);
-    //         } else if (event.deltaY < 0) {
-    //             next = Math.max(1, tab - 1);
-    //         }
-    //
-    //         if (next && next !== tab) {
-    //             setTab(next);
-    //             window.removeEventListener("wheel", handleScrollNew);
-    //             open = false;
-    //         }
-    //
-    //     }
-    //
-    //     exec = setTimeout(() => {
-    //         open = true;
-    //         // window.addEventListener("wheel", handleScrollNew);
-    //         // addListener();
-    //     }, 50);
-    //
-    // };
-
-    // just pause for now
     // useEffect(() => {
-    //
-    //     setTimeout(() => {
-    //         window.addEventListener("wheel", handleScrollNew);
-    //     }, 800);
-    //     return () => {
-    //         window.removeEventListener("wheel", handleScrollNew);
-    //     };
-    //
-    // }, [tab]);
+    //     console.log("account:", address);
+    //     console.log("chain:", chain);
+    //     console.log("targetChain:", targetChain);
+    //     console.log("chains:", chains);
+    // }, [address, chain])
+
+    const handleScrollNew = (event) => {
+
+        // window.removeEventListener("wheel", handleScrollNew);
+        exec && clearTimeout(exec);
+        // console.log("window.onwheel: ", event.deltaY);
+
+        if (open) {
+
+            let next;
+            if (event.deltaY > 0) {
+                next = Math.min(3, tab + 1);
+            } else if (event.deltaY < 0) {
+                next = Math.max(1, tab - 1);
+            }
+
+            if (next && next !== tab) {
+                setTab(next);
+                window.removeEventListener("wheel", handleScrollNew);
+                open = false;
+            }
+
+        }
+
+        exec = setTimeout(() => {
+            open = true;
+            // window.addEventListener("wheel", handleScrollNew);
+            // addListener();
+        }, 50);
+
+    };
+
+    useEffect(() => {
+
+        setTimeout(() => {
+            window.addEventListener("wheel", handleScrollNew);
+        }, 800);
+        return () => {
+            window.removeEventListener("wheel", handleScrollNew);
+        };
+
+    }, [tab]);
 
     // const gas = useEstimateGas({
     //     address: contractAddress,

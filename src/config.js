@@ -1,3 +1,5 @@
+import { defineChain } from "viem";
+
 const API_URL = 'https://api.owldinal.xyz/api';
 
 const list = {
@@ -43,4 +45,16 @@ const URL = {
     }
 }
 
-export default URL;
+export const merlinTest = defineChain({
+    id: 686868,
+    name: 'Merlin Testnet',
+    nativeCurrency: {name: 'BTC', symbol: 'BTC', decimals: 18},
+    rpcUrls: {
+        default: {http: ['https://testnet-rpc.merlinchain.io']},
+    },
+    blockExplorers: {
+        default: {name: 'Merlin-scan', url: 'https://testnet-scan.merlinchain.io'},
+    },
+})
+
+export default {URL, merlinTest};
