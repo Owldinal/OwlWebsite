@@ -4,6 +4,7 @@ import My from "../pages/My/index.jsx";
 import Treasury from "../pages/Treasury/index.jsx";
 import { merlin } from "viem/chains";
 import { merlinTest } from "@/config.js";
+import MyItem from "@/pages/MyItem/index.jsx";
 
 const environment = "test";
 
@@ -28,8 +29,8 @@ const router = createBrowserRouter([
         element: <My contractAddress={contractAddress} targetChain={targetChain}/>,
     },
     {
-        path:"/my-item",
-        element: <My contractAddress={contractAddress} targetChain={targetChain}/>,
+        path: "/my-item",
+        element: <MyItem contractAddress={contractAddress} targetChain={targetChain}/>,
     }
 ]);
 

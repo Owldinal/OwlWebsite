@@ -3,7 +3,8 @@ import logo from "@/assets/logo.png";
 import OwlButton from "@/components/Button/index.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useSwitchChain } from "wagmi";
+import { useAccount, useBalance, useSwitchChain } from "wagmi";
+import { addCommaInNumber } from "@/util.js";
 
 export default function (props) {
 
@@ -13,6 +14,7 @@ export default function (props) {
     const {openConnectModal, connectModalOpen} = useConnectModal();
     const {openAccountModal, accountModalOpen} = useAccountModal();
     const {isConnected, address, chain} = useAccount();
+    const {data: balance} = useBalance(address);
     const {chains, switchChain} = useSwitchChain();
 
     return (
@@ -31,8 +33,11 @@ export default function (props) {
 
                 <div className="flexCenter">
 
-                    <OwlButton text="2,731,345.87 Owl" type="dark"/>
-                    <OwlButton text="Buy Owl" type="dark" style={{margin: "0 16px"}}/>
+                    <OwlButton text={addCommaInNumber(balance) + " Owl"} type="dark"/>
+                    <a href="" target="_blank" style={{textDecoration: 'none'}}>
+                        <OwlButton text="Buy Owl" type="dark" style={{margin: "0 16px"}}/>
+                    </a>
+
 
                     {!isConnected &&
                         <OwlButton func={openConnectModal} text="Connect wallet"/>}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import cn from "classnames";
 import OwlButton from "@/components/Button/index.jsx";
@@ -16,12 +16,61 @@ import { Tabs } from "antd";
 
 const {TabPane} = Tabs;
 import { tableData } from "./data.jsx";
+import { useAccount } from "wagmi";
+import { getData } from "@/config.js";
+import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
+import { addCommaInNumber } from "@/util.js";
 
 function App(props) {
 
+    const navigate = useNavigate();
     const {contractAddress, targetChain} = props;
+    const {isConnected, address, chain} = useAccount();
 
-    const navigate = useNavigate()
+    const [userInfo, setUserInfo] = useState({
+
+        wallet: "0x0000000000000000000000000000000000000000",
+        owl_balance: 0,
+        total_earned: 0,
+        buff_level: 0,
+        elf_info: {total: 0, staked: 0, apr: 0},
+        fruit_info: {total: 0, staked: 0, apr: 0},
+        owl_info: {total: 0, staked: 0, apr: 0},
+        referral_rewards: {
+            total: 0,
+            claimed: 0,
+            available: 0,
+            locked: 0
+        },
+        invitation_code: "",
+        invite_count: 0
+
+    });
+
+    useEffect(() => {
+
+        getData.getUserInfo(address).then(result => {
+            console.log("user info result: ", result);
+            setUserInfo(result.data);
+        })
+
+        // getData.getUserOwldinals()
+
+
+    }, []);
+
+    const copyAddressOnClick = () => {
+
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(address).then(() => {
+                console.log('Address copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+    }
+
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain}/>
@@ -31,39 +80,46 @@ function App(props) {
                     <div className="flexBetween flexC" style={{margin: "24px 0"}}>
                         <div className="infoCard inputCard width100" style={{minWidth: ""}}>
                             <div className="text1 flexStartCenter">
-                                <span>
-                                  <img src={a1} width="48" alt="" className="boderRadius50"/>
+                                {/*<span>*/}
+                                {/*  <img src={a1} width="48" alt="" className="boderRadius50"/>*/}
+                                {/*</span>{" "}*/}
+                                <span
+                                    style={{margin: "0 8px 0 0px"}}>{address || "Please connect your wallet"}
                                 </span>{" "}
-                                <span style={{margin: "0 8px 0 16px"}}>0x1234...5678</span>{" "}
-                                <img src={copy} width="12" alt=""/>
+                                {address && (
+                                    <img src={copy} width="12" alt="" onClick={copyAddressOnClick}/>
+                                )}
                             </div>
 
                             <div className="text2 ">
-                                5,271.78<span>owl</span>
+                                {userInfo["owl_balance"]}<span> Owl</span>
                             </div>
 
                             <div className="text3">Total Earned</div>
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
-                                <img src={bage1} width="48" alt=""/>
-                                <img
-                                    src={bage2}
-                                    width="48"
-                                    alt=""
-                                    style={{margin: "0 16px"}}
-                                />
-                                <img src={bage3} width="48" alt=""/>
+                                {(userInfo["buff_level"] === 1 || userInfo["buff_level"] === 3) && (
+                                    <img src={bage1} width="48" alt=""/>)}
+                                {(userInfo["buff_level"] === 2 || userInfo["buff_level"] === 3) && (
+                                    <img
+                                        src={bage2}
+                                        width="48"
+                                        alt=""
+                                        style={{margin: "0 16px"}}
+                                    />)}
+                                {(userInfo["buff_level"] === 3) && (<img src={bage3} width="48" alt=""/>)}
                             </div>
+
                             <div className="flexBetween flexS">
                                 <div className="infoItem2" style={{textAlign: "center", marginRight: '12px'}}>
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
-                                        <div className="infoItemTextUp">
-                                            <img src={arrup} width="10" alt=""/> APR: 2755%
-                                        </div>
+                                        <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] > 0 ? 1 : 0}
+                                                        text={"APR: " + userInfo["elf_info"]["apr"] || "0%"}/>
                                     </div>
 
-                                    <div className="infoItemText1">7/15</div>
+                                    <div
+                                        className="infoItemText1">{userInfo["elf_info"]["staked"]}/{userInfo["elf_info"]["total"]}</div>
                                     <div className="infoItemText2">Staked/Total</div>
 
                                     <OwlButton
@@ -81,12 +137,12 @@ function App(props) {
                                 <div className="infoItem2" style={{textAlign: "center"}}>
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
-                                        <div className="infoItemTextUp">
-                                            <img src={arrup} width="10" alt=""/> APR: 0%
-                                        </div>
+                                        <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] > 0 ? 1 : 0}
+                                                        text={"APR: " + userInfo["fruit_info"]["apr"] || "0%"}/>
                                     </div>
 
-                                    <div className="infoItemText1">0/214</div>
+                                    <div
+                                        className="infoItemText1">{userInfo["fruit_info"]["staked"]}/{userInfo["fruit_info"]["total"]}</div>
                                     <div className="infoItemText2">Staked/Total</div>
 
                                     <OwlButton
@@ -109,30 +165,33 @@ function App(props) {
 
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="text3">Claimed</div>
-                                    <div className="text5">5,000,00</div>
+                                    <div
+                                        className="text5">{addCommaInNumber(userInfo["referral_rewards"]["claimed"])}</div>
                                 </div>
                                 <div
                                     className="flexBetween"
                                     style={{width: "100%", margin: "16px 0"}}
                                 >
                                     <div className="text3">Available</div>
-                                    <div className="text5">1,500,000</div>
+                                    <div
+                                        className="text5">{addCommaInNumber(userInfo["referral_rewards"]["available"])}</div>
                                 </div>
                                 <div className="flexBetween" style={{width: "100%"}}>
                                     <div className="text3">Locked</div>
-                                    <div className="text5">7,500,000</div>
+                                    <div
+                                        className="text5">{addCommaInNumber(userInfo["referral_rewards"]["locked"])}</div>
                                 </div>
 
                                 <OwlButton
                                     type="dark"
-                                    text="Claim 1,500,000 Owl"
+                                    text={"Claim " + addCommaInNumber(userInfo["referral_rewards"]["available"]) + " Owl"}
                                     style={{width: "100%", marginTop: "36px", color: "#9EFF00"}}
                                 />
 
                                 <div className="flexBetween" style={{margin: "32px 0 8px"}}>
                                     <div className="text3">Invitation link</div>
 
-                                    <div className="text6">Invite list (12)</div>
+                                    <div className="text6">Invite list ({userInfo["invite_count"]})</div>
                                 </div>
 
                                 <div className="flexBetween linkInfo">
@@ -214,7 +273,8 @@ function App(props) {
                 </div>
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default App;
