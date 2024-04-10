@@ -12,14 +12,64 @@ import * as echarts from "echarts";
 
 import { Input } from "antd";
 import { useAccount } from "wagmi";
+import { coin, getData } from "@/config.js";
+import { addCommaInNumber } from "@/util.js";
+import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
+import DisplayBlock from "@components/DisplayBlock.jsx";
 
 function App(props) {
 
     const {contractAddress, targetChain} = props;
     const {isConnected, address, chain} = useAccount();
+    const [inputValue, setInputValue] = useState("");
+    const [gameInfo, setGameInfo] = useState({
+        total_rewards: 0,
+        total_rewards_usd: 0,
+        owl_price: 0,
+        owl_price_change: 0,
+        total_market_cap: 0,
+        total_market_cap_change: 0,
+        total_burned: 0,
+        total_burned_change: 0,
+    });
+    const [rewardsTrend, setRewardsTrend] = useState({});
+    const [rewardsRevenue, setRewardsRevenue] = useState([
+        {
+            address: "0x1234...5678",
+            operation: "minted",
+            description: "Gen1 Blind Box",
+            count: 0,
+            amount: 0,
+            transaction_hash: ""
+        },
+        {
+            address: "0x1234...5678",
+            operation: "minted",
+            description: "Gen1 Blind Box",
+            count: 0,
+            amount: 0,
+            transaction_hash: ""
+        }
+    ])
+
+    const boxPrice = 10;
 
     useEffect(() => {
+
+        getData.getGameInfo().then(result => {
+            setGameInfo(result);
+        });
+
+        getData.getRewardsTrend().then(result => {
+            setRewardsTrend(result);
+        })
+
+        getData.getRewardsHistory().then(result => {
+            setRewardsRevenue(result);
+        })
+
         initChart();
+
     });
 
     const tableData = [
@@ -107,12 +157,8 @@ function App(props) {
                 axisTick: {
                     show: false,
                 },
-
-
                 splitLine: {
-
                     show: true,
-
                     lineStyle: {
                         type: "dashed",
 
@@ -166,6 +212,10 @@ function App(props) {
         };
     };
 
+    const mintAndOpenBox = () => {
+
+    }
+
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain}/>
@@ -173,48 +223,26 @@ function App(props) {
                 <Sider/>
                 <div className="treasuryContent">
                     <div className="infoCard flexBetween flexC">
+
                         <div class='leftInfo'>
+
                             <div className="text1">Total Rewards</div>
                             <div className="text2">
-                                673,478,598.78<span>owl</span>
+                                {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
                             </div>
-                            <div className="text3">4.728.12455 USD</div>
+                            <div className="text3">{addCommaInNumber(gameInfo["total_rewards_usd"]) + " USD"}</div>
 
                             <div className="flexBetween flexW" style={{marginTop: "36px"}}>
-                                <div className="infoItem flexBetweenStart"
-                                     style={{marginRight: "16px", marginBottom: '6px'}}>
-                                    <div>
-                                        <div className="infoItemText1">0.00762</div>
-                                        <div className="infoItemText2">Owl Price</div>
-                                    </div>
-                                    <div className="infoItemTextUp">
-                                        <img src={arrup} width="10" alt=""/> 173.43%
-                                    </div>
-                                </div>
-                                <div
-                                    className="infoItem flexBetweenStart"
-                                    style={{marginRight: "16px", marginBottom: '6px'}}
-                                >
-                                    <div>
-                                        <div className="infoItemText1">45,244.87</div>
-                                        <div className="infoItemText2">Total Marketcap</div>
-                                    </div>
-                                    <div className="infoItemTextDown">
-                                        <img src={arrdown} width="10" alt=""/> 23.48
-                                    </div>
-                                </div>
-                                <div className="infoItem flexBetweenStart"
-                                     style={{marginRight: "16px", marginBottom: '6px'}}>
-                                    <div>
-                                        <div className="infoItemText1">123,345,789</div>
-                                        <div className="infoItemText2">Total Burn</div>
-                                    </div>
-                                    <div className="infoItemTextUp">
-                                        <img src={arrup} width="10" alt=""/> 473.43%
-                                    </div>
-                                </div>
+                                <DisplayBlock content={gameInfo["owl_price"]} title={"Owl Price"}
+                                              change={gameInfo["owl_price_change"]}/>
+                                <DisplayBlock content={gameInfo["total_market_cap"]} title={"Total Marketcap"}
+                                              change={gameInfo["total_market_cap_change"]}/>
+                                <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
+                                              change={gameInfo["total_burned_change"]}/>
                             </div>
+
                         </div>
+
                         <div className="rightInfo" style={{flex: 1, height: "auto", marginLeft: '12px'}}>
 
                             <div className="flexBetween">
@@ -225,7 +253,6 @@ function App(props) {
                                     <div className="acbtn activeAcbtn">Day</div>
                                     <div className="acbtn" style={{margin: '0 6px'}}>Week</div>
                                     <div className="acbtn">Month</div>
-
                                 </div>
                             </div>
                             <div id="chart" style={{width: "100%", height: "200px"}}></div>
@@ -239,15 +266,33 @@ function App(props) {
                             </div>
                             <div className="flexBetween" style={{width: "100%"}}>
                                 <div className="text5">Amount</div>
-                                <div className="text6">x5 x10 x100</div>
+                                <div className={"text6"}
+                                     onClick={() => setInputValue((inputValue * 5).toString())}>x5
+                                </div>
+                                <div className={"text6"}
+                                     onClick={() => setInputValue((inputValue * 10).toString())}>x10
+                                </div>
+                                <div className={"text6"}
+                                     onClick={() => setInputValue((inputValue * 100).toString())}>x100
+                                </div>
                             </div>
                             <Input
                                 placeholder="Enter Amount"
+                                // type="number"
                                 size="large"
                                 style={{margin: "12px 0"}}
+                                value={inputValue}
+                                onChange={(e) => {
+                                    const v = Math.ceil(Number(e.target.value));
+                                    if (!isNaN(v)) {
+                                        setInputValue(v.toString());
+                                    } else {
+                                        setInputValue("0");
+                                    }
+                                }}
                             />
                             <div className="flexBetween" style={{width: "100%"}}>
-                                <div className="text5">0 Owl</div>
+                                <div className="text5">{inputValue * boxPrice} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
 
@@ -255,39 +300,48 @@ function App(props) {
                                 text="Mint"
                                 size="big"
                                 style={{width: "100%", marginTop: "24px"}}
+                                func={mintAndOpenBox}
                             />
                         </div>
                         <div className="tableWrapper">
                             <div className="text1" style={{marginBottom: "16px"}}>
                                 Treasury Revenue
                             </div>
-                            {tableData.map((item, index) => {
-                                let {a, b, c, d, e, f, g} = item;
-                                return (
-                                    <div className="tableItem flexBetween" key={index}>
-                                        <div>{a}</div>
-                                        <div>{b}</div>
-                                        <div>{c}</div>
-                                        <div>{d}</div>
-                                        <div>{e}</div>
-                                        <div>{f}</div>
-                                        <div>
-                                            <img
-                                                src={share}
-                                                width="14"
-                                                alt=""
-                                                style={{cursor: "pointer"}}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
+
+                            <div style={{overflowY: "scroll", height: "400px"}}>
+                                {tableData.map((item, index) => {
+                                    let {a, b, c, d, e, f, g} = item;
+                                    return (
+                                        <>
+                                            <a href={""} target={"_blank"} style={{textDecoration: 'none'}}>
+                                                <div className="tableItem flexBetween" key={index}>
+                                                    <div>{a}</div>
+                                                    <div>{b}</div>
+                                                    <div>{c}</div>
+                                                    <div>{d}</div>
+                                                    <div>{e}</div>
+                                                    <div>{f}</div>
+                                                    <div>
+                                                        <img
+                                                            src={share}
+                                                            width="14"
+                                                            alt=""
+                                                            style={{cursor: "pointer"}}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default App;

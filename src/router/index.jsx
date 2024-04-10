@@ -28,10 +28,10 @@ const router = createBrowserRouter([
         path: "/my",
         element: <My contractAddress={contractAddress} targetChain={targetChain}/>,
     },
-    {
-        path: "/my-item",
-        element: <MyItem contractAddress={contractAddress} targetChain={targetChain}/>,
-    }
+    // {
+    //     path: "/my-item",
+    //     element: <MyItem contractAddress={contractAddress} targetChain={targetChain}/>,
+    // }
 ]);
 
 export default router;
