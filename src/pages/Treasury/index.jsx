@@ -161,7 +161,6 @@ function App(props) {
                     show: true,
                     lineStyle: {
                         type: "dashed",
-
                         color: ["#191919"],
                     },
                 },
@@ -204,7 +203,6 @@ function App(props) {
         };
 
         option && myChart.setOption(option);
-
 
         window.onresize = function () {
 
@@ -255,7 +253,9 @@ function App(props) {
                                     <div className="acbtn">Month</div>
                                 </div>
                             </div>
+
                             <div id="chart" style={{width: "100%", height: "200px"}}></div>
+
                         </div>
                     </div>
                     <div className="flexBetween flexC" style={{margin: "24px 0"}}>
