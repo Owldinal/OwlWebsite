@@ -6,6 +6,7 @@ import b1 from "@/assets/b1.png";
 import { merlinTest } from "@/main.jsx";
 import { useEffect, useState } from "react";
 import { Modal } from "antd";
+import HomeHeader from "@components/Header.jsx";
 
 export default function (props) {
 
@@ -27,11 +28,34 @@ export default function (props) {
         console.log("error: ", error);
         console.log("signature: ", signature);
 
-        // post here
+        if (signature) {
+            // post here
+            const formData = new FormData();
+            formData.append('eth_address', address);
+            formData.append('bind_address', inputValue);
+            formData.append('signedMessage', signature);
+
+            fetch('https://bindapi.owldinal.xyz/bindEth', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setResult(data);
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
 
     }, [signature, error])
 
     const bind = async () => {
+
+        if (result.res === true || result.res === false) {
+            return;
+        }
 
         await signMessage({
             message: inputValue,
@@ -39,43 +63,19 @@ export default function (props) {
 
     }
 
-    const {data: verifyResult} = useVerifyMessage({
-        address: address,
-        message: inputValue,
-        signature: signature,
-    })
-    console.log("result: ", verifyResult);
+    // const {data: verifyResult} = useVerifyMessage({
+    //     address: address,
+    //     message: inputValue,
+    //     signature: signature,
+    // })
+    // console.log("result: ", verifyResult);
 
     return (
         <>
             <div className="rootInnerWrapper">
 
-                <div className="topHead flexBetween">
-                    <div className='flexCenter'>
+                <HomeHeader/>
 
-                        <img src={logo} height="40" alt="" style={{marginRight: "24px"}}/>
-                        <div>
-                            Owldinal
-                        </div>
-
-                    </div>
-
-                    <div className="flexCenter">
-
-                        {!isConnected &&
-                            <OwlButton func={openConnectModal} text="Connect wallet"/>}
-
-                        {(isConnected && chain !== targetChain) &&
-                            <OwlButton func={() => switchChain({chainId: targetChain.id})}
-                                       text={"Switch to Merlin"}/>}
-
-                        {(isConnected && chain === targetChain) &&
-                            <OwlButton func={openAccountModal}
-                                       text={address.slice(0, 6) + "..." + address.slice(-4)}/>}
-
-                    </div>
-
-                </div>
 
                 <div style={{margin: "24px 0", alignItems: "center", display: "flex", justifyContent: "space-between"}}>
 
@@ -83,37 +83,57 @@ export default function (props) {
                         <img src={b1} alt={""}/>
                     </div>
 
-                    <div style={{width: "60%"}}>
+                    <div style={{
+                        width: "60%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column"
+                    }}>
 
                         <div style={{fontSize: "24px", marginBottom: "30px"}}>
-                            A sentence
+                            Owldinal stands as the 1st pioneering
                         </div>
+                        <div style={{fontSize: "24px", marginBottom: "30px"}}>
+                            PFP collection natively built on
+                        </div>
+                        <a href={"https://twitter.com/MerlinLayer2"} target={"_blank"} style={{textDecoration: "none"}}>
+                            <div style={{fontSize: "24px", marginBottom: "30px"}}>
+                                @MerlinLayer2
+                            </div>
+                        </a>
 
-                        <div style={{fontSize: "16px", marginBottom: "10px"}}>Enter address here</div>
-                        <div style={{flexDirection: "row", display: "flex", alignItems: "center"}}>
-                            <input type={"text"} value={inputValue}
-                                   size={45}
-                                   style={{
-                                       backgroundColor: 'lightgray',
-                                       borderRadius: '5px',
-                                       lineHeight: '20px',
-                                       color: 'black',
-                                       padding: '5px 10px'
-                                   }}
-                                   onChange={e => setInputValue(e.target.value)}/>
 
-                            <div style={{
-                                width: "40%",
-                                marginLeft: "5%",
-                                alignItems: "center",
-                                display: "flex"
-                            }}>
+                        {/*<div style={{fontSize: "16px", marginBottom: "10px"}}>Enter address here</div>*/}
+                        <input type={"text"} value={inputValue}
+                               size={45}
+                               style={{
+                                   backgroundColor: '#0a0a0a',
+                                   borderRadius: '5px',
+                                   lineHeight: '20px',
+                                   color: '#414141',
+                                   padding: '5px 10px',
+                                   marginBottom: "30px"
+                               }}
+                               onChange={e => setInputValue(e.target.value)}/>
+
+                        <div style={{
+                            // width: "40%",
+                            // marginLeft: "20%",
+                            alignItems: "center",
+                            display: "flex"
+                        }}>
+                            {!isConnected &&
+                                <OwlButton func={openConnectModal} text="Connect wallet"/>}
+                            {(isConnected && chain !== targetChain) &&
+                                <OwlButton func={() => switchChain({chainId: targetChain.id})}
+                                           text={"Switch to Merlin"}/>}
+                            {(isConnected && chain === targetChain) &&
                                 <OwlButton text={"Bind"} func={() => {
                                     if (inputValue.length === 42) {
                                         setVisible(true)
                                     }
-                                }} size={"small"}/>
-                            </div>
+                                }}/>}
                         </div>
 
                     </div>
@@ -124,7 +144,10 @@ export default function (props) {
                     title={null}
                     open={visible}
                     onOk={bind}
-                    onCancel={() => setVisible(false)}
+                    onCancel={() => {
+                        setVisible(false);
+                        setResult({});
+                    }}
                     footer={null}
                     style={{
                         display: "flex",
@@ -136,15 +159,32 @@ export default function (props) {
                         overflow: "auto"
                     }}
                 >
-                    <h4 className="dialogTitle">{"Binding"}</h4>
-                    <div>Your address: {address}</div>
-                    <div style={{marginBottom: "20px"}}>Binding address: {inputValue}</div>
+                    {/*<h4 className="dialogTitle">{"Binding"}</h4>*/}
+                    <div className={"text5"} style={{
+                        alignItems: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        marginBottom: "24px",
+                        marginTop: "24px"
+                    }}>
+                        <div>Are you sure want to use address:</div>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <div
+                                style={{color: "#b4fd4f"}}>{address.slice(0, 6) + "..." + address.slice(38, 42) + " "}</div>
+                            {" to bind to "}
+                            <div
+                                style={{color: "#b4fd4f"}}> {" " + inputValue.slice(0, 6) + "..." + inputValue.slice(38, 42)}</div>
+                        </div>
 
-                    <OwlButton size={"middle"} text={signature ? "Binding success" : "Confirm"} disabled={!signature}
-                               func={signature ? null : (() => bind())}/>
-                    {/*{signature && (<div>{"Binding success"}</div>)}*/}
-                    <div>--------</div>
-                    <OwlButton size={"middle"} text={signature ? signature : "Verifying"}/>
+
+                        {/*{signature && (<div>{"Binding success"}</div>)}*/}
+                        {/*<div>--------</div>*/}
+                        {/*<OwlButton size={"middle"} text={signature ? signature : "Verifying"}/>*/}
+                    </div>
+
+                    <OwlButton size={"small"}
+                               text={result.code ? (result.res ? "Binding success" : "Your address has been bound") : "Confirm"}
+                               func={() => bind()}/>
 
                 </Modal>
 
