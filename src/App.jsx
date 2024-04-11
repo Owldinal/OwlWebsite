@@ -541,6 +541,10 @@ function App() {
                     </div>
                     {/*<div className="disabledTab flexCenter">Play</div>*/}
 
+                    <div className="tab flexCenter" onClick={() => navigate("/bind")}>
+                        Bind
+                    </div>
+
 
                 </div>
 
