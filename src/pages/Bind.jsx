@@ -1,10 +1,11 @@
-import { useAccount, useSignMessage, useSwitchChain } from "wagmi";
+import { useAccount, useSignMessage, useSwitchChain, useVerifyMessage } from "wagmi";
 import logo from "@/assets/logo.png";
 import OwlButton from "@components/Button/index.jsx";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import b1 from "@/assets/b1.png";
 import { merlinTest } from "@/main.jsx";
 import { useEffect, useState } from "react";
+import { Modal } from "antd";
 
 export default function (props) {
 
@@ -14,9 +15,21 @@ export default function (props) {
     const {chains, switchChain} = useSwitchChain();
     const [inputValue, setInputValue] = useState("");
     const {signMessage, data: signature, error} = useSignMessage()
+    const [visible, setVisible] = useState(false);
+    const [result, setResult] = useState({});
 
 
     const targetChain = merlinTest;
+
+
+    useEffect(() => {
+
+        console.log("error: ", error);
+        console.log("signature: ", signature);
+
+        // post here
+
+    }, [signature, error])
 
     const bind = async () => {
 
@@ -26,15 +39,12 @@ export default function (props) {
 
     }
 
-    useEffect(() => {
-
-        console.log("error: ", error);
-        console.log("signature: ", signature);
-
-        // post here
-
-
-    }, [signature, error])
+    const {data: verifyResult} = useVerifyMessage({
+        address: address,
+        message: inputValue,
+        signature: signature,
+    })
+    console.log("result: ", verifyResult);
 
     return (
         <>
@@ -79,7 +89,7 @@ export default function (props) {
                             A sentence
                         </div>
 
-                        <div style={{fontSize: "16px", marginBottom: "10px"}}>Enter your sentence here</div>
+                        <div style={{fontSize: "16px", marginBottom: "10px"}}>Enter address here</div>
                         <div style={{flexDirection: "row", display: "flex", alignItems: "center"}}>
                             <input type={"text"} value={inputValue}
                                    size={45}
@@ -98,13 +108,45 @@ export default function (props) {
                                 alignItems: "center",
                                 display: "flex"
                             }}>
-                                <OwlButton text={"Bind"} func={bind} size={"small"}/>
+                                <OwlButton text={"Bind"} func={() => {
+                                    if (inputValue.length === 42) {
+                                        setVisible(true)
+                                    }
+                                }} size={"small"}/>
                             </div>
                         </div>
 
                     </div>
 
                 </div>
+
+                <Modal
+                    title={null}
+                    open={visible}
+                    onOk={bind}
+                    onCancel={() => setVisible(false)}
+                    footer={null}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100vh",
+                        top: 0,
+                        width: "70%",
+                        overflow: "auto"
+                    }}
+                >
+                    <h4 className="dialogTitle">{"Binding"}</h4>
+                    <div>Your address: {address}</div>
+                    <div style={{marginBottom: "20px"}}>Binding address: {inputValue}</div>
+
+                    <OwlButton size={"middle"} text={signature ? "Binding success" : "Confirm"} disabled={!signature}
+                               func={signature ? null : (() => bind())}/>
+                    {/*{signature && (<div>{"Binding success"}</div>)}*/}
+                    <div>--------</div>
+                    <OwlButton size={"middle"} text={signature ? signature : "Verifying"}/>
+
+                </Modal>
 
             </div>
         </>
