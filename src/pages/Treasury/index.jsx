@@ -22,6 +22,7 @@ function App(props) {
     const {contractAddress, targetChain} = props;
     const {isConnected, address, chain} = useAccount();
     const [inputValue, setInputValue] = useState("");
+    const [viewOption, setViewOption] = useState(1);
     const [gameInfo, setGameInfo] = useState({
         total_rewards: 0,
         total_rewards_usd: 0,
@@ -32,7 +33,11 @@ function App(props) {
         total_burned: 0,
         total_burned_change: 0,
     });
-    const [rewardsTrend, setRewardsTrend] = useState({});
+    const [rewardsTrend, setRewardsTrend] = useState({
+        daily: [],
+        weekly: [],
+        monthly: []
+    });
     const [rewardsRevenue, setRewardsRevenue] = useState([
         {
             address: "0x1234...5678",
@@ -71,6 +76,18 @@ function App(props) {
         initChart();
 
     });
+
+    useEffect(() => {
+
+        if (viewOption === 1) {
+            initChart(rewardsTrend.daily);
+        } else if (viewOption === 2) {
+            initChart(rewardsTrend.weekly);
+        } else if (viewOption === 3) {
+            initChart(rewardsTrend.monthly);
+        }
+
+    }, [viewOption])
 
     const tableData = [
         {
@@ -139,15 +156,22 @@ function App(props) {
         },
     ];
 
-    const initChart = () => {
-        var chartDom = document.getElementById("chart");
-        var myChart = echarts.init(chartDom);
-        var option;
+    const initChart = (data) => {
+        let chartDom = document.getElementById("chart");
+        let myChart = echarts.init(chartDom);
+
+        // date process here
+        const timeline = data.map(item => item.date);
+        const totalPoolAmount = data.map(item => item.totalPoolAmount);
+        const allocatedRewards = data.map(item => item.allocatedRewards);
+
+        let option;
 
         option = {
             xAxis: {
                 type: "category",
                 data: ["May 5", "May 6", "May 7", "May 8", "May 9", "May 10", "May 11"],
+                // data: timeline,
                 axisTick: {
                     show: false,
                 },
@@ -175,6 +199,7 @@ function App(props) {
             series: [
                 {
                     data: [110, 150, 155, 170, 200, 130, 120],
+                    // data:totalPoolAmount,
                     type: "line",
                     symbol: "none",
                     smooth: true,
@@ -188,6 +213,7 @@ function App(props) {
                 },
                 {
                     data: [100, 130, 165, 120, 180, 100, 100],
+                    // data: allocatedRewards,
                     type: "line",
                     symbol: "none",
                     smooth: true,
@@ -205,7 +231,6 @@ function App(props) {
         option && myChart.setOption(option);
 
         window.onresize = function () {
-
             myChart.resize();
         };
     };
@@ -248,9 +273,16 @@ function App(props) {
                                     Daily Rewards
                                 </div>
                                 <div className="flexStart">
-                                    <div className="acbtn activeAcbtn">Day</div>
-                                    <div className="acbtn" style={{margin: '0 6px'}}>Week</div>
-                                    <div className="acbtn">Month</div>
+                                    <div className={"acbtn" + (viewOption === 1 ? " activeAcbtn" : "")}
+                                         onClick={() => setViewOption(1)}>Day
+                                    </div>
+                                    <div className={"acbtn" + (viewOption === 2 ? " activeAcbtn" : "")}
+                                         onClick={() => setViewOption(2)}
+                                         style={{margin: '0 6px'}}>Week
+                                    </div>
+                                    <div className={"acbtn" + (viewOption === 3 ? " activeAcbtn" : "")}
+                                         onClick={() => setViewOption(3)}>Month
+                                    </div>
                                 </div>
                             </div>
 
