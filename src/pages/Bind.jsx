@@ -7,6 +7,7 @@ import { merlinTest } from "@/main.jsx";
 import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import HomeHeader from "@components/Header.jsx";
+import { merlin } from "viem/chains";
 
 export default function (props) {
 
@@ -20,7 +21,7 @@ export default function (props) {
     const [result, setResult] = useState({});
 
 
-    const targetChain = merlinTest;
+    const targetChain = merlin;
 
 
     useEffect(() => {
@@ -170,10 +171,10 @@ export default function (props) {
                         <div>Are you sure want to use address:</div>
                         <div style={{display: "flex", flexDirection: "row"}}>
                             <div
-                                style={{color: "#b4fd4f"}}>{address.slice(0, 6) + "..." + address.slice(38, 42) + " "}</div>
+                                style={{color: "#b4fd4f"}}>{address ? (address.slice(0, 6) + "..." + address.slice(38, 42)) : "" + " "}</div>
                             {" to bind to "}
                             <div
-                                style={{color: "#b4fd4f"}}> {" " + inputValue.slice(0, 6) + "..." + inputValue.slice(38, 42)}</div>
+                                style={{color: "#b4fd4f"}}> {" " + inputValue ? (inputValue.slice(0, 6) + "..." + inputValue.slice(38, 42)) : ""}</div>
                         </div>
 
 
