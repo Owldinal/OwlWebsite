@@ -46,7 +46,7 @@ function App() {
         // test
         "0x6a8a00E25A388162Bf1C495225D1046243666607" :
         // prod
-        "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
+        "0x6B18e87beb44a72eB48dA76a881F9104cb97A180";
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
@@ -252,7 +252,7 @@ function App() {
                 setCheck(2);
             }
 
-            setAlreadyMinted(Number(tokenIdCounter?.result) - 1 || 0);
+            setAlreadyMinted(Number(tokenIdCounter?.result) || 0);
             // console.log("address: ", address);
             // console.log("checkCanMint: ", checkCanMint);
             // console.log("alreadyMinted: ", alreadyMinted);
@@ -385,18 +385,20 @@ function App() {
                                     </div>
                                     <div className="infoLine"></div>
                                     <div
-                                        className="infoText1">{
-                                        check === 1 ?
-                                            (address ? "Checking your eligibility..." : "Please connect your wallet...") :
-                                            check === 2 ?
-                                                "You are not eligible." :
-                                                check === 3 ?
-                                                    "You can mint token one." :
-                                                    check === 4 ?
-                                                        "You are whitelisted." :
-                                                        check === 5 ?
-                                                            "You are eligible." :
-                                                            ""}
+                                        className="infoText1">
+                                        {
+                                            check === 1 ?
+                                                (address ? "Checking your eligibility..." : "Please connect your wallet...") :
+                                                check === 2 ?
+                                                    "You are not eligible." :
+                                                    check === 3 ?
+                                                        "You can mint token one." :
+                                                        check === 4 ?
+                                                            "You are whitelisted." :
+                                                            check === 5 ?
+                                                                "You are eligible." :
+                                                                ""}
+
                                     </div>
                                 </div>
                                 <div style={{width: "100%"}}>
