@@ -232,7 +232,7 @@ function App(props) {
                                 {/*  <img src={a1} width="48" alt="" className="boderRadius50"/>*/}
                                 {/*</span>{" "}*/}
                                 <span
-                                    style={{margin: "0 8px 0 0px"}}>{address || "Please connect your wallet"}
+                                    style={{margin: "0 8px 0 0px"}}>{address.slice(0, 6) + "..." + address.slice(-4) || "Please connect your wallet"}
                                 </span>{" "}
                                 {address && (
                                     <img src={copy} width="12" alt="" onClick={() => copyOnClick(address)}/>

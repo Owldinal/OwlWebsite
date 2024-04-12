@@ -3,8 +3,10 @@ import logo from "@/assets/logo.png";
 import OwlButton from "@/components/Button/index.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useBalance, useSwitchChain } from "wagmi";
+import { useAccount, useBalance, useReadContracts, useSwitchChain } from "wagmi";
 import { addCommaInNumber } from "@/util.js";
+import { ContractAbi, ContractAddress } from "@/config.js";
+import { useEffect, useState } from "react";
 
 export default function (props) {
 
@@ -14,8 +16,31 @@ export default function (props) {
     const {openConnectModal, connectModalOpen} = useConnectModal();
     const {openAccountModal, accountModalOpen} = useAccountModal();
     const {isConnected, address, chain} = useAccount();
-    const {data: balance} = useBalance(address);
     const {chains, switchChain} = useSwitchChain();
+    const [balance, setBalance] = useState("0");
+
+    const {
+        data
+    } = useReadContracts({
+        contracts: [
+            {
+                address: ContractAddress.owlTokenAddress,
+                abi: ContractAbi.owlToken,
+                functionName: "balanceOf",
+                args: [address],
+            }
+        ],
+    })
+
+    console.log("balance: ", data);
+
+    useEffect(() => {
+        const [temp] = data || [];
+        console.log("temp: ", temp);
+        if (temp) {
+            setBalance((BigInt(temp.result) / BigInt(10 ** 18)).toString());
+        }
+    }, [data])
 
     return (
         <div>

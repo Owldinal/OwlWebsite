@@ -18,10 +18,10 @@ export const ContractAddress = {
 }
 
 export const ContractAbi = {
-    owlToken:OwlToken,
-    owldinalNft:Owldinal,
-    owlGame:OwlGame,
-    genOneBox:OwldinalGenOneBox
+    owlToken: OwlToken,
+    owldinalNft: Owldinal,
+    owlGame: OwlGame,
+    genOneBox: OwldinalGenOneBox
 }
 
 export const list = {
@@ -78,4 +78,14 @@ export const merlinTest = defineChain({
     blockExplorers: {
         default: {name: 'Merlin-scan', url: 'https://testnet-scan.merlinchain.io'},
     },
+})
+
+
+export const merlinLocal = defineChain({
+    id: 1337,
+    name: 'Merlin Local',
+    nativeCurrency: {name: 'BTC', symbol: 'BTC', decimals: 18},
+    rpcUrls: {
+        default: {http: ['https://api.owldinal.xyz/node']},
+    }
 })

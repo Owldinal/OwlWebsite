@@ -13,13 +13,13 @@ import {
     okxWallet,
     rainbowWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { merlinTest } from "@/config.js";
+import { merlinLocal, merlinTest } from "@/config.js";
 
 
 const config = getDefaultConfig({
     appName: 'Owl',
     projectId: 'ae928899b66286a771031a02c9ac00d9',
-    chains: [merlin, merlinTest],
+    chains: [merlin, merlinTest, merlinLocal],
     wallets: [{
         groupName: 'Recommended',
         wallets: [
@@ -29,6 +29,7 @@ const config = getDefaultConfig({
         ],
     }],
 });
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
