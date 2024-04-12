@@ -73,8 +73,6 @@ function App(props) {
             setRewardsRevenue(result);
         })
 
-        initChart();
-
     });
 
     useEffect(() => {
