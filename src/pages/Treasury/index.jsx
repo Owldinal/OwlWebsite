@@ -15,6 +15,7 @@ import DisplayBlock from "@components/DisplayBlock.jsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { readContracts } from "@wagmi/core";
 import { config } from "@/main.jsx";
+import Popup from "@components/Popup/index.jsx"
 
 function App(props) {
 
@@ -318,6 +319,22 @@ function App(props) {
         };
     };
 
+    const [show,setShow] = useState(false);
+    const [elf,setElf] = useState(0);
+    const [nothing,setNothing] = useState(0);
+    const [magic,setMagic] = useState(0);
+
+
+    const handleShow = () =>{
+        setShow(true)
+    }
+    const handleClose= () =>{
+        setShow(false)
+    }
+
+    const mintAndOpenBox = () => {
+        handleShow(true);
+    }
 
     useEffect(() => {
 
@@ -336,6 +353,7 @@ function App(props) {
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain}/>
+
             <div className="flexStart">
                 <Sider/>
                 <div className="treasuryContent">
@@ -421,6 +439,9 @@ function App(props) {
                                 <div className="text5">{inputValue * boxPrice} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
+                            {
+                                show &&  <Popup elf={elf} nothing={nothing} magic={magic} handleClose={handleClose} />
+                            }
                             <OwlButton
                                 text={modelText}
                                 size="big"
