@@ -27,6 +27,12 @@ function App(props) {
     const [targetHash, setTargetHash] = useState("");
     const [modelText, setModelText] = useState("Approve");
 
+    const [show, setShow] = useState(false);
+    const [elf, setElf] = useState(0);
+    const [magic, setMagic] = useState(0);
+    const [nothing, setNothing] = useState(0);
+
+
     const boxPrice = 100000;
 
     // const {
@@ -127,7 +133,6 @@ function App(props) {
 
     }
 
-
     const approveOwlToken = async () => {
 
         await writeContract({
@@ -150,25 +155,33 @@ function App(props) {
 
     useEffect(() => {
 
-        const owlTokenAllowance = async () => {
-            return await readContracts(config, {
-                contracts: [
-                    {
-                        address: ContractAddress.owlTokenAddress,
-                        abi: ContractAbi.owlToken,
-                        functionName: 'allowance',
-                        args: [address, ContractAddress.owlGameAddress]
-                    },
-                ],
-            })
-        }
+        if (receipt && receipt.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
-        owlTokenAllowance().then(result => {
-            console.log("result: ", result);
-            const allowance = result[0].result;
-            const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
-            setModelText(isConfirming || isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
-        })
+            setShow(true);
+
+        } else {
+
+            const owlTokenAllowance = async () => {
+                return await readContracts(config, {
+                    contracts: [
+                        {
+                            address: ContractAddress.owlTokenAddress,
+                            abi: ContractAbi.owlToken,
+                            functionName: 'allowance',
+                            args: [address, ContractAddress.owlGameAddress]
+                        },
+                    ],
+                })
+            }
+
+            owlTokenAllowance().then(result => {
+                console.log("result: ", result);
+                const allowance = result[0].result;
+                const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
+                setModelText(isConfirming || isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
+            })
+
+        }
 
     }, [inputValue, receipt])
 
@@ -319,22 +332,6 @@ function App(props) {
         };
     };
 
-    const [show,setShow] = useState(false);
-    const [elf,setElf] = useState(0);
-    const [nothing,setNothing] = useState(0);
-    const [magic,setMagic] = useState(0);
-
-
-    const handleShow = () =>{
-        setShow(true)
-    }
-    const handleClose= () =>{
-        setShow(false)
-    }
-
-    const mintAndOpenBox = () => {
-        handleShow(true);
-    }
 
     useEffect(() => {
 
@@ -440,7 +437,8 @@ function App(props) {
                                 <div className="text6"></div>
                             </div>
                             {
-                                show &&  <Popup elf={elf} nothing={nothing} magic={magic} handleClose={handleClose} />
+                                show && (
+                                    <Popup elf={elf} nothing={nothing} magic={magic} handleClose={() => setShow(false)}/>)
                             }
                             <OwlButton
                                 text={modelText}
