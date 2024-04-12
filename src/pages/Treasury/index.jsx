@@ -161,9 +161,9 @@ function App(props) {
         let myChart = echarts.init(chartDom);
 
         // date process here
-        const timeline = data.map(item => item.date);
-        const totalPoolAmount = data.map(item => item.totalPoolAmount);
-        const allocatedRewards = data.map(item => item.allocatedRewards);
+        // const timeline = data.map(item => item.date);
+        // const totalPoolAmount = data.map(item => item.totalPoolAmount);
+        // const allocatedRewards = data.map(item => item.allocatedRewards);
 
         let option;
 
