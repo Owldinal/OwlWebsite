@@ -16,6 +16,7 @@ import { coin, getData } from "@/config.js";
 import { addCommaInNumber } from "@/util.js";
 import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import DisplayBlock from "@components/DisplayBlock.jsx";
+import Popup from "@components/Popup/index.jsx"
 
 function App(props) {
 
@@ -233,13 +234,27 @@ function App(props) {
         };
     };
 
-    const mintAndOpenBox = () => {
+    const [show,setShow] = useState(false);
+    const [elf,setElf] = useState(0);
+    const [nothing,setNothing] = useState(0);
+    const [magic,setMagic] = useState(0);
 
+
+    const handleShow = () =>{
+        setShow(true)
+    }
+    const handleClose= () =>{
+        setShow(false)
+    }
+
+    const mintAndOpenBox = () => {
+        handleShow(true);
     }
 
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain}/>
+
             <div className="flexStart">
                 <Sider/>
                 <div className="treasuryContent">
@@ -325,7 +340,9 @@ function App(props) {
                                 <div className="text5">{inputValue * boxPrice} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
-
+                            {
+                                show &&  <Popup elf={elf} nothing={nothing} magic={magic} handleClose={handleClose} />
+                            }
                             <OwlButton
                                 text="Mint"
                                 size="big"
