@@ -11,10 +11,10 @@ const API_URL = 'https://api.owldinal.xyz/api';
 export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
 export const ContractAddress = {
-    owlTokenAddress: "0x1fc4808063315f4FB23727b3Ce9142D112194342",
-    owldinalNftAddress: "0xe2aF0326fe09ab9193481bA9e4271674b384C66f",
-    owlGameAddress: "0x159fbF4c2C3571798416962333B9cb3edCBEA0fe",
-    genOneBoxAddress: "0x4de38B3c5C8031dE5B36CF30A5023ce6d24D994e",
+    owlTokenAddress: "0x15463B075F37c269830801feCd8CdAC76Aa1A310",
+    owldinalNftAddress: "0xF6E4Af62bD0f298311079503563ea4B1cfF6Dead",
+    owlGameAddress: "0xe53A375D3B997FB22f8bF85910280A011042aDf2",
+    genOneBoxAddress: "0x15463B075F37c269830801feCd8CdAC76Aa1A310",
 }
 
 export const ContractAbi = {
@@ -65,6 +65,10 @@ export const getData = {
         const request = list.REWARDS_HISTORY + "?cursor=" + cursor + "&limit=" + limit;
         const response = await fetch(request);
         return await response.json();
+    },
+    getPriceUSD: async () => {
+        const response = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB")
+        return await response.json()
     }
 }
 

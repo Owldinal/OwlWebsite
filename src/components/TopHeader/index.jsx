@@ -32,11 +32,11 @@ export default function (props) {
         ],
     })
 
-    console.log("balance: ", data);
+    // console.log("balance: ", data);
 
     useEffect(() => {
         const [temp] = data || [];
-        console.log("temp: ", temp);
+        // console.log("temp: ", temp);
         if (temp) {
             setBalance((BigInt(temp.result) / BigInt(10 ** 18)).toString());
         }

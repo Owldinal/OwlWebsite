@@ -19,8 +19,8 @@ import Popup from "@components/Popup/index.jsx"
 
 function App(props) {
 
-    const {openConnectModal, connectModalOpen} = useConnectModal();
     const {contractAddress, targetChain} = props;
+    const {openConnectModal, connectModalOpen} = useConnectModal();
     const {isConnected, address, chain} = useAccount();
     const [inputValue, setInputValue] = useState("");
     const [viewOption, setViewOption] = useState(1);
@@ -32,79 +32,44 @@ function App(props) {
     const [magic, setMagic] = useState(0);
     const [nothing, setNothing] = useState(0);
 
+    const [priceUSD, setPriceUSD] = useState(0);
+    const [gameInfo, setGameInfo] = useState();
+    const [rewardsTrend, setRewardsTrend] = useState();
+    const [rewardsRevenue, setRewardsRevenue] = useState();
 
     const boxPrice = 100000;
 
-    // const {
-    //     data: readContract,
-    // } = useReadContracts({
-    //     contracts: [
-    //         {
-    //             address: ContractAddress.owlTokenAddress,
-    //             abi: ContractAbi.owlToken,
-    //             functionName: 'allowance',
-    //             args: [address, ContractAddress.owlGameAddress]
-    //         },
-    //     ],
-    // })
-
-
     const {data: writeContractHash, writeContract, isPending, error} = useWriteContract()
-
-
-    const [gameInfo, setGameInfo] = useState({
-        total_rewards: 0,
-        total_rewards_usd: 0,
-        owl_price: 0,
-        owl_price_change: 0,
-        total_market_cap: 0,
-        total_market_cap_change: 0,
-        total_burned: 0,
-        total_burned_change: 0,
-    });
-
-    const [rewardsTrend, setRewardsTrend] = useState({
-        daily: [],
-        weekly: [],
-        monthly: []
-    });
-
-    const [rewardsRevenue, setRewardsRevenue] = useState([
-        {
-            address: "0x1234...5678",
-            operation: "minted",
-            description: "Gen1 Blind Box",
-            count: 0,
-            amount: 0,
-            transaction_hash: ""
-        },
-        {
-            address: "0x1234...5678",
-            operation: "minted",
-            description: "Gen1 Blind Box",
-            count: 0,
-            amount: 0,
-            transaction_hash: ""
-        }
-    ])
 
     useEffect(() => {
 
         getData.getGameInfo().then(result => {
-            setGameInfo(result);
+            setGameInfo(result.data);
+            console.log("gameInfo: ", result)
         });
 
         getData.getRewardsTrend().then(result => {
-            setRewardsTrend(result);
+            setRewardsTrend(result.data);
+            console.log("rewardsTrend: ", result)
         })
 
-        getData.getRewardsHistory().then(result => {
-            setRewardsRevenue(result);
+        getData.getRewardsHistory(0, 20).then(result => {
+            setRewardsRevenue(result.data);
+            console.log("rewardsRevenue: ", result)
+        })
+
+        getData.getPriceUSD().then(result => {
+            setPriceUSD(result);
+            console.log("priceUSD: ", result)
         })
 
     }, [])
 
     useEffect(() => {
+
+        if (!rewardsTrend) {
+            return;
+        }
 
         if (viewOption === 1) {
             initChart(rewardsTrend.daily);
@@ -114,13 +79,11 @@ function App(props) {
             initChart(rewardsTrend.monthly);
         }
 
-    }, [viewOption])
+    }, [viewOption, rewardsTrend])
 
     const mintAndOpenBox = async () => {
 
-        // if (!isConnected) {
-        //     openConnectModal();
-        // }
+        setModelText("Confirming...");
 
         await writeContract({
             address: ContractAddress.owlGameAddress,
@@ -134,6 +97,12 @@ function App(props) {
     }
 
     const approveOwlToken = async () => {
+
+        if (!isConnected) {
+            openConnectModal();
+        }
+
+        setModelText("Confirming...");
 
         await writeContract({
             address: ContractAddress.owlTokenAddress,
@@ -157,34 +126,49 @@ function App(props) {
 
         if (receipt && receipt.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
-            setShow(true);
-
-        } else {
-
-            const owlTokenAllowance = async () => {
-                return await readContracts(config, {
-                    contracts: [
-                        {
-                            address: ContractAddress.owlTokenAddress,
-                            abi: ContractAbi.owlToken,
-                            functionName: 'allowance',
-                            args: [address, ContractAddress.owlGameAddress]
-                        },
-                    ],
-                })
+            let count = [0, 0, 0, 0];
+            const logs = receipt.logs;
+            for (let i = 1; i < logs.length; i++) {
+                if (logs[i].topics[0] === "0x4cce2d7ca388465a90e71f76235d389abe1ede028b09c07d4f86519e5adb078c") {
+                    const tokenId = Number(parseInt(logs[i].data.slice(2, 66), 16))
+                    const boxType = Number(parseInt(logs[i].data.slice(66), 16));
+                    // console.log("tokenId: ", tokenId, "boxType: ", boxType);
+                    count[boxType]++;
+                }
             }
 
-            owlTokenAllowance().then(result => {
-                console.log("result: ", result);
-                const allowance = result[0].result;
-                const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
-                setModelText(isConfirming || isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
-            })
+            setShow(true);
+            setElf(count[1]);
+            setMagic(count[2]);
+            setNothing(count[3]);
 
         }
 
-    }, [inputValue, receipt])
+    }, [receipt])
 
+    useEffect(() => {
+
+        const owlTokenAllowance = async () => {
+            return await readContracts(config, {
+                contracts: [
+                    {
+                        address: ContractAddress.owlTokenAddress,
+                        abi: ContractAbi.owlToken,
+                        functionName: 'allowance',
+                        args: [address, ContractAddress.owlGameAddress]
+                    },
+                ],
+            })
+        }
+
+        owlTokenAllowance().then(result => {
+            // console.log("result: ", result);
+            const allowance = result[0].result;
+            const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
+            setModelText(isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
+        })
+
+    }, [inputValue, receipt])
 
     const tableData = [
         {
@@ -253,22 +237,33 @@ function App(props) {
         },
     ];
 
-    const initChart = (data) => {
+    const initChart = ({data}) => {
+
+        if (!data) {
+            return;
+        }
+        // console.log("data: ", data);
+
         let chartDom = document.getElementById("chart");
         let myChart = echarts.init(chartDom);
 
         // date process here
-        // const timeline = data.map(item => item.date);
-        // const totalPoolAmount = data.map(item => item.totalPoolAmount);
-        // const allocatedRewards = data.map(item => item.allocatedRewards);
+        const timeline = data.map(item => {
+            const date = new Date(item.date);
+            return viewOption === 1 ? date.getDay() : date.getDate();
+        });
+        const totalPoolAmount = data.map(item => item.total_pool_amount);
+        const allocatedRewards = data.map(item => item.allocated_rewards);
+
+        // console.log("timeline: ", timeline, "totalPoolAmount: ", totalPoolAmount, "allocatedRewards: ", allocatedRewards);
 
         let option;
 
         option = {
             xAxis: {
                 type: "category",
-                data: ["May 5", "May 6", "May 7", "May 8", "May 9", "May 10", "May 11"],
-                // data: timeline,
+                // data: ["May 5", "May 6", "May 7", "May 8", "May 9", "May 10", "May 11"],
+                data: timeline,
                 axisTick: {
                     show: false,
                 },
@@ -289,16 +284,16 @@ function App(props) {
             grid: {
                 borderColor: "#8C919F",
                 top: '15%',
-                left: '10%',
+                left: '15%',
                 right: '5%',
                 bottom: '10%',
             },
             series: [
                 {
-                    data: [110, 150, 155, 170, 200, 130, 120],
-                    // data:totalPoolAmount,
+                    // data: [110, 150, 155, 170, 200, 130, 120],
+                    data: totalPoolAmount,
                     type: "line",
-                    symbol: "none",
+                    // symbol: "none",
                     smooth: true,
                     itemStyle: {
                         normal: {
@@ -309,10 +304,10 @@ function App(props) {
                     },
                 },
                 {
-                    data: [100, 130, 165, 120, 180, 100, 100],
-                    // data: allocatedRewards,
+                    // data: [100, 130, 165, 120, 180, 100, 100],
+                    data: allocatedRewards,
                     type: "line",
-                    symbol: "none",
+                    // symbol: "none",
                     smooth: true,
                     itemStyle: {
                         normal: {
@@ -332,20 +327,19 @@ function App(props) {
         };
     };
 
-
-    useEffect(() => {
-
-        console.log("writeContract: ", writeContract);
-        console.log("isPending: ", isPending);
-        console.log("isConfirmed: ", isConfirmed);
-        console.log("isConfirming: ", isConfirming);
-        console.log("receipt: ", receipt);
-        console.log("error: ", error);
-        console.log("gameInfo: ", gameInfo);
-        console.log("rewardsTrend: ", rewardsTrend);
-        console.log("rewardsRevenue: ", rewardsRevenue);
-
-    }, [writeContractHash, isPending, isConfirmed, isConfirming, receipt, error, gameInfo, rewardsTrend, rewardsRevenue])
+    // useEffect(() => {
+    //
+    //     // console.log("writeContract: ", writeContractHash);
+    //     // console.log("isPending: ", isPending);
+    //     // console.log("isConfirmed: ", isConfirmed);
+    //     // console.log("isConfirming: ", isConfirming);
+    //     // console.log("receipt: ", receipt);
+    //     // console.log("error: ", error);
+    //     console.log("gameInfo: ", gameInfo);
+    //     console.log("rewardsTrend: ", rewardsTrend);
+    //     console.log("rewardsRevenue: ", rewardsRevenue);
+    //
+    // }, [writeContractHash, isPending, isConfirmed, isConfirming, receipt, error, gameInfo, rewardsTrend, rewardsRevenue])
 
     return (
         <div className="rootInnerWrapper">
@@ -356,13 +350,15 @@ function App(props) {
                 <div className="treasuryContent">
                     <div className="infoCard flexBetween flexC">
 
-                        <div class='leftInfo'>
+                        {gameInfo && (<div class='leftInfo'>
 
                             <div className="text1">Total Rewards</div>
                             <div className="text2">
                                 {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
                             </div>
-                            <div className="text3">{addCommaInNumber(gameInfo["total_rewards_usd"]) + " USD"}</div>
+                            {priceUSD && (
+                                <div className="text3">{addCommaInNumber(priceUSD.pairs[0].priceUsd) + " USD"}</div>
+                            )}
 
                             <div className="flexBetween flexW" style={{marginTop: "36px"}}>
                                 <DisplayBlock content={gameInfo["owl_price"]} title={"Owl Price"}/>
@@ -372,7 +368,7 @@ function App(props) {
                                               change={gameInfo["total_burned_change"]}/>
                             </div>
 
-                        </div>
+                        </div>)}
 
                         <div className="rightInfo" style={{flex: 1, height: "auto", marginLeft: '12px'}}>
 
@@ -436,10 +432,16 @@ function App(props) {
                                 <div className="text5">{inputValue * boxPrice} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
-                            {
-                                show && (
-                                    <Popup elf={elf} nothing={nothing} magic={magic} handleClose={() => setShow(false)}/>)
-                            }
+
+                            {show && (
+                                <Popup elf={elf} nothing={nothing} magic={magic} handleClose={() => {
+                                    setShow(false);
+                                    setModelText("Approve");
+                                    setElf(0);
+                                    setMagic(0);
+                                    setNothing(0);
+                                }}/>)}
+
                             <OwlButton
                                 text={modelText}
                                 size="big"
@@ -454,18 +456,21 @@ function App(props) {
                             </div>
 
                             <div style={{overflowY: "scroll", height: "400px"}}>
-                                {tableData.map((item, index) => {
-                                    let {a, b, c, d, e, f, g} = item;
+                                {rewardsRevenue && (rewardsRevenue.list.map((item, index) => {
+                                    let {address, amount, count, description, operation, transaction_hash} = item;
                                     return (
                                         <>
-                                            <a href={""} target={"_blank"} style={{textDecoration: 'none'}}>
+                                            <a href={"https://scan.merlinchain.io/tx/" + transaction_hash}
+                                               target={"_blank"} style={{textDecoration: 'none'}}>
                                                 <div className="tableItem flexBetween" key={index}>
-                                                    <div>{a}</div>
-                                                    <div>{b}</div>
-                                                    <div>{c}</div>
-                                                    <div>{d}</div>
-                                                    <div>{e}</div>
-                                                    <div>{f}</div>
+                                                    <div
+                                                        style={{width: "18%"}}>{address.slice(0, 6)}...{address.slice(-4)}</div>
+                                                    <div style={{width: "15%"}}>{amount}</div>
+                                                    <div style={{width: "15%"}}>{operation}</div>
+                                                    <div style={{width: "15%"}}>{count}</div>
+                                                    <div style={{width: "40%"}}>{description}</div>
+                                                    <div
+                                                        style={{width: "18%"}}>{transaction_hash.slice(0, 6)}...{transaction_hash.slice(-4)}</div>
                                                     <div>
                                                         <img
                                                             src={share}
@@ -478,7 +483,7 @@ function App(props) {
                                             </a>
                                         </>
                                     )
-                                })}
+                                }))}
                             </div>
                         </div>
                     </div>

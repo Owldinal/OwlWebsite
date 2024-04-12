@@ -10,7 +10,7 @@ import tel from "@/assets/tel.png";
 import book from "@/assets/book.png";
 
 export default function () {
-    console.log("location: ", location);
+    // console.log("location: ", location);
     const navigate = useNavigate()
     const {pathname} = location;
     const [activeMenu, setActiveMenu] = useState(
