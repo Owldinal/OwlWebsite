@@ -35,12 +35,15 @@ export default function (props) {
     // console.log("balance: ", data);
 
     useEffect(() => {
-        const [temp] = data || [];
-        // console.log("temp: ", temp);
-        if (temp) {
-            setBalance((BigInt(temp.result) / BigInt(10 ** 18)).toString());
+        if (data && data.length > 0) {
+            const [temp] = data;
+            if (temp && temp.result) {
+                const balanceBigInt = BigInt(temp.result);
+                const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
+                setBalance(balance);
+            }
         }
-    }, [data])
+    }, [data]);
 
     return (
         <div>
