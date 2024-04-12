@@ -11,8 +11,10 @@ export default function (props) {
                     <div className="infoItemText1">{props.content}</div>
                     <div className="infoItemText2">{props.title}</div>
                 </div>
-                <ArrowAndNumber arrow={props.change >= 0 ? 1 : 0}
-                                text={addCommaInNumber(props.change) + "%"}/>
+                {props.change && (
+                    <ArrowAndNumber arrow={props.change >= 0 ? 1 : 0}
+                                    text={addCommaInNumber(props.change) + "%"}/>
+                )}
             </div>
         </>
     )

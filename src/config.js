@@ -1,10 +1,28 @@
 import { defineChain } from "viem";
+import Owldinal from "./abi/Owldinal.json";
+import OwldinalGenOneBox from "./abi/OwldinalGenOneBox.json";
+import OwlGame from "./abi/OwlGame.json";
+import OwlToken from "./abi/OwlToken.json";
 
 export const coin = "Owl";
 
 const API_URL = 'https://api.owldinal.xyz/api';
 
 export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
+
+export const ContractAddress = {
+    owlTokenAddress: "0x1fc4808063315f4FB23727b3Ce9142D112194342",
+    owldinalNftAddress: "0xe2aF0326fe09ab9193481bA9e4271674b384C66f",
+    owlGameAddress: "0x159fbF4c2C3571798416962333B9cb3edCBEA0fe",
+    genOneBoxAddress: "0x4de38B3c5C8031dE5B36CF30A5023ce6d24D994e",
+}
+
+export const ContractAbi = {
+    owlToken:OwlToken,
+    owldinalNft:Owldinal,
+    owlGame:OwlGame,
+    genOneBox:OwldinalGenOneBox
+}
 
 export const list = {
     GENERATE_SIGNATURE: `${API_URL}/generateSignature`,

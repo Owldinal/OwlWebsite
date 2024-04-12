@@ -190,10 +190,10 @@ function App(props) {
 
     useEffect(() => {
 
-        getData.getUserInfo(address).then(result => {
-            console.log("user info result: ", result);
-            setUserInfo(result.data);
-        })
+        // getData.getUserInfo(address).then(result => {
+        //     console.log("user info result: ", result);
+        //     setUserInfo(result.data);
+        // })
 
         // getData.getUserOwldinals(address, 1, 10).then(result => {
         //     console.log("user owldinals result: ", result);

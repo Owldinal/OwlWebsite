@@ -1,21 +1,18 @@
 import { useState, useEffect } from "react";
 import "./index.css";
-import cn from "classnames";
 import OwlButton from "@/components/Button/index.jsx";
 import TopHeader from "@/components/TopHeader/index.jsx";
 import Sider from "@/components/Sider/index.jsx";
-import arrup from "@/assets/arrup.png";
-import arrdown from "@/assets/arrdown.png";
 import box from "@/assets/box.png";
 import share from "@/assets/share.png";
 import * as echarts from "echarts";
 
 import { Input } from "antd";
-import { useAccount } from "wagmi";
-import { coin, getData } from "@/config.js";
+import { useAccount, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { coin, ContractAbi, ContractAddress, getData } from "@/config.js";
 import { addCommaInNumber } from "@/util.js";
-import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import DisplayBlock from "@components/DisplayBlock.jsx";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 function App(props) {
 
@@ -23,6 +20,34 @@ function App(props) {
     const {isConnected, address, chain} = useAccount();
     const [inputValue, setInputValue] = useState("");
     const [viewOption, setViewOption] = useState(1);
+    const {openConnectModal, connectModalOpen} = useConnectModal();
+    const [targetHash, setTargetHash] = useState("");
+
+    const boxPrice = 100000;
+
+    // const {
+    //     data: readContract,
+    // } = useReadContracts({
+    //     contracts: [
+    //         {
+    //             address: ContractAddress.owlTokenAddress,
+    //             abi: ContractAbi.owlToken,
+    //             functionName: 'allowance',
+    //             args: [address, ContractAddress.owlGameAddress]
+    //         },
+    //     ],
+    // })
+    //
+    // const {isLoading: isConfirming, isSuccess: isConfirmed, data: receipt} =
+    //     useWaitForTransactionReceipt({
+    //         targetHash
+    //     })
+    //
+    // const [owlTokenAllowance,] = readContract || [];
+    // const canMintAndOpenBox = owlTokenAllowance && owlTokenAllowance >= inputValue * boxPrice;
+    //
+    // const {data: writeContractHash, writeContract, isPending, error} = useWriteContract()
+
     const [gameInfo, setGameInfo] = useState({
         total_rewards: 0,
         total_rewards_usd: 0,
@@ -57,35 +82,35 @@ function App(props) {
         }
     ])
 
-    const boxPrice = 10;
-
     useEffect(() => {
 
-        getData.getGameInfo().then(result => {
-            setGameInfo(result);
-        });
+        // getData.getGameInfo().then(result => {
+        //     setGameInfo(result);
+        // });
+        //
+        // getData.getRewardsTrend().then(result => {
+        //     setRewardsTrend(result);
+        // })
+        //
+        // getData.getRewardsHistory().then(result => {
+        //     setRewardsRevenue(result);
+        // })
 
-        getData.getRewardsTrend().then(result => {
-            setRewardsTrend(result);
-        })
-
-        getData.getRewardsHistory().then(result => {
-            setRewardsRevenue(result);
-        })
+        initChart();
 
     });
 
-    useEffect(() => {
-
-        if (viewOption === 1) {
-            initChart(rewardsTrend.daily);
-        } else if (viewOption === 2) {
-            initChart(rewardsTrend.weekly);
-        } else if (viewOption === 3) {
-            initChart(rewardsTrend.monthly);
-        }
-
-    }, [viewOption])
+    // useEffect(() => {
+    //
+    //     if (viewOption === 1) {
+    //         initChart(rewardsTrend.daily);
+    //     } else if (viewOption === 2) {
+    //         initChart(rewardsTrend.weekly);
+    //     } else if (viewOption === 3) {
+    //         initChart(rewardsTrend.monthly);
+    //     }
+    //
+    // }, [viewOption])
 
     const tableData = [
         {
@@ -233,9 +258,40 @@ function App(props) {
         };
     };
 
-    const mintAndOpenBox = () => {
+    const mintAndOpenBox = async () => {
+
+        if (!isConnected) {
+            openConnectModal();
+        }
+
+        // await writeContract({
+        //     address: ContractAddress.owlGameAddress,
+        //     abi: ContractAbi.owlGame,
+        //     functionName: 'mintMysteryBox',
+        //     args: [
+        //         inputValue
+        //     ],
+        // })
+        //
+        // console.log("writeContractHash: ", writeContractHash);
+        // setTargetHash(writeContractHash);
+        // console.log("writeContractHash: ", writeContractHash);
 
     }
+
+    const approveOwlToken = () => {
+
+        // writeContract({
+        //     address: ContractAddress.owlTokenAddress,
+        //     abi: ContractAbi.owlToken,
+        //     functionName: 'approve',
+        //     args: [
+        //         ContractAddress.owlGameAddress,
+        //         inputValue * boxPrice * 10 ** 18
+        //     ],
+        // });
+
+    };
 
     return (
         <div className="rootInnerWrapper">
@@ -254,8 +310,7 @@ function App(props) {
                             <div className="text3">{addCommaInNumber(gameInfo["total_rewards_usd"]) + " USD"}</div>
 
                             <div className="flexBetween flexW" style={{marginTop: "36px"}}>
-                                <DisplayBlock content={gameInfo["owl_price"]} title={"Owl Price"}
-                                              change={gameInfo["owl_price_change"]}/>
+                                <DisplayBlock content={gameInfo["owl_price"]} title={"Owl Price"}/>
                                 <DisplayBlock content={gameInfo["total_market_cap"]} title={"Total Marketcap"}
                                               change={gameInfo["total_market_cap_change"]}/>
                                 <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
@@ -296,13 +351,13 @@ function App(props) {
                             </div>
                             <div className="flexBetween" style={{width: "100%"}}>
                                 <div className="text5">Amount</div>
-                                <div className={"text6"}
+                                <div className={"text6"} style={{cursor: "pointer"}}
                                      onClick={() => setInputValue((inputValue * 5).toString())}>x5
                                 </div>
-                                <div className={"text6"}
+                                <div className={"text6"} style={{cursor: "pointer"}}
                                      onClick={() => setInputValue((inputValue * 10).toString())}>x10
                                 </div>
-                                <div className={"text6"}
+                                <div className={"text6"} style={{cursor: "pointer"}}
                                      onClick={() => setInputValue((inputValue * 100).toString())}>x100
                                 </div>
                             </div>
@@ -327,11 +382,13 @@ function App(props) {
                             </div>
 
                             <OwlButton
-                                text="Mint"
+                                text={"Mint"}
                                 size="big"
                                 style={{width: "100%", marginTop: "24px"}}
-                                func={mintAndOpenBox}
+                                func={mintAndOpenBox()}
+                                // func={canMintAndOpenBox ? mintAndOpenBox() : approveOwlToken()}
                             />
+
                         </div>
                         <div className="tableWrapper">
                             <div className="text1" style={{marginBottom: "16px"}}>
