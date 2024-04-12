@@ -3,12 +3,12 @@ import App from "../App.jsx";
 import My from "../pages/My/index.jsx";
 import Treasury from "../pages/Treasury/index.jsx";
 import { merlin } from "viem/chains";
-import { merlinTest } from "@/config.js";
+import { merlinLocal, merlinTest } from "@/config.js";
 import MyItem from "@/pages/MyItem/index.jsx";
 
 const environment = "test";
 
-const targetChain = environment === "test" ? merlinTest : merlin;
+const targetChain = merlinLocal;
 const contractAddress = environment === "test" ?
     // test
     "0x6a8a00E25A388162Bf1C495225D1046243666607" :
