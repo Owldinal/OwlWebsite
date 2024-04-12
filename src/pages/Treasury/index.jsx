@@ -13,6 +13,8 @@ import { coin, ContractAbi, ContractAddress, getData } from "@/config.js";
 import { addCommaInNumber } from "@/util.js";
 import DisplayBlock from "@components/DisplayBlock.jsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { readContracts } from "@wagmi/core";
+import { config } from "@/main.jsx";
 
 function App(props) {
 
@@ -22,29 +24,26 @@ function App(props) {
     const [inputValue, setInputValue] = useState("");
     const [viewOption, setViewOption] = useState(1);
     const [targetHash, setTargetHash] = useState("");
+    const [modelText, setModelText] = useState("Approve");
 
     const boxPrice = 100000;
 
-    const {
-        data: readContract,
-    } = useReadContracts({
-        contracts: [
-            {
-                address: ContractAddress.owlTokenAddress,
-                abi: ContractAbi.owlToken,
-                functionName: 'allowance',
-                args: [address, ContractAddress.owlGameAddress]
-            },
-        ],
-    })
+    // const {
+    //     data: readContract,
+    // } = useReadContracts({
+    //     contracts: [
+    //         {
+    //             address: ContractAddress.owlTokenAddress,
+    //             abi: ContractAbi.owlToken,
+    //             functionName: 'allowance',
+    //             args: [address, ContractAddress.owlGameAddress]
+    //         },
+    //     ],
+    // })
 
-    const {isLoading: isConfirming, isSuccess: isConfirmed, data: receipt} =
-        useWaitForTransactionReceipt({targetHash})
-
-    const [owlTokenAllowance,] = readContract || [];
-    const canMintAndOpenBox = owlTokenAllowance && owlTokenAllowance >= inputValue * boxPrice;
 
     const {data: writeContractHash, writeContract, isPending, error} = useWriteContract()
+
 
     const [gameInfo, setGameInfo] = useState({
         total_rewards: 0,
@@ -110,7 +109,6 @@ function App(props) {
 
     }, [viewOption])
 
-
     const mintAndOpenBox = async () => {
 
         // if (!isConnected) {
@@ -122,29 +120,57 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: 'mintMysteryBox',
             args: [
-                inputValue
+                BigInt(inputValue)
             ],
         })
 
-        // console.log("writeContractHash: ", writeContractHash);
-        // setTargetHash(writeContractHash);
-        // console.log("writeContractHash: ", writeContractHash);
-
     }
 
-    const approveOwlToken = () => {
 
-        writeContract({
+    const approveOwlToken = async () => {
+
+        await writeContract({
             address: ContractAddress.owlTokenAddress,
             abi: ContractAbi.owlToken,
             functionName: 'approve',
             args: [
                 ContractAddress.owlGameAddress,
-                inputValue * boxPrice * 10 ** 18
+                BigInt(inputValue * boxPrice) * 10n ** 18n
             ],
         });
 
     };
+
+    const {
+        isLoading: isConfirming,
+        isSuccess: isConfirmed,
+        data: receipt
+    } = useWaitForTransactionReceipt({hash: writeContractHash})
+
+    useEffect(() => {
+
+        const owlTokenAllowance = async () => {
+            return await readContracts(config, {
+                contracts: [
+                    {
+                        address: ContractAddress.owlTokenAddress,
+                        abi: ContractAbi.owlToken,
+                        functionName: 'allowance',
+                        args: [address, ContractAddress.owlGameAddress]
+                    },
+                ],
+            })
+        }
+
+        owlTokenAllowance().then(result => {
+            console.log("result: ", result);
+            const allowance = result[0].result;
+            const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
+            setModelText(isConfirming || isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
+        })
+
+    }, [inputValue, receipt])
+
 
     const tableData = [
         {
@@ -295,7 +321,6 @@ function App(props) {
 
     useEffect(() => {
 
-        console.log("readContract: ", readContract);
         console.log("writeContract: ", writeContract);
         console.log("isPending: ", isPending);
         console.log("isConfirmed: ", isConfirmed);
@@ -306,7 +331,7 @@ function App(props) {
         console.log("rewardsTrend: ", rewardsTrend);
         console.log("rewardsRevenue: ", rewardsRevenue);
 
-    }, [readContract, writeContractHash, isPending, isConfirmed, isConfirming, receipt, error, gameInfo, rewardsTrend, rewardsRevenue])
+    }, [writeContractHash, isPending, isConfirmed, isConfirming, receipt, error, gameInfo, rewardsTrend, rewardsRevenue])
 
     return (
         <div className="rootInnerWrapper">
@@ -396,12 +421,11 @@ function App(props) {
                                 <div className="text5">{inputValue * boxPrice} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
-
                             <OwlButton
-                                text={canMintAndOpenBox ? "Mint" : "Approve"}
+                                text={modelText}
                                 size="big"
                                 style={{width: "100%", marginTop: "24px"}}
-                                func={canMintAndOpenBox ? mintAndOpenBox : approveOwlToken}
+                                func={modelText === "Mint" ? mintAndOpenBox : modelText === "Approve" ? approveOwlToken : null}
                             />
 
                         </div>

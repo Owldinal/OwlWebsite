@@ -16,7 +16,7 @@ import {
 import { merlinLocal, merlinTest } from "@/config.js";
 
 
-const config = getDefaultConfig({
+export const config = getDefaultConfig({
     appName: 'Owl',
     projectId: 'ae928899b66286a771031a02c9ac00d9',
     chains: [merlin, merlinTest, merlinLocal],
