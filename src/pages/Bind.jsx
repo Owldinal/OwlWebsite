@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import HomeHeader from "@components/Header.jsx";
 import { merlin } from "viem/chains";
+import { merlinLocal } from "@/config.js";
 
 export default function (props) {
 
@@ -21,7 +22,7 @@ export default function (props) {
     const [result, setResult] = useState({});
 
 
-    const targetChain = merlin;
+    const targetChain = merlinLocal;
 
 
     useEffect(() => {
