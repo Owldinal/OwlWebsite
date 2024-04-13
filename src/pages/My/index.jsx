@@ -47,163 +47,29 @@ function App(props) {
         invite_count: 0
 
     });
-    const [userOwldinals, setUserOwldinals] = useState([
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        }, {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "mint"
-        },
-
-    ]);
-    const [userFruitAndELf, setUserFruitAndELf] = useState([
-        {
-            token_id: 0,
-            type: "",
-            token_url: "",
-            earning: 0,
-            apr: 0,
-            status: "open"
-        }
-    ]);
+    const [userOwldinals, setUserOwldinals] = useState();
+    const [userFruitAndELf, setUserFruitAndELf] = useState();
 
     useEffect(() => {
 
-        // getData.getUserInfo(address).then(result => {
-        //     console.log("user info result: ", result);
-        //     setUserInfo(result.data);
-        // })
+        if (!address) {
+            return;
+        }
 
-        // getData.getUserOwldinals(address, 1, 10).then(result => {
-        //     console.log("user owldinals result: ", result);
-        //     setUserOwldinals(result.data);
-        // })
-        //
-        // getData.getUserBoxes(address, 1, 10).then(result => {
-        //     console.log("user boxes result: ", result);
-        //     setUserBoxes(result.data);
-        // })
+        getData.getUserInfo(address, 1, 10).then(result => {
+            console.log("user info result: ", result);
+            result.code === 0 && setUserInfo(result.data);
+        })
+
+        getData.getUserOwldinals(address, 1, 10).then(result => {
+            console.log("user owldinals result: ", result);
+            result.code === 0 && setUserOwldinals(result.data);
+        })
+
+        getData.getUserBoxes(address, 1, 10).then(result => {
+            console.log("user boxes result: ", result);
+            result.code === 0 && setUserFruitAndELf(result.data);
+        })
 
     }, [address]);
 
@@ -232,7 +98,7 @@ function App(props) {
                                 {/*  <img src={a1} width="48" alt="" className="boderRadius50"/>*/}
                                 {/*</span>{" "}*/}
                                 <span
-                                    style={{margin: "0 8px 0 0px"}}>{address.slice(0, 6) + "..." + address.slice(-4) || "Please connect your wallet"}
+                                    style={{margin: "0 8px 0 0px"}}>{address ? (address.slice(0, 6) + "..." + address.slice(-4)) : "Please connect your wallet"}
                                 </span>{" "}
                                 {address && (
                                     <img src={copy} width="12" alt="" onClick={() => copyOnClick(address)}/>
@@ -362,11 +228,11 @@ function App(props) {
                                     </div>
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
-                                        {userFruitAndELf.map((item, index) => {
+                                        {userFruitAndELf && (userFruitAndELf.list.map((item, index) => {
                                             const {token_id, type, token_url, earning, apr, status} = item;
                                             return <NFTRow token_id={token_id} earning={earning} apr={apr}
                                                            status={status}/>
-                                        })}
+                                        }))}
                                     </div>
 
                                 </TabPane>
@@ -382,11 +248,11 @@ function App(props) {
                                         </div>
 
                                         <div style={{overflowY: "scroll", height: "770px"}}>
-                                            {userOwldinals.map((item, index) => {
+                                            {userOwldinals && (userOwldinals.list.map((item, index) => {
                                                 const {token_id, type, token_url, earning, apr, status} = item;
                                                 return <NFTRow token_id={token_id} earning={earning} apr={apr}
                                                                status={status}/>
-                                            })}
+                                            }))}
                                         </div>
 
                                     </div>
