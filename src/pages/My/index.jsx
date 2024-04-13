@@ -14,13 +14,17 @@ import { useNavigate } from "react-router-dom";
 
 import { Tabs } from "antd";
 
-const {TabPane} = Tabs;
-import { tableData } from "./data.jsx";
 import { useAccount } from "wagmi";
-import { getData } from "@/config.js";
+import { ContractAbi, ContractAddress, getData } from "@/config.js";
 import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import { addCommaInNumber } from "@/util.js";
-import NFTRow from "@components/NFTRow.jsx";
+import BoxRow from "@components/BoxRow.jsx";
+import OwlRow from "@components/OwlRow.jsx";
+import { getTransactionReceipt, readContracts, writeContract } from "@wagmi/core";
+import { config } from "@/main.jsx";
+
+const {TabPane} = Tabs;
+
 
 function App(props) {
 
@@ -50,18 +54,37 @@ function App(props) {
     const [userOwldinals, setUserOwldinals] = useState();
     const [userFruitAndELf, setUserFruitAndELf] = useState();
 
+    const [isApprove, setIsApprove] = useState(false);
+    const [hash, setHash] = useState();
+
     useEffect(() => {
 
         if (!address) {
             return;
         }
 
-        getData.getUserInfo(address, 1, 10).then(result => {
+        const isApproveForAll = async () => {
+            return await readContracts(config, {
+                contracts: [
+                    {
+                        address: ContractAddress.genOneBoxAddress,
+                        abi: ContractAbi.genOneBox,
+                        functionName: "isApprovedForAll",
+                        args: [address, ContractAddress.owlGameAddress],
+                    },
+                ],
+            })
+        }
+        isApproveForAll().then(result => {
+            setIsApprove(result[0].result);
+        })
+
+        getData.getUserInfo(address).then(result => {
             console.log("user info result: ", result);
             result.code === 0 && setUserInfo(result.data);
         })
 
-        getData.getUserOwldinals(address, 1, 10).then(result => {
+        getData.getUserOwldinals(address, 1, 100).then(result => {
             console.log("user owldinals result: ", result);
             result.code === 0 && setUserOwldinals(result.data);
         })
@@ -71,7 +94,122 @@ function App(props) {
             result.code === 0 && setUserFruitAndELf(result.data);
         })
 
-    }, [address]);
+    }, [address, hash]);
+
+    const stake = async (type, id) => {
+
+        if (!address || !userInfo) {
+            return;
+        }
+
+        if (!isApprove) {
+
+            const hash = await writeContract(config, {
+                address: ContractAddress.genOneBoxAddress,
+                abi: ContractAbi.genOneBox,
+                functionName: "setApproveForAll",
+            })
+
+            const approveResult = await getTransactionReceipt(config, {hash: hash});
+            console.log("approve result: ", approveResult.toString())
+
+            if (approveResult.status === "success") {
+                setIsApprove(true);
+            }
+
+        }
+
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
+
+        const hash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "stakeMysteryBox",
+            args: [list]
+        })
+
+        const stakeResult = await getTransactionReceipt(config, {hash: hash});
+        if (stakeResult.status === "success") {
+            setHash(hash);
+            console.log("stake result: ", stakeResult);
+        }
+
+    }
+
+    const claim = async (type, id) => {
+
+        if (!address || !userInfo) {
+            return;
+        }
+
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
+
+        const hash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "claimAndUnstakeMysteryBox",
+            args: [list]
+        })
+
+        const claimResult = await getTransactionReceipt(config, {hash: hash});
+        if (claimResult.status === "success") {
+            setHash(hash);
+            console.log("claim result: ", claimResult);
+        }
+
+    };
+
+    const stakeNFT = async (id) => {
+
+        if (!address || !userOwldinals) {
+            return;
+        }
+
+        const approveHash = await writeContract(config, {
+            address: ContractAddress.owldinalNftAddress,
+            abi: ContractAbi.owldinalNft,
+            functionName: "setApproveForAll",
+            args: [ContractAddress.owlGameAddress, true]
+        })
+
+        const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+        console.log("approve result: ", approveResult.toString())
+
+        const hash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "stakeOwldinalNft",
+            args: [id]
+        })
+
+        const stakeResult = await getTransactionReceipt(config, {hash: hash});
+        if (stakeResult.status === "success") {
+            setHash(hash);
+            console.log("stake NFT result: ", stakeResult);
+        }
+
+    }
+
+    const claimNFT = async (id) => {
+
+        if (!address || !userOwldinals) {
+            return;
+        }
+
+        const hash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "unstakeOwldinalNft",
+            args: [id]
+        })
+
+        const unstakeResult = await getTransactionReceipt(config, {hash: hash});
+        if (unstakeResult.status === "success") {
+            setHash(hash);
+            console.log("unstake NFT result: ", unstakeResult);
+        }
+
+    }
 
     const copyOnClick = (address) => {
 
@@ -140,11 +278,13 @@ function App(props) {
                                         type="dark"
                                         text="Stake All"
                                         style={{width: "100%", marginTop: "24px"}}
+                                        func={() => stake(1, -1)}
                                     />
                                     <OwlButton
                                         type="dark"
                                         text="Claim All"
                                         style={{width: "100%", marginTop: "8px"}}
+                                        func={() => claim(1, -1)}
                                     />
                                 </div>
 
@@ -163,11 +303,13 @@ function App(props) {
                                         type="dark"
                                         text="Stake All"
                                         style={{width: "100%", marginTop: "24px"}}
+                                        func={() => stake(2, -1)}
                                     />
                                     <OwlButton
                                         type="dark"
                                         text="Claim All"
                                         style={{width: "100%", marginTop: "8px"}}
+                                        func={() => claim(2, -1)}
                                     />
                                 </div>
                             </div>
@@ -200,6 +342,22 @@ function App(props) {
                                     type="dark"
                                     text={"Claim " + addCommaInNumber(userInfo["referral_rewards"]["available"]) + " Owl"}
                                     style={{width: "100%", marginTop: "36px", color: "#9EFF00"}}
+                                    func={async () => {
+                                        if (!address || !userInfo || userInfo["referral_rewards"]["available"] <= 0) {
+                                            return;
+                                        }
+                                        const hash = await writeContract(config, {
+                                            address: ContractAddress.owlGameAddress,
+                                            abi: ContractAbi.owlGame,
+                                            functionName: "claimInviterReward",
+                                        })
+
+                                        const rewardsResult = await getTransactionReceipt(config, {hash: hash});
+                                        if (rewardsResult.status === "success") {
+                                            setHash(hash);
+                                            console.log("rewards result: ", rewardsResult);
+                                        }
+                                    }}
                                 />
 
                                 <div className="flexBetween" style={{margin: "32px 0 8px"}}>
@@ -219,7 +377,7 @@ function App(props) {
                         <div className="tableWrapper">
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Treasury Revenue" key="1">
-                                    <div className="tableItem flexBetween tableHeader">
+                                    <div className="tableItem flexBetween tableHeaderItem">
                                         <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
                                         <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
                                         <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
@@ -229,9 +387,10 @@ function App(props) {
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
                                         {userFruitAndELf && (userFruitAndELf.list.map((item, index) => {
-                                            const {token_id, type, token_url, earning, apr, status} = item;
-                                            return <NFTRow token_id={token_id} earning={earning} apr={apr}
-                                                           status={status}/>
+                                            const {token_id, earning, apr, is_staking} = item;
+                                            return <BoxRow key={index} token_id={token_id} earning={earning} apr={apr}
+                                                           is_staking={is_staking}
+                                                           func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}/>
                                         }))}
                                     </div>
 
@@ -239,22 +398,21 @@ function App(props) {
                                 <TabPane tab="My Owldinal" key="2">
                                     <div style={{height: "100%"}}>
 
-                                        <div className="tableItem flexBetween tableHeader">
-                                            <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
-                                            <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
-                                            <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
-                                            <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
-                                            <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
+                                        <div className="tableItem flexBetween tableHeaderItem">
+                                            <div className="tableHeaderItem" style={{width: '40%'}}>NFT</div>
+                                            <div className="tableHeaderItem" style={{width: '40%'}}>Status</div>
+                                            <div className="tableHeaderItem" style={{width: '10%'}}>Operate</div>
                                         </div>
 
                                         <div style={{overflowY: "scroll", height: "770px"}}>
                                             {userOwldinals && (userOwldinals.list.map((item, index) => {
-                                                const {token_id, type, token_url, earning, apr, status} = item;
-                                                return <NFTRow token_id={token_id} earning={earning} apr={apr}
-                                                               status={status}/>
+                                                const {token_id, token_url, is_staking} = item;
+                                                return <OwlRow key={index} token_id={token_id} token_url={token_url}
+                                                               is_staking={is_staking}
+                                                               func={is_staking ? (() => claimNFT(token_id)) : (() => stakeNFT( token_id))}/>
                                             }))}
                                         </div>
-
+¬
                                     </div>
                                 </TabPane>
                             </Tabs>

@@ -14,7 +14,7 @@ export const ContractAddress = {
     owlTokenAddress: "0x15463B075F37c269830801feCd8CdAC76Aa1A310",
     owldinalNftAddress: "0xF6E4Af62bD0f298311079503563ea4B1cfF6Dead",
     owlGameAddress: "0xe53A375D3B997FB22f8bF85910280A011042aDf2",
-    genOneBoxAddress: "0x15463B075F37c269830801feCd8CdAC76Aa1A310",
+    genOneBoxAddress: "0x4b54fC01A0714f79Ec0Bd1856f62Dc710601ef7f",
 }
 
 export const ContractAbi = {
@@ -38,7 +38,7 @@ export const list = {
 export const getData = {
     getUserInfo: async (address) => {
         const request = list.USER_INFO + "?wallet=" + address;
-        const response = await fetch(list.USER_INFO);
+        const response = await fetch(request);
         return await response.json();
     },
     getUserOwldinals: async (address, page, perPage) => {
