@@ -638,6 +638,7 @@
     "type": "function"
   },
   {
+    "name": "handleInviteCode",
     "inputs": [
       {
         "internalType": "uint32",
@@ -645,7 +646,6 @@
         "type": "uint32"
       }
     ],
-    "name": "handleInviteCode",
     "outputs": [
       {
         "internalType": "address",
