@@ -341,9 +341,9 @@ function App(props) {
                                 <div className={"text6"} style={{cursor: "pointer"}}
                                      onClick={() => setInputValue((inputValue * 10).toString())}>x10
                                 </div>
-                                <div className={"text6"} style={{cursor: "pointer"}}
-                                     onClick={() => setInputValue((inputValue * 100).toString())}>x100
-                                </div>
+                                {/*<div className={"text6"} style={{cursor: "pointer"}}*/}
+                                {/*     onClick={() => setInputValue((inputValue * 100).toString())}>x100*/}
+                                {/*</div>*/}
                             </div>
                             <Input
                                 placeholder="Enter Amount"
