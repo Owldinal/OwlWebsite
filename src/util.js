@@ -7,6 +7,7 @@ export function addCommaInNumber(number) {
 
     const parts = numberString.split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    parts[1] = parts[1] ? parts[1].substring(0, 2) : "";
 
-    return parts.join(".");
+    return parts[1] ? parts.join(".") : parts[0];
 }

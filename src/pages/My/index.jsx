@@ -57,10 +57,35 @@ function App(props) {
     const [isApprove, setIsApprove] = useState(false);
     const [hash, setHash] = useState();
 
+    const [assumeNew, setAssumeNew] = useState(false);
+
+
     useEffect(() => {
 
         if (!address) {
+            setAssumeNew(true);
             return;
+        }
+
+        if (assumeNew) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            console.log("invite code: ", code);
+            if (code) {
+                const invite = async () => {
+                    return await writeContract(config, {
+                        contracts: [{
+                            address: ContractAddress.owlGameAddress,
+                            abi: ContractAbi.owlGame,
+                            functionName: "handleInviteCode",
+                            args: [code],
+                        }]
+                    })
+                }
+                invite().then(result => {
+                    console.log("invite result: ", result);
+                })
+            }
         }
 
         const isApproveForAll = async () => {
@@ -267,7 +292,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + userInfo["elf_info"]["apr"] || "0%"}/>
+                                                        text={"APR: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -292,7 +317,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + userInfo["fruit_info"]["apr"] || "0%"}/>
+                                                        text={"APR: " + addCommaInNumber(userInfo["fruit_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -366,10 +391,11 @@ function App(props) {
                                 </div>
 
                                 <div className="flexBetween linkInfo">
-                                    <div className="text5">https:
-                                        <img src={copy} width="12" alt=""
-                                             onClick={() => copyOnClick(userInfo["invitation_code"])}/>
+                                    <div className="text5" style={{marginRight: "10px"}}>
+                                        {"https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
                                     </div>
+                                    <img src={copy} width="12" alt=""
+                                         onClick={() => copyOnClick("https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
                                 </div>
                             </div>
 
@@ -409,10 +435,10 @@ function App(props) {
                                                 const {token_id, token_url, is_staking} = item;
                                                 return <OwlRow key={index} token_id={token_id} token_url={token_url}
                                                                is_staking={is_staking}
-                                                               func={is_staking ? (() => claimNFT(token_id)) : (() => stakeNFT( token_id))}/>
+                                                               func={is_staking ? (() => claimNFT(token_id)) : (() => stakeNFT(token_id))}/>
                                             }))}
                                         </div>
-¬
+                                        ¬
                                     </div>
                                 </TabPane>
                             </Tabs>

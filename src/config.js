@@ -84,7 +84,6 @@ export const merlinTest = defineChain({
     },
 })
 
-
 export const merlinLocal = defineChain({
     id: 1337,
     name: 'Merlin Local',
