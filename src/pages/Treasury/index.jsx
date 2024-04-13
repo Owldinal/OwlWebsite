@@ -226,7 +226,7 @@ function App(props) {
                     // data: [110, 150, 155, 170, 200, 130, 120],
                     data: totalPoolAmount,
                     type: "line",
-                    // symbol: "none",
+                    symbol: "none",
                     smooth: true,
                     itemStyle: {
                         normal: {
@@ -240,7 +240,7 @@ function App(props) {
                     // data: [100, 130, 165, 120, 180, 100, 100],
                     data: allocatedRewards,
                     type: "line",
-                    // symbol: "none",
+                    symbol: "none",
                     smooth: true,
                     itemStyle: {
                         normal: {

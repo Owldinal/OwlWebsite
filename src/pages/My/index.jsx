@@ -59,17 +59,11 @@ function App(props) {
 
     const [assumeNew, setAssumeNew] = useState(false);
 
+
     useEffect(() => {
 
         if (!address) {
             setAssumeNew(true);
-        }
-
-    });
-
-    useEffect(() => {
-
-        if (!address) {
             return;
         }
 
@@ -298,7 +292,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + userInfo["elf_info"]["apr"] || "0%"}/>
+                                                        text={"APR: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -323,7 +317,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + userInfo["fruit_info"]["apr"] || "0%"}/>
+                                                        text={"APR: " + addCommaInNumber(userInfo["fruit_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -400,8 +394,8 @@ function App(props) {
                                     <div className="text5" style={{marginRight: "10px"}}>
                                         {"https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
                                     </div>
-                                        <img src={copy} width="12" alt=""
-                                             onClick={() => copyOnClick("https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
+                                    <img src={copy} width="12" alt=""
+                                         onClick={() => copyOnClick("https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
                                 </div>
                             </div>
 
