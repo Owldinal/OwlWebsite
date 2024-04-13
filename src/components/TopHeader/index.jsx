@@ -45,6 +45,12 @@ export default function (props) {
         }
     }, [data]);
 
+    useEffect(() => {
+        if (!isConnected) {
+            setBalance("0");
+        }
+    }, [isConnected])
+
     return (
         <div>
             <div className="topHead flexBetween">
@@ -66,7 +72,6 @@ export default function (props) {
                        target="_blank" style={{textDecoration: 'none'}}>
                         <OwlButton text="Buy Owl" type="dark" style={{margin: "0 16px"}}/>
                     </a>
-
 
                     {!isConnected &&
                         <OwlButton func={openConnectModal} text="Connect wallet"/>}
