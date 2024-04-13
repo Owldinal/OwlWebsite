@@ -59,27 +59,29 @@ function App(props) {
 
     const [assumeNew, setAssumeNew] = useState(false);
 
+    useEffect(() => {
+        if (!address) {
+            setAssumeNew(true);
+        }
+    })
 
     useEffect(() => {
 
         if (!address) {
-            setAssumeNew(true);
             return;
         }
 
-        if (assumeNew) {
+        if (assumeNew === true) {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             console.log("invite code: ", code);
             if (code) {
                 const invite = async () => {
                     return await writeContract(config, {
-                        contracts: [{
-                            address: ContractAddress.owlGameAddress,
-                            abi: ContractAbi.owlGame,
-                            functionName: "handleInviteCode",
-                            args: [code],
-                        }]
+                        address: ContractAddress.owlGameAddress,
+                        abi: ContractAbi.owlGame,
+                        functionName: "handleInviteCode",
+                        args: [encodeInviteCode(code)],
                     })
                 }
                 invite().then(result => {
@@ -120,6 +122,19 @@ function App(props) {
         })
 
     }, [address, hash]);
+
+    function encodeInviteCode(inviteCode) {
+        if (inviteCode.length !== 5) {
+            throw new Error("Invalid invite code length");
+        }
+        let encoded = 0;
+        for (let i = 0; i < 5; i++) {
+            let char = inviteCode[i];
+            let charValue = char.charCodeAt(0) - 0x41;
+            encoded |= (charValue << (i * 5));
+        }
+        return encoded;
+    }
 
     const stake = async (type, id) => {
 
