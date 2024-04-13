@@ -490,6 +490,7 @@
     "type": "function"
   },
   {
+    "name": "isApprovedForAll",
     "inputs": [
       {
         "internalType": "address",
@@ -502,7 +503,6 @@
         "type": "address"
       }
     ],
-    "name": "isApprovedForAll",
     "outputs": [
       {
         "internalType": "bool",
