@@ -428,8 +428,8 @@ function App(props) {
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
                                         {userFruitAndELf && (userFruitAndELf.list.map((item, index) => {
-                                            const {token_id, earning, apr, is_staking} = item;
-                                            return <BoxRow key={index} token_id={token_id} earning={earning} apr={apr}
+                                            const {token_id, box_type, earning, apr, is_staking} = item;
+                                            return <BoxRow key={index} token_id={token_id} box_type={box_type} earning={earning} apr={apr}
                                                            is_staking={is_staking}
                                                            func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}/>
                                         }))}
