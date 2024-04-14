@@ -77,7 +77,12 @@ export const merlinTest = defineChain({
     name: 'Merlin Testnet',
     nativeCurrency: {name: 'BTC', symbol: 'BTC', decimals: 18},
     rpcUrls: {
-        default: {http: ['https://testnet-rpc.merlinchain.io']},
+        default: {
+            http: [
+                // 'https://testnet-rpc.merlinchain.io'
+                'https://merlin-testnet.blockpi.network/v1/rpc/public'
+            ]
+        },
     },
     blockExplorers: {
         default: {name: 'Merlin-scan', url: 'https://testnet-scan.merlinchain.io'},
