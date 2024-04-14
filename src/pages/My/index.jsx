@@ -408,10 +408,10 @@ function App(props) {
 
                                 <div className="flexBetween linkInfo">
                                     <div className="text5" style={{marginRight: "10px"}}>
-                                        {"https://jbtest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
+                                        {"https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
                                     </div>
                                     <img src={copy} width="12" alt=""
-                                         onClick={() => copyOnClick("https://jbtest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
+                                         onClick={() => copyOnClick("https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
                                 </div>
                             </div>
 
