@@ -37,7 +37,7 @@ function App(props) {
         wallet: "0x0000000000000000000000000000000000000000",
         owl_balance: 0,
         total_earned: 0,
-        buff_level: 3,
+        buff_level: 0,
         elf_info: {total: 0, staked: 0, apr: 0},
         fruit_info: {total: 0, staked: 0, apr: 0},
         owl_info: {total: 0, staked: 0, apr: 0},
