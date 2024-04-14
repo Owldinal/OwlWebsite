@@ -389,7 +389,7 @@ function App(props) {
                             </div>
 
                             <div style={{overflowY: "scroll", height: "400px"}}>
-                                {rewardsRevenue && (rewardsRevenue.list.map((item, index) => {
+                                {(rewardsRevenue && rewardsRevenue.list) && (rewardsRevenue.list.map((item, index) => {
                                     let {address, amount, count, description, operation, transaction_hash} = item;
                                     return (
                                         <>
