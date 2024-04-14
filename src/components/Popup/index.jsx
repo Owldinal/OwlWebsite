@@ -96,7 +96,7 @@ export default function Popup({elf,magic,nothing,handleClose}){
                     </div>):false}
                 </div>
                 <div className="popup-button-main">
-                    <div onClick={()=>handleClose()} className="popup-button">
+                    <div onClick={()=>handleClose()} className="popup-button" style={{cursor: 'pointer'}}>
                         OK
                     </div>
                 </div>
