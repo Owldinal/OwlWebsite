@@ -116,7 +116,7 @@ function App(props) {
             result.code === 0 && setUserOwldinals(result.data);
         })
 
-        getData.getUserBoxes(address, 1, 10).then(result => {
+        getData.getUserBoxes(address, 1, 100).then(result => {
             console.log("user boxes result: ", result);
             result.code === 0 && setUserFruitAndELf(result.data);
         })
@@ -208,12 +208,12 @@ function App(props) {
         const approveHash = await writeContract(config, {
             address: ContractAddress.owldinalNftAddress,
             abi: ContractAbi.owldinalNft,
-            functionName: "setApproveForAll",
+            functionName: "setApprovalForAll",
             args: [ContractAddress.owlGameAddress, true]
         })
 
         const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-        console.log("approve result: ", approveResult.toString())
+        console.log("approve result: ", approveResult)
 
         const hash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
@@ -429,7 +429,8 @@ function App(props) {
                                     <div style={{overflowY: "scroll", height: "770px"}}>
                                         {userFruitAndELf && (userFruitAndELf.list.map((item, index) => {
                                             const {token_id, box_type, earning, apr, is_staking} = item;
-                                            return <BoxRow key={index} token_id={token_id} box_type={box_type} earning={earning} apr={apr}
+                                            return <BoxRow key={index} token_id={token_id} box_type={box_type}
+                                                           earning={earning} apr={apr}
                                                            is_staking={is_staking}
                                                            func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}/>
                                         }))}
@@ -450,7 +451,7 @@ function App(props) {
                                                 const {token_id, token_url, is_staking} = item;
                                                 return <OwlRow key={index} token_id={token_id} token_url={token_url}
                                                                is_staking={is_staking}
-                                                               func={is_staking ? (() => claimNFT(token_id)) : (() => stakeNFT(token_id))}/>
+                                                               func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
                                             }))}
                                         </div>
                                         ¬
