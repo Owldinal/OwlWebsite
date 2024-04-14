@@ -148,6 +148,7 @@ function App(props) {
                 address: ContractAddress.genOneBoxAddress,
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
+                args: [ContractAddress.owlGameAddress, true],
             })
 
             const approveResult = await getTransactionReceipt(config, {hash: hash});
