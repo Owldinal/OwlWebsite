@@ -336,10 +336,10 @@ function App(props) {
                             <div className="flexBetween" style={{width: "100%"}}>
                                 <div className="text5">Amount</div>
                                 <div className={"text6"} style={{cursor: "pointer"}}
-                                     onClick={() => setInputValue((inputValue * 5).toString())}>x5
+                                     onClick={() => setInputValue("5")}>x5
                                 </div>
                                 <div className={"text6"} style={{cursor: "pointer"}}
-                                     onClick={() => setInputValue((inputValue * 10).toString())}>x10
+                                     onClick={() => setInputValue("10")}>x10
                                 </div>
                                 {/*<div className={"text6"} style={{cursor: "pointer"}}*/}
                                 {/*     onClick={() => setInputValue((inputValue * 100).toString())}>x100*/}
