@@ -11,10 +11,16 @@ const API_URL = 'https://api.owldinal.xyz/api';
 export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
 export const ContractAddress = {
+    // test
     owlTokenAddress: "0xF86EA7e636f43dd6dCD35B7E04742f5508F9CF73",
     owldinalNftAddress: "0x96fB752fc565c740F8b09a1760FE5a3D89dD18E5",
     owlGameAddress: "0xC0E5d058eeF687B0c3cEf2967D0B55AD81eb9C21",
     genOneBoxAddress: "0xC9761572c264ADE5253d4F56a574fa0F4905ca5d",
+    // local
+    // owlTokenAddress: "0x15463B075F37c269830801feCd8CdAC76Aa1A310",
+    // owldinalNftAddress: "0xF6E4Af62bD0f298311079503563ea4B1cfF6Dead",
+    // owlGameAddress: "0xe53A375D3B997FB22f8bF85910280A011042aDf2",
+    // genOneBoxAddress: "0x4b54fC01A0714f79Ec0Bd1856f62Dc710601ef7f",
 }
 
 export const ContractAbi = {

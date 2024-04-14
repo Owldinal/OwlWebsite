@@ -13,7 +13,7 @@ import { coin, ContractAbi, ContractAddress, getData } from "@/config.js";
 import { addCommaInNumber } from "@/util.js";
 import DisplayBlock from "@components/DisplayBlock.jsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { readContracts } from "@wagmi/core";
+import { getTransactionReceipt, readContracts, writeContract } from "@wagmi/core";
 import { config } from "@/main.jsx";
 import Popup from "@components/Popup/index.jsx"
 
@@ -25,7 +25,7 @@ function App(props) {
     const [inputValue, setInputValue] = useState("");
     const [viewOption, setViewOption] = useState(1);
     const [targetHash, setTargetHash] = useState("");
-    const [modelText, setModelText] = useState("Approve");
+    const [modelText, setModelText] = useState("Mint");
 
     const [show, setShow] = useState(false);
     const [elf, setElf] = useState(0);
@@ -37,9 +37,37 @@ function App(props) {
     const [rewardsTrend, setRewardsTrend] = useState();
     const [rewardsRevenue, setRewardsRevenue] = useState();
 
-    const boxPrice = 100000;
+    const boxPrice = 100_000;
 
-    const {data: writeContractHash, writeContract, isPending, error} = useWriteContract()
+    const [balance, setBalance] = useState("0");
+    useEffect(() => {
+        if (!isConnected) {
+            setBalance("0");
+        } else {
+            const balance = async () => {
+                return await readContracts(config, {
+                    contracts: [
+                        {
+                            address: ContractAddress.owlTokenAddress,
+                            abi: ContractAbi.owlToken,
+                            functionName: "balanceOf",
+                            args: [address],
+                        }
+                    ],
+                });
+            }
+            balance().then((data) => {
+                if (data && data.length > 0) {
+                    const [temp] = data;
+                    if (temp && temp.result) {
+                        const balanceBigInt = BigInt(temp.result);
+                        const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
+                        setBalance(balance);
+                    }
+                }
+            })
+        }
+    }, [isConnected, address, show])
 
     useEffect(() => {
 
@@ -63,7 +91,7 @@ function App(props) {
             console.log("priceUSD: ", result)
         })
 
-    }, [])
+    }, [show])
 
     useEffect(() => {
 
@@ -83,28 +111,16 @@ function App(props) {
 
     const mintAndOpenBox = async () => {
 
-        setModelText("Confirming...");
-
-        await writeContract({
-            address: ContractAddress.owlGameAddress,
-            abi: ContractAbi.owlGame,
-            functionName: 'mintMysteryBox',
-            args: [
-                BigInt(inputValue)
-            ],
-        })
-
-    }
-
-    const approveOwlToken = async () => {
-
         if (!isConnected) {
             openConnectModal();
+            return;
         }
-
+        if (!inputValue || inputValue <= 0) {
+            return;
+        }
         setModelText("Confirming...");
 
-        await writeContract({
+        const approveHash = await writeContract(config, {
             address: ContractAddress.owlTokenAddress,
             abi: ContractAbi.owlToken,
             functionName: 'approve',
@@ -113,21 +129,23 @@ function App(props) {
                 BigInt(inputValue * boxPrice) * 10n ** 18n
             ],
         });
+        const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+        console.log("approve owl result: ", approveResult)
 
-    };
-
-    const {
-        isLoading: isConfirming,
-        isSuccess: isConfirmed,
-        data: receipt
-    } = useWaitForTransactionReceipt({hash: writeContractHash})
-
-    useEffect(() => {
-
-        if (receipt && receipt.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
+        const mintHash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: 'mintMysteryBox',
+            args: [
+                BigInt(inputValue)
+            ],
+        })
+        const mintResult = await getTransactionReceipt(config, {hash: mintHash});
+        console.log("mint result: ", mintResult)
+        if (mintResult && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
             let count = [0, 0, 0, 0];
-            const logs = receipt.logs;
+            const logs = mintResult.logs;
             for (let i = 1; i < logs.length; i++) {
                 if (logs[i].topics[0] === "0x4cce2d7ca388465a90e71f76235d389abe1ede028b09c07d4f86519e5adb078c") {
                     const tokenId = Number(parseInt(logs[i].data.slice(2, 66), 16))
@@ -137,38 +155,41 @@ function App(props) {
                 }
             }
 
-            setShow(true);
             setElf(count[1]);
             setMagic(count[2]);
             setNothing(count[3]);
+            setShow(true);
 
         }
 
-    }, [receipt])
+    }
 
     useEffect(() => {
 
-        const owlTokenAllowance = async () => {
+        if (!isConnected || !address) {
+            return;
+        }
+
+        const owlBalance = async () => {
             return await readContracts(config, {
                 contracts: [
                     {
                         address: ContractAddress.owlTokenAddress,
                         abi: ContractAbi.owlToken,
-                        functionName: 'allowance',
-                        args: [address, ContractAddress.owlGameAddress]
+                        functionName: 'balanceOf',
+                        args: [address]
                     },
                 ],
             })
         }
 
-        owlTokenAllowance().then(result => {
-            // console.log("result: ", result);
-            const allowance = result[0].result;
-            const canMintAndOpenBox = allowance > 0 && (allowance >= BigInt(inputValue * boxPrice) * 10n ** 18n);
-            setModelText(isPending ? "Confirming..." : canMintAndOpenBox ? "Mint" : "Approve")
+        owlBalance().then(result => {
+            const balance = result[0].result;
+            const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= BigInt(inputValue * boxPrice) * 10n ** 18n);
+            setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
         })
 
-    }, [inputValue, receipt])
+    }, [inputValue])
 
     const initChart = ({data}) => {
 
@@ -276,14 +297,14 @@ function App(props) {
 
     return (
         <div className="rootInnerWrapper">
-            <TopHeader targetChain={targetChain}/>
+            <TopHeader targetChain={targetChain} balance={balance}/>
 
             <div className="flexStart">
                 <Sider/>
                 <div className="treasuryContent">
                     <div className="infoCard flexBetween flexC">
 
-                        {gameInfo && (<div class='leftInfo'>
+                        {gameInfo && (<div className='leftInfo'>
 
                             <div className="text1">Total Rewards</div>
                             <div className="text2">
@@ -341,6 +362,9 @@ function App(props) {
                                 <div className={"text6"} style={{cursor: "pointer"}}
                                      onClick={() => setInputValue("10")}>x10
                                 </div>
+                                <div className={"text6"} style={{cursor: "pointer"}}
+                                     onClick={() => setInputValue("20")}>x20
+                                </div>
                                 {/*<div className={"text6"} style={{cursor: "pointer"}}*/}
                                 {/*     onClick={() => setInputValue((inputValue * 100).toString())}>x100*/}
                                 {/*</div>*/}
@@ -362,14 +386,14 @@ function App(props) {
                             />
 
                             <div className="flexBetween" style={{width: "100%"}}>
-                                <div className="text5">{inputValue * boxPrice} {coin} < /div>
+                                <div className="text5">{addCommaInNumber(inputValue * boxPrice)} {coin} < /div>
                                 <div className="text6"></div>
                             </div>
 
                             {show && (
                                 <Popup elf={elf} nothing={nothing} magic={magic} handleClose={() => {
                                     setShow(false);
-                                    setModelText("Approve");
+                                    setModelText("Mint");
                                     setElf(0);
                                     setMagic(0);
                                     setNothing(0);
@@ -379,7 +403,7 @@ function App(props) {
                                 text={modelText}
                                 size="big"
                                 style={{width: "100%", marginTop: "24px"}}
-                                func={modelText === "Mint" ? mintAndOpenBox : modelText === "Approve" ? approveOwlToken : null}
+                                func={modelText === "Mint" ? mintAndOpenBox : null}
                             />
 
                         </div>
@@ -392,10 +416,10 @@ function App(props) {
                                 {(rewardsRevenue && rewardsRevenue.list) && (rewardsRevenue.list.map((item, index) => {
                                     let {address, amount, count, description, operation, transaction_hash} = item;
                                     return (
-                                        <>
-                                            <a href={"https://scan.merlinchain.io/tx/" + transaction_hash}
+                                        <div key={index}>
+                                            <a href={"https://testnet-scan.merlinchain.io/tx/" + transaction_hash}
                                                target={"_blank"} style={{textDecoration: 'none'}}>
-                                                <div className="tableItem flexBetween" key={index}>
+                                                <div className="tableItem flexBetween">
                                                     <div
                                                         style={{width: "18%"}}>{address.slice(0, 6)}...{address.slice(-4)}</div>
                                                     <div style={{width: "15%"}}>{amount}</div>
@@ -414,7 +438,7 @@ function App(props) {
                                                     </div>
                                                 </div>
                                             </a>
-                                        </>
+                                        </div>
                                     )
                                 }))}
                             </div>

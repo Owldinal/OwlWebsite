@@ -7,6 +7,7 @@ import Sider from "@/components/Sider/index.jsx";
 import arrup from "@/assets/arrup.png";
 import a1 from "@/assets/a1.png";
 import copy from "@/assets/copy.png";
+import copy_success from "@/assets/copy_success.png";
 import bage1 from "@/assets/bage1.png";
 import bage2 from "@/assets/bage2.png";
 import bage3 from "@/assets/bage3.png";
@@ -58,6 +59,38 @@ function App(props) {
     const [hash, setHash] = useState();
 
     const [assumeNew, setAssumeNew] = useState(false);
+    const [copySuccess1, setCopySuccess1] = useState(false);
+    const [copySuccess2, setCopySuccess2] = useState(false);
+
+    const [balance, setBalance] = useState("0");
+    useEffect(() => {
+        if (!isConnected) {
+            setBalance("0");
+        } else {
+            const balance = async () => {
+                return await readContracts(config, {
+                    contracts: [
+                        {
+                            address: ContractAddress.owlTokenAddress,
+                            abi: ContractAbi.owlToken,
+                            functionName: "balanceOf",
+                            args: [address],
+                        }
+                    ],
+                });
+            }
+            balance().then((data) => {
+                if (data && data.length > 0) {
+                    const [temp] = data;
+                    if (temp && temp.result) {
+                        const balanceBigInt = BigInt(temp.result);
+                        const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
+                        setBalance(balance);
+                    }
+                }
+            })
+        }
+    }, [isConnected, address, hash])
 
     useEffect(() => {
         if (!address) {
@@ -252,7 +285,7 @@ function App(props) {
 
     }
 
-    const copyOnClick = (address) => {
+    const copyOnClick = (address, i) => {
 
         if (navigator.clipboard) {
             navigator.clipboard.writeText(address).then(() => {
@@ -260,13 +293,24 @@ function App(props) {
             }).catch(err => {
                 console.error('Failed to copy: ', err);
             });
+            if (i === 1) {
+                setCopySuccess1(true);
+                setTimeout(() => {
+                    setCopySuccess1(false);
+                }, 2000);
+            } else if (i === 2) {
+                setCopySuccess2(true);
+                setTimeout(() => {
+                    setCopySuccess2(false);
+                }, 2000);
+            }
         }
 
     }
 
     return (
         <div className="rootInnerWrapper">
-            <TopHeader targetChain={targetChain}/>
+            <TopHeader targetChain={targetChain} balance={balance}/>
             <div className="flexStart">
                 <Sider/>
                 <div style={{width: '100%', padding: '16px', height: "100%"}}>
@@ -279,8 +323,11 @@ function App(props) {
                                 <span
                                     style={{margin: "0 8px 0 0px"}}>{address ? (address.slice(0, 6) + "..." + address.slice(-4)) : "Please connect your wallet"}
                                 </span>{" "}
-                                {address && (
-                                    <img src={copy} width="12" alt="" onClick={() => copyOnClick(address)}/>
+                                {(address && !copySuccess1) && (
+                                    <img src={copy} width="12" alt="" onClick={() => copyOnClick(address, 1)}/>
+                                )}
+                                {(address && copySuccess1) && (
+                                    <img src={copy_success} width="12" alt=""/>
                                 )}
                             </div>
 
@@ -410,8 +457,10 @@ function App(props) {
                                     <div className="text5" style={{marginRight: "10px"}}>
                                         {"https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
                                     </div>
-                                    <img src={copy} width="12" alt=""
-                                         onClick={() => copyOnClick("https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
+                                    {!copySuccess2 &&
+                                        <img src={copy} width="12" alt=""
+                                             onClick={() => copyOnClick("https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"], 2)}/>}
+                                    {copySuccess2 && <img src={copy_success} width="12" alt=""/>}
                                 </div>
                             </div>
 
