@@ -285,7 +285,7 @@ function App(props) {
                             </div>
 
                             <div className="text2 ">
-                                {userInfo["total_earned"]}<span> Owl</span>
+                                {addCommaInNumber(userInfo["total_earned"])}<span> Owl</span>
                             </div>
 
                             <div className="text3">Total Earned</div>
