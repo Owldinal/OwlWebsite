@@ -411,7 +411,7 @@ function App(props) {
                                         {"https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"]}
                                     </div>
                                     <img src={copy} width="12" alt=""
-                                         onClick={() => copyOnClick("https://owltest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
+                                         onClick={() => copyOnClick("https://flashtest.owldinal.xyz/my?code=" + userInfo["invitation_code"])}/>
                                 </div>
                             </div>
 
