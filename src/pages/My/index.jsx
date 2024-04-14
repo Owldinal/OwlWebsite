@@ -147,7 +147,7 @@ function App(props) {
             const hash = await writeContract(config, {
                 address: ContractAddress.genOneBoxAddress,
                 abi: ContractAbi.genOneBox,
-                functionName: "setApproveForAll",
+                functionName: "setApprovalForAll",
             })
 
             const approveResult = await getTransactionReceipt(config, {hash: hash});
@@ -454,7 +454,6 @@ function App(props) {
                                                                func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
                                             }))}
                                         </div>
-                                        ¬
                                     </div>
                                 </TabPane>
                             </Tabs>
