@@ -147,7 +147,7 @@ function App(props) {
             const hash = await writeContract(config, {
                 address: ContractAddress.genOneBoxAddress,
                 abi: ContractAbi.genOneBox,
-                functionName: "setApproveForAll",
+                functionName: "setApprovalForAll",
             })
 
             const approveResult = await getTransactionReceipt(config, {hash: hash});
