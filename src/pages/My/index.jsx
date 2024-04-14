@@ -338,16 +338,19 @@ function App(props) {
                             <div className="text3">Total Earned</div>
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
-                                {(userInfo["buff_level"] === 1 || userInfo["buff_level"] === 3) && (
-                                    <img src={bage1} width="48" alt=""/>)}
-                                {(userInfo["buff_level"] === 2 || userInfo["buff_level"] === 3) && (
-                                    <img
-                                        src={bage2}
-                                        width="48"
-                                        alt=""
-                                        style={{margin: "0 16px"}}
-                                    />)}
-                                {(userInfo["buff_level"] === 3) && (<img src={bage3} width="48" alt=""/>)}
+                                <img src={bage1} width="48" alt=""
+                                     style={userInfo["buff_level"] === 1 || userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
+                                <img
+                                    src={bage2}
+                                    width="48"
+                                    alt=""
+                                    style={userInfo["buff_level"] === 2 || userInfo["buff_level"] === 3 ? {margin: "0 16px"} : {
+                                        margin: "0 16px",
+                                        filter: "grayscale(1)"
+                                    }}
+                                />
+                                <img src={bage3} width="48" alt=""
+                                     style={userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
                             </div>
 
                             <div className="flexBetween flexS">
@@ -356,6 +359,7 @@ function App(props) {
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
                                                         text={"APR: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
+
                                     </div>
 
                                     <div
