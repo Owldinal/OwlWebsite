@@ -454,7 +454,6 @@ function App(props) {
                                                                func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
                                             }))}
                                         </div>
-                                        ¬
                                     </div>
                                 </TabPane>
                             </Tabs>
