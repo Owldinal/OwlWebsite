@@ -84,7 +84,7 @@ function App(props) {
             console.log("rewardsTrend: ", result)
         })
 
-        getData.getRewardsHistory(0, 20).then(result => {
+        getData.getRewardsHistory(0, 1000).then(result => {
             setRewardsRevenue(result.data);
             console.log("rewardsRevenue: ", result)
         })
