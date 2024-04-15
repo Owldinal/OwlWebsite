@@ -86,8 +86,6 @@ function App(props) {
                             abi: ContractAbi.owlToken,
                             functionName: "balanceOf",
                             args: [address],
-                            gas: 1000000n,
-                            gasPrice: 1000000000n,
                         }
                     ],
                 });
