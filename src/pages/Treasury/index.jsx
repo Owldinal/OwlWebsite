@@ -123,33 +123,52 @@ function App(props) {
         }
         setModelText("Confirming...");
 
-        const approveHash = await writeContract(config, {
-            address: ContractAddress.owlTokenAddress,
-            abi: ContractAbi.owlToken,
-            functionName: 'approve',
-            args: [
-                ContractAddress.owlGameAddress,
-                BigInt(inputValue * boxPrice) * 10n ** 18n
+        const hasAllowance = await readContracts(config, {
+            contracts: [
+                {
+                    address: ContractAddress.owlTokenAddress,
+                    abi: ContractAbi.owlToken,
+                    functionName: 'allowance',
+                    args: [
+                        address,
+                        ContractAddress.owlGameAddress
+                    ],
+                },
             ],
-            // 20000 = 2BTC
-            gas: 1000000n,
-            gasPrice: 1000000000n,
-        });
-        // const transaction = await getTransactionConfirmations(config, {
-        //     hash: approveHash,
-        // })
-        // console.log("approve transaction: ", transaction);
-        const interval = setInterval(async () => {
-            try {
-                const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-                console.log("approve owl result: ", approveResult)
-                if (approveResult.status === "success") {
-                    clearInterval(interval);
+        })
+        console.log("hasAllowance: ", hasAllowance[0].result);
+        console.log("inputValue: ", inputValue * boxPrice * 10n ** 18n);
+
+        if (BigInt(hasAllowance[0].result) < BigInt(inputValue * boxPrice) * 10n ** 18n) {
+
+            const approveHash = await writeContract(config, {
+                address: ContractAddress.owlTokenAddress,
+                abi: ContractAbi.owlToken,
+                functionName: 'approve',
+                args: [
+                    ContractAddress.owlGameAddress,
+                    BigInt(inputValue * boxPrice) * 10n ** 18n
+                ],
+                // 20000 = 2BTC
+                gas: 1000000n,
+                gasPrice: 1000000000n,
+            });
+            // const transaction = await getTransactionConfirmations(config, {
+            //     hash: approveHash,
+            // })
+            // console.log("approve transaction: ", transaction);
+            const interval = setInterval(async () => {
+                try {
+                    const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+                    console.log("approve owl result: ", approveResult)
+                    if (approveResult.status === "success") {
+                        clearInterval(interval);
+                    }
+                } catch (e) {
+                    console.log("approve owl error: ", e);
                 }
-            } catch (e) {
-                console.log("approve owl error: ", e);
-            }
-        }, 2000)
+            }, 2000)
+        }
 
         setTimeout(async () => {
             const mintHash = await writeContract(config, {
