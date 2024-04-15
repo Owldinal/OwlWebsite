@@ -155,15 +155,15 @@ function App(props) {
             result.code === 0 && setUserInfo(result.data);
         })
 
-        // getData.getUserOwldinals(address, 1, 100).then(result => {
-        //     console.log("user owldinals result: ", result);
-        //     result.code === 0 && setUserOwldinals(result.data);
-        // })
+        getData.getUserOwldinals(address, 1, 100).then(result => {
+            console.log("user owldinals result: ", result);
+            result.code === 0 && setUserOwldinals(result.data);
+        })
 
-        // getData.getUserBoxes(address, 1, 100).then(result => {
-        //     console.log("user boxes result: ", result);
-        //     result.code === 0 && setUserFruitAndELf(result.data);
-        // })
+        getData.getUserBoxes(address, 1, 100).then(result => {
+            console.log("user boxes result: ", result);
+            result.code === 0 && setUserFruitAndELf(result.data);
+        })
 
     }, [address, hash]);
 
