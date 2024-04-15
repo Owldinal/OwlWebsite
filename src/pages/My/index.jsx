@@ -90,6 +90,7 @@ function App(props) {
                     ],
                 });
             }
+            console.log("request balance: ", address);
             balance().then((data) => {
                 if (data && data.length > 0) {
                     console.log("balance: ", data);
