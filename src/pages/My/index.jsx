@@ -198,7 +198,7 @@ function App(props) {
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval = setInterval(async () => {
@@ -227,7 +227,7 @@ function App(props) {
             functionName: "stakeMysteryBox",
             args: [list],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
 
         const interval = setInterval(async () => {
@@ -259,7 +259,7 @@ function App(props) {
             functionName: "claimAndUnstakeMysteryBox",
             args: [list],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
         const interval = setInterval(async () => {
             try {
@@ -300,7 +300,7 @@ function App(props) {
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval1 = setInterval(async () => {
@@ -325,7 +325,7 @@ function App(props) {
                 functionName: "stakeOwldinalNft",
                 args: [id],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval2 = setInterval(async () => {
@@ -356,7 +356,7 @@ function App(props) {
             functionName: "unstakeOwldinalNft",
             args: [id],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
 
         const interval = setInterval(async () => {
