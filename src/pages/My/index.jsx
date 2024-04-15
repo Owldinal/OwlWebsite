@@ -607,7 +607,18 @@ function App(props) {
                                                    width: "70%",
                                                    overflow: "auto"
                                                }}>
-                                            <h4>{modelText}</h4>
+                                            <div style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                flexDirection: "column",
+                                            }}>
+                                                <div style={{marginBottom: "20px",marginTop: "20px"}}>
+                                                    <h4>{modelText}</h4>
+                                                </div>
+                                                <OwlButton size={"small"} text={"OK"}
+                                                           func={() => setDialogVisible(false)}/>
+                                            </div>
                                         </Modal>
 
                                         <div className="tableItem flexBetween tableHeaderItem">
