@@ -362,7 +362,8 @@ function App(props) {
                                 {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
                             </div>
                             {priceUSD && (
-                                <div className="text3">{addCommaInNumber(priceUSD.pairs[0].priceUsd) + " USD"}</div>
+                                <div
+                                    className="text3">{addCommaInNumber(priceUSD.pairs[0].priceUsd, true) + " USD"}</div>
                             )}
 
                             <div className="flexBetween flexW" style={{marginTop: "36px"}}>
