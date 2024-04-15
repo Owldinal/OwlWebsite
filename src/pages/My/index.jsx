@@ -282,26 +282,40 @@ function App(props) {
             return;
         }
 
-        const approveHash = await writeContract(config, {
-            address: ContractAddress.owldinalNftAddress,
-            abi: ContractAbi.owldinalNft,
-            functionName: "setApprovalForAll",
-            args: [ContractAddress.owlGameAddress, true],
-            gas: 1000000n,
-            gasPrice: 10000000000n,
+        const approveForAll = await readContracts(config, {
+            contracts: [{
+                address: ContractAddress.owldinalNftAddress,
+                abi: ContractAbi.owldinalNft,
+                functionName: "isApprovedForAll",
+                args: [address, ContractAddress.owlGameAddress],
+            }]
         })
+        console.log("approveForAll: ", approveForAll);
 
-        const interval1 = setInterval(async () => {
-            try {
-                const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-                if (approveResult.status === "success") {
-                    clearInterval(interval1);
+        if (!approveForAll[0].result) {
+
+            const approveHash = await writeContract(config, {
+                address: ContractAddress.owldinalNftAddress,
+                abi: ContractAbi.owldinalNft,
+                functionName: "setApprovalForAll",
+                args: [ContractAddress.owlGameAddress, true],
+                gas: 1000000n,
+                gasPrice: 10000000000n,
+            })
+
+            const interval1 = setInterval(async () => {
+                try {
+                    const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+                    if (approveResult.status === "success") {
+                        clearInterval(interval1);
+                    }
+                    console.log("approve result: ", approveResult)
+                } catch (e) {
+                    console.log("error: ", e);
                 }
-                console.log("approve result: ", approveResult)
-            } catch (e) {
-                console.log("error: ", e);
-            }
-        },2000)
+            }, 2000)
+
+        }
 
         setTimeout(async () => {
 
