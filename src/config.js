@@ -88,6 +88,7 @@ export const merlinTest = defineChain({
                 // 'https://testnet-rpc.merlinchain.io',
                 'https://merlin-testnet.blockpi.network/v1/rpc/public',
                 'https://merlin-testnet.blockpi.network/v1/rpc/264303e0e3d6db049249fc8e12b1eb13ebf37613',
+                'https://merlin-testnet.blockpi.network/v1/rpc/97b12c2e9ff1fae02b5a4bcb137fc27a61afb3f1'
             ]
         },
     },
