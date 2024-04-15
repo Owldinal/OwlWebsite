@@ -303,7 +303,7 @@ function App(props) {
             } catch (e) {
                 console.log("error: ", e);
             }
-        })
+        },2000)
 
         setTimeout(async () => {
 
