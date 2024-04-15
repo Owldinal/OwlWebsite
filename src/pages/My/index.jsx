@@ -52,19 +52,8 @@ function App(props) {
         invite_count: 0
 
     });
-    const [userOwldinals, setUserOwldinals] = useState({list: [{token_id: 1, is_staking: false}]});
-    const [userFruitAndELf, setUserFruitAndELf] = useState({
-        list: [
-            {
-                token_id: 0,
-                box_type: 2,
-                token_url: "",
-                earning: 0,
-                apr: 0,
-                status: "open"
-            }
-        ]
-    });
+    const [userOwldinals, setUserOwldinals] = useState();
+    const [userFruitAndELf, setUserFruitAndELf] = useState();
 
     const [isApprove, setIsApprove] = useState(false);
     const [hash, setHash] = useState();
