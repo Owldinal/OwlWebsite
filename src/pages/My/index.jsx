@@ -52,8 +52,19 @@ function App(props) {
         invite_count: 0
 
     });
-    const [userOwldinals, setUserOwldinals] = useState();
-    const [userFruitAndELf, setUserFruitAndELf] = useState();
+    const [userOwldinals, setUserOwldinals] = useState({list: [{token_id: 1, is_staking: false}]});
+    const [userFruitAndELf, setUserFruitAndELf] = useState({
+        list: [
+            {
+                token_id: 0,
+                box_type: 2,
+                token_url: "",
+                earning: 0,
+                apr: 0,
+                status: "open"
+            }
+        ]
+    });
 
     const [isApprove, setIsApprove] = useState(false);
     const [hash, setHash] = useState();
@@ -144,15 +155,15 @@ function App(props) {
             result.code === 0 && setUserInfo(result.data);
         })
 
-        getData.getUserOwldinals(address, 1, 100).then(result => {
-            console.log("user owldinals result: ", result);
-            result.code === 0 && setUserOwldinals(result.data);
-        })
+        // getData.getUserOwldinals(address, 1, 100).then(result => {
+        //     console.log("user owldinals result: ", result);
+        //     result.code === 0 && setUserOwldinals(result.data);
+        // })
 
-        getData.getUserBoxes(address, 1, 100).then(result => {
-            console.log("user boxes result: ", result);
-            result.code === 0 && setUserFruitAndELf(result.data);
-        })
+        // getData.getUserBoxes(address, 1, 100).then(result => {
+        //     console.log("user boxes result: ", result);
+        //     result.code === 0 && setUserFruitAndELf(result.data);
+        // })
 
     }, [address, hash]);
 
