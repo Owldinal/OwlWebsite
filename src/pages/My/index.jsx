@@ -86,6 +86,8 @@ function App(props) {
                             abi: ContractAbi.owlToken,
                             functionName: "balanceOf",
                             args: [address],
+                            gas: 1000000n,
+                            gasPrice: 1000000000n,
                         }
                     ],
                 });
@@ -128,6 +130,8 @@ function App(props) {
                         abi: ContractAbi.owlGame,
                         functionName: "handleInviteCode",
                         args: [encodeInviteCode(code)],
+                        gas: 1000000n,
+                        gasPrice: 1000000000n,
                     })
                 }
                 invite().then(result => {
@@ -195,14 +199,25 @@ function App(props) {
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
+                gas: 1000000n,
+                gasPrice: 1000000000n,
             })
 
-            const approveResult = await getTransactionReceipt(config, {hash: hash});
-            console.log("approve result: ", approveResult.toString())
+            const interval = setInterval(async () => {
 
-            if (approveResult.status === "success") {
-                setIsApprove(true);
-            }
+                try {
+                    const approveResult = await getTransactionReceipt(config, {hash: hash});
+                    console.log("approve result: ", approveResult.toString())
+
+                    if (approveResult.status === "success") {
+                        setIsApprove(true);
+                        clearInterval(interval);
+                    }
+                } catch (e) {
+                    console.log("error: ", e);
+                }
+
+            }, 2000)
 
         }
 
@@ -212,15 +227,24 @@ function App(props) {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
-            args: [list]
+            args: [list],
+            gas: 1000000n,
+            gasPrice: 1000000000n,
         })
 
-        const stakeResult = await getTransactionReceipt(config, {hash: hash});
-        if (stakeResult.status === "success") {
-            setHash(hash);
-            console.log("stake result: ", stakeResult);
-        }
-
+        const interval = setInterval(async () => {
+            try {
+                const stakeResult = await getTransactionReceipt(config, {hash: hash});
+                if (stakeResult.status === "success") {
+                    setHash(hash);
+                    console.log("stake result: ", stakeResult);
+                    clearInterval(interval);
+                }
+            } catch
+                (e) {
+                console.log("error: ", e);
+            }
+        }, 2000)
     }
 
     const claim = async (type, id) => {
@@ -235,14 +259,22 @@ function App(props) {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
-            args: [list]
+            args: [list],
+            gas: 1000000n,
+            gasPrice: 1000000000n,
         })
-
-        const claimResult = await getTransactionReceipt(config, {hash: hash});
-        if (claimResult.status === "success") {
-            setHash(hash);
-            console.log("claim result: ", claimResult);
-        }
+        const interval = setInterval(async () => {
+            try {
+                const claimResult = await getTransactionReceipt(config, {hash: hash});
+                if (claimResult.status === "success") {
+                    setHash(hash);
+                    console.log("claim result: ", claimResult);
+                    clearInterval(interval)
+                }
+            } catch (e) {
+                console.log("error: ", e);
+            }
+        }, 2000)
 
     };
 
@@ -256,25 +288,48 @@ function App(props) {
             address: ContractAddress.owldinalNftAddress,
             abi: ContractAbi.owldinalNft,
             functionName: "setApprovalForAll",
-            args: [ContractAddress.owlGameAddress, true]
+            args: [ContractAddress.owlGameAddress, true],
+            gas: 1000000n,
+            gasPrice: 1000000000n,
         })
 
-        const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-        console.log("approve result: ", approveResult)
-
-        const hash = await writeContract(config, {
-            address: ContractAddress.owlGameAddress,
-            abi: ContractAbi.owlGame,
-            functionName: "stakeOwldinalNft",
-            args: [id]
+        const interval1 = setInterval(async () => {
+            try {
+                const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+                if (approveResult.status === "success") {
+                    clearInterval(interval1);
+                }
+                console.log("approve result: ", approveResult)
+            } catch (e) {
+                console.log("error: ", e);
+            }
         })
 
-        const stakeResult = await getTransactionReceipt(config, {hash: hash});
-        if (stakeResult.status === "success") {
-            setHash(hash);
-            console.log("stake NFT result: ", stakeResult);
-        }
+        setTimeout(async () => {
 
+            const hash = await writeContract(config, {
+                address: ContractAddress.owlGameAddress,
+                abi: ContractAbi.owlGame,
+                functionName: "stakeOwldinalNft",
+                args: [id],
+                gas: 1000000n,
+                gasPrice: 1000000000n,
+            })
+
+            const interval2 = setInterval(async () => {
+                try {
+                    const stakeResult = await getTransactionReceipt(config, {hash: hash});
+                    if (stakeResult.status === "success") {
+                        setHash(hash);
+                        console.log("stake NFT result: ", stakeResult);
+                        clearInterval(interval2);
+                    }
+                } catch (e) {
+                    console.log("error: ", e);
+                }
+            }, 2000)
+
+        }, 2000)
     }
 
     const claimNFT = async (id) => {
@@ -287,14 +342,24 @@ function App(props) {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "unstakeOwldinalNft",
-            args: [id]
+            args: [id],
+            gas: 1000000n,
+            gasPrice: 1000000000n,
         })
 
-        const unstakeResult = await getTransactionReceipt(config, {hash: hash});
-        if (unstakeResult.status === "success") {
-            setHash(hash);
-            console.log("unstake NFT result: ", unstakeResult);
-        }
+        const interval = setInterval(async () => {
+            try {
+                const unstakeResult = await getTransactionReceipt(config, {hash: hash});
+                if (unstakeResult.status === "success") {
+                    setHash(hash);
+                    console.log("unstake NFT result: ", unstakeResult);
+                    clearInterval(interval)
+                }
+            } catch (e) {
+                console.log("error: ", e);
+            }
+
+        }, 2000)
 
     }
 
