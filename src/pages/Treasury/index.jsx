@@ -56,9 +56,11 @@ function App(props) {
                     ],
                 });
             }
+            console.log("request balance: ", address);
             balance().then((data) => {
                 if (data && data.length > 0) {
                     const [temp] = data;
+                    console.log("balance: ", temp);
                     if (temp && temp.result) {
                         const balanceBigInt = BigInt(temp.result);
                         const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
