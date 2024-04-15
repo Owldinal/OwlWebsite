@@ -13,7 +13,7 @@ import bage2 from "@/assets/bage2.png";
 import bage3 from "@/assets/bage3.png";
 import { useNavigate } from "react-router-dom";
 
-import { Tabs } from "antd";
+import { Modal, Tabs } from "antd";
 
 import { useAccount } from "wagmi";
 import { ContractAbi, ContractAddress, getData } from "@/config.js";
@@ -61,6 +61,9 @@ function App(props) {
     const [assumeNew, setAssumeNew] = useState(false);
     const [copySuccess1, setCopySuccess1] = useState(false);
     const [copySuccess2, setCopySuccess2] = useState(false);
+
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [modelText, setModelText] = useState("");
 
     const [balance, setBalance] = useState("0");
     useEffect(() => {
@@ -150,6 +153,9 @@ function App(props) {
 
         getData.getUserOwldinals(address, 1, 1000).then(result => {
             console.log("user owldinals result: ", result);
+            const noMoreStaking = result.data.list.map((item) => item.is_staking === true).length > 3;
+            console.log("noMoreStaking: ", noMoreStaking);
+            result.data.noMoreStaking = noMoreStaking;
             result.code === 0 && setUserOwldinals(result.data);
         })
 
@@ -271,6 +277,12 @@ function App(props) {
             return;
         }
 
+        if (userOwldinals.noMoreStaking) {
+            setModelText("You cannot stake more than 3 at the same time")
+            setDialogVisible(true);
+            return;
+        }
+
         const approveForAll = await readContracts(config, {
             contracts: [{
                 address: ContractAddress.owldinalNftAddress,
@@ -339,14 +351,21 @@ function App(props) {
             return;
         }
 
-        const hash = await writeContract(config, {
-            address: ContractAddress.owlGameAddress,
-            abi: ContractAbi.owlGame,
-            functionName: "unstakeOwldinalNft",
-            args: [id],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
-        })
+        try {
+            const hash = await writeContract(config, {
+                address: ContractAddress.owlGameAddress,
+                abi: ContractAbi.owlGame,
+                functionName: "unstakeOwldinalNft",
+                args: [id],
+                gas: 1000000n,
+                gasPrice: 1000000000n,
+            })
+        } catch (e) {
+            console.warn(e);
+            setModelText("Unstaking Owldinal is only allowed after claiming all rewards.");
+            setDialogVisible(true);
+            return;
+        }
 
         const interval = setInterval(async () => {
             try {
@@ -548,6 +567,7 @@ function App(props) {
                             </div>
 
                         </div>
+
                         <div className="tableWrapper">
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Treasury Revenue" key="1">
@@ -573,6 +593,23 @@ function App(props) {
                                 <TabPane tab="My Owldinal" key="2">
                                     <div style={{height: "100%"}}>
 
+                                        <Modal title={null}
+                                               open={dialogVisible}
+                                               footer={null}
+                                               onOk={() => setDialogVisible(false)}
+                                               onCancel={() => setDialogVisible(false)}
+                                               style={{
+                                                   display: "flex",
+                                                   alignItems: "center",
+                                                   justifyContent: "center",
+                                                   height: "100vh",
+                                                   top: 0,
+                                                   width: "70%",
+                                                   overflow: "auto"
+                                               }}>
+                                            <h4>{modelText}</h4>
+                                        </Modal>
+
                                         <div className="tableItem flexBetween tableHeaderItem">
                                             <div className="tableHeaderItem" style={{width: '40%'}}>NFT</div>
                                             <div className="tableHeaderItem" style={{width: '40%'}}>Status</div>
@@ -580,17 +617,21 @@ function App(props) {
                                         </div>
 
                                         <div style={{overflowY: "scroll", height: "770px"}}>
-                                            {userOwldinals && (userOwldinals.list.map((item, index) => {
-                                                const {token_id, token_url, is_staking} = item;
-                                                return <OwlRow key={index} token_id={token_id} token_url={token_url}
-                                                               is_staking={is_staking}
-                                                               func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
-                                            }))}
+                                            {userOwldinals && (
+                                                userOwldinals.list.map((item, index) => {
+                                                    const {token_id, token_url, is_staking} = item;
+                                                    return <OwlRow key={index} token_id={token_id} token_url={token_url}
+                                                                   is_staking={is_staking}
+                                                                   noMoreStaking={userOwldinals.noMoreStaking}
+                                                                   func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
+                                                })
+                                            )}
                                         </div>
                                     </div>
                                 </TabPane>
                             </Tabs>
                         </div>
+
                     </div>
                 </div>
             </div>
