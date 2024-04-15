@@ -52,19 +52,8 @@ function App(props) {
         invite_count: 0
 
     });
-    const [userOwldinals, setUserOwldinals] = useState({list: [{token_id: 1, is_staking: false}]});
-    const [userFruitAndELf, setUserFruitAndELf] = useState({
-        list: [
-            {
-                token_id: 0,
-                box_type: 2,
-                token_url: "",
-                earning: 0,
-                apr: 0,
-                status: "open"
-            }
-        ]
-    });
+    const [userOwldinals, setUserOwldinals] = useState();
+    const [userFruitAndELf, setUserFruitAndELf] = useState();
 
     const [isApprove, setIsApprove] = useState(false);
     const [hash, setHash] = useState();
@@ -198,7 +187,7 @@ function App(props) {
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval = setInterval(async () => {
@@ -227,7 +216,7 @@ function App(props) {
             functionName: "stakeMysteryBox",
             args: [list],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
 
         const interval = setInterval(async () => {
@@ -259,7 +248,7 @@ function App(props) {
             functionName: "claimAndUnstakeMysteryBox",
             args: [list],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
         const interval = setInterval(async () => {
             try {
@@ -300,7 +289,7 @@ function App(props) {
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval1 = setInterval(async () => {
@@ -325,7 +314,7 @@ function App(props) {
                 functionName: "stakeOwldinalNft",
                 args: [id],
                 gas: 1000000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             })
 
             const interval2 = setInterval(async () => {
@@ -356,7 +345,7 @@ function App(props) {
             functionName: "unstakeOwldinalNft",
             args: [id],
             gas: 1000000n,
-            gasPrice: 10000000000n,
+            gasPrice: 1000000000n,
         })
 
         const interval = setInterval(async () => {
