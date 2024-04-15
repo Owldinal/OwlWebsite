@@ -92,6 +92,7 @@ function App(props) {
             }
             balance().then((data) => {
                 if (data && data.length > 0) {
+                    console.log("balance: ", data);
                     const [temp] = data;
                     if (temp && temp.result) {
                         const balanceBigInt = BigInt(temp.result);
