@@ -222,7 +222,7 @@ function App(props) {
             return;
         }
 
-        const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= BigInt(inputValue * boxPrice));
+        const canMintAndOpenBox = balance >= 0 && (BigInt(balance) >= BigInt(inputValue * boxPrice));
         setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
 
     }, [inputValue])
