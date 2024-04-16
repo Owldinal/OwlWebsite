@@ -152,7 +152,7 @@ function App(props) {
                 ],
                 // 20000 = 2BTC
                 gas: 100000n,
-                gasPrice: 10000000000n,
+                gasPrice: 1000000000n,
             });
             // const transaction = await getTransactionConfirmations(config, {
             //     hash: approveHash,
@@ -179,7 +179,7 @@ function App(props) {
                 args: [
                     BigInt(inputValue)
                 ],
-                gas: 100000n,
+                gas: 1000000n,
                 gasPrice: 10000000000n,
             })
             const interval2 = setInterval(async () => {
