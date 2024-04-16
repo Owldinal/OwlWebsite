@@ -137,7 +137,7 @@ function App(props) {
             ],
         })
         console.log("hasAllowance: ", hasAllowance[0].result);
-        console.log("inputValue: ", inputValue * boxPrice * 10n ** 18n);
+        console.log("inputValue: ", BigInt(inputValue * boxPrice) * (10n ** 18n));
 
         if (BigInt(hasAllowance[0].result) < (BigInt(inputValue * boxPrice) * (10n ** 18n))) {
 
