@@ -139,7 +139,7 @@ function App(props) {
         console.log("hasAllowance: ", hasAllowance[0].result);
         console.log("inputValue: ", inputValue * boxPrice * 10n ** 18n);
 
-        if (BigInt(hasAllowance[0].result) < BigInt(inputValue * boxPrice) * 10n ** 18n) {
+        if (BigInt(hasAllowance[0].result) < (BigInt(inputValue * boxPrice) * (10n ** 18n))) {
 
             const approveHash = await writeContract(config, {
                 address: ContractAddress.owlTokenAddress,
@@ -150,8 +150,8 @@ function App(props) {
                     BigInt(inputValue * boxPrice) * 10n ** 18n
                 ],
                 // 20000 = 2BTC
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                gas: 100000n,
+                gasPrice: 100000000n,
             });
             // const transaction = await getTransactionConfirmations(config, {
             //     hash: approveHash,
@@ -178,8 +178,8 @@ function App(props) {
                 args: [
                     BigInt(inputValue)
                 ],
-                gas: 1000000n,
-                gasPrice: 10000000000n,
+                gas: 100000n,
+                gasPrice: 1000000000n,
             })
             const interval2 = setInterval(async () => {
 
@@ -236,7 +236,7 @@ function App(props) {
 
         owlBalance().then(result => {
             const balance = result[0].result;
-            const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= BigInt(inputValue * boxPrice) * 10n ** 18n);
+            const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= (BigInt(inputValue * boxPrice) * (10n ** 18n)));
             setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
         })
 
