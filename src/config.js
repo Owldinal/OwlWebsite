@@ -89,8 +89,8 @@ export const merlinTest = defineChain({
                 // 'https://merlin-testnet.blockpi.network/v1/rpc/public',
                 // 'https://merlin-testnet.blockpi.network/v1/rpc/264303e0e3d6db049249fc8e12b1eb13ebf37613',
                 // 'https://merlin-testnet.blockpi.network/v1/rpc/97b12c2e9ff1fae02b5a4bcb137fc27a61afb3f1',
-                // 'https://merlin-testnet.blockpi.network/v1/rpc/23e9f0e00ebe936f2228bb48c83f08ac658a66d6'
-                'https://merlin-testnet-enterprise.unifra.io'
+                'https://merlin-testnet.blockpi.network/v1/rpc/23e9f0e00ebe936f2228bb48c83f08ac658a66d6'
+                // 'https://merlin-testnet-enterprise.unifra.io'
             ]
         },
     },
