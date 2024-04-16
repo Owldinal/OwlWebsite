@@ -192,7 +192,7 @@ function App(props) {
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
-                gas: 100000n,
+                gas: 1000000n,
                 gasPrice: 1000000000n,
             })
 
@@ -221,7 +221,7 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
             args: [list],
-            gas: 100000n,
+            gas: 1000000n,
             gasPrice: 1000000000n,
         })
 
@@ -253,7 +253,7 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
             args: [list],
-            gas: 100000n,
+            gas: 1000000n,
             gasPrice: 1000000000n,
         })
         const interval = setInterval(async () => {
