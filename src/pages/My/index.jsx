@@ -208,7 +208,7 @@ function App(props) {
 
         const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
 
-        const hash = await writeContract(config, {
+        const stakeHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
@@ -217,9 +217,9 @@ function App(props) {
             // gasPrice: 1000000000n,
         })
 
-        const stakeResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
         if (stakeResult.status === "success") {
-            setHash(hash);
+            setHash(stakeHash);
             console.log("stake result: ", stakeResult);
         }
 
@@ -233,7 +233,7 @@ function App(props) {
 
         const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
 
-        const hash = await writeContract(config, {
+        const claimHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
@@ -242,9 +242,9 @@ function App(props) {
             // gasPrice: 1000000000n,
         })
 
-        const claimResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        const claimResult = await waitForTransactionReceipt(config, {hash: claimHash, pollingInterval: 1_000,});
         if (claimResult.status === "success") {
-            setHash(hash);
+            setHash(claimHash);
             console.log("claim result: ", claimResult);
         }
 
@@ -298,8 +298,8 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "stakeOwldinalNft",
             args: [id],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
+            // gas: 1000000n,
+            // gasPrice: 1000000000n,
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});

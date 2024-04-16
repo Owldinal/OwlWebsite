@@ -173,8 +173,8 @@ function App(props) {
             args: [
                 BigInt(inputValue)
             ],
-            gas: 1000000n,
-            gasPrice: 10000000000n,
+            // gas: 1000000n,
+            // gasPrice: 10000000000n,
         })
 
         const mintResult = await waitForTransactionReceipt(config, {hash: mintHash,  pollingInterval: 1_000, });
