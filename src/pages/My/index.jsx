@@ -21,7 +21,7 @@ import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import { addCommaInNumber } from "@/util.js";
 import BoxRow from "@components/BoxRow.jsx";
 import OwlRow from "@components/OwlRow.jsx";
-import { getTransactionReceipt, readContracts, writeContract } from "@wagmi/core";
+import { getTransactionReceipt, readContracts, waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { config } from "@/main.jsx";
 
 const {TabPane} = Tabs;
@@ -179,6 +179,7 @@ function App(props) {
         return encoded;
     }
 
+
     const stake = async (type, id) => {
 
         if (!address || !userInfo) {
@@ -196,21 +197,12 @@ function App(props) {
                 gasPrice: 1000000000n,
             })
 
-            const interval = setInterval(async () => {
+            const approveResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
+            console.log("approve result: ", approveResult.toString())
 
-                try {
-                    const approveResult = await getTransactionReceipt(config, {hash: hash});
-                    console.log("approve result: ", approveResult.toString())
-
-                    if (approveResult.status === "success") {
-                        setIsApprove(true);
-                        clearInterval(interval);
-                    }
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-
-            }, 2000)
+            if (approveResult.status === "success") {
+                setIsApprove(true);
+            }
 
         }
 
@@ -227,7 +219,7 @@ function App(props) {
 
         const interval = setInterval(async () => {
             try {
-                const stakeResult = await getTransactionReceipt(config, {hash: hash});
+                const stakeResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
                 if (stakeResult.status === "success") {
                     setHash(hash);
                     console.log("stake result: ", stakeResult);
@@ -258,7 +250,7 @@ function App(props) {
         })
         const interval = setInterval(async () => {
             try {
-                const claimResult = await getTransactionReceipt(config, {hash: hash});
+                const claimResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
                 if (claimResult.status === "success") {
                     setHash(hash);
                     console.log("claim result: ", claimResult);
@@ -306,7 +298,7 @@ function App(props) {
 
             const interval1 = setInterval(async () => {
                 try {
-                    const approveResult = await getTransactionReceipt(config, {hash: approveHash});
+                    const approveResult = await waitForTransactionReceipt(config, {hash: approveHash,  pollingInterval: 1_000, });
                     if (approveResult.status === "success") {
                         clearInterval(interval1);
                     }
@@ -331,7 +323,7 @@ function App(props) {
 
             const interval2 = setInterval(async () => {
                 try {
-                    const stakeResult = await getTransactionReceipt(config, {hash: hash});
+                    const stakeResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
                     if (stakeResult.status === "success") {
                         setHash(hash);
                         console.log("stake NFT result: ", stakeResult);
