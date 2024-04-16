@@ -120,8 +120,8 @@ function App(props) {
                         abi: ContractAbi.owlGame,
                         functionName: "handleInviteCode",
                         args: [encodeInviteCode(code)],
-                        gas: 100000n,
-                        gasPrice: 1000000000n,
+                        // gas: 100000n,
+                        // gasPrice: 1000000000n,
                     })
                 }
                 invite().then(result => {
@@ -193,8 +193,8 @@ function App(props) {
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                // gas: 1000000n,
+                // gasPrice: 1000000000n,
             })
 
             const approveResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
@@ -213,8 +213,8 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
             args: [list],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
+            // gas: 1000000n,
+            // gasPrice: 1000000000n,
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
@@ -238,8 +238,8 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
             args: [list],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
+            // gas: 1000000n,
+            // gasPrice: 1000000000n,
         })
 
         const claimResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
@@ -280,8 +280,8 @@ function App(props) {
                 abi: ContractAbi.owldinalNft,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                // gas: 1000000n,
+                // gasPrice: 1000000000n,
             })
 
             const approveResult = await waitForTransactionReceipt(config, {
@@ -293,7 +293,7 @@ function App(props) {
 
         }
 
-        const hash = await writeContract(config, {
+        const stakeHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "stakeOwldinalNft",
@@ -302,9 +302,9 @@ function App(props) {
             gasPrice: 1000000000n,
         })
 
-        const stakeResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
         if (stakeResult.status === "success") {
-            setHash(hash);
+            setHash(stakeHash);
             console.log("stake NFT result: ", stakeResult);
         }
 
@@ -323,8 +323,8 @@ function App(props) {
                 abi: ContractAbi.owlGame,
                 functionName: "unstakeOwldinalNft",
                 args: [id],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                // gas: 1000000n,
+                // gasPrice: 1000000000n,
             })
         } catch (e) {
             console.warn(e);
@@ -335,9 +335,8 @@ function App(props) {
 
         const unstakeResult = await waitForTransactionReceipt(config, {hash: unstakeHash, pollingInterval: 1_000});
         if (unstakeResult.status === "success") {
-            setHash(hash);
+            setHash(unstakeHash);
             console.log("unstake NFT result: ", unstakeResult);
-            clearInterval(interval)
         }
 
     }
@@ -396,18 +395,18 @@ function App(props) {
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
                                 <img src={bage1} width="48" alt=""
-                                     style={userInfo["buff_level"] === 1 || userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
+                                     style={userInfo["buff_level"] >= 1 ? {} : {filter: "grayscale(1)"}}/>
                                 <img
                                     src={bage2}
                                     width="48"
                                     alt=""
-                                    style={userInfo["buff_level"] === 2 || userInfo["buff_level"] === 3 ? {margin: "0 16px"} : {
+                                    style={userInfo["buff_level"] >= 2 ? {margin: "0 16px"} : {
                                         margin: "0 16px",
                                         filter: "grayscale(1)"
                                     }}
                                 />
                                 <img src={bage3} width="48" alt=""
-                                     style={userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
+                                     style={userInfo["buff_level"] >= 3 ? {} : {filter: "grayscale(1)"}}/>
                             </div>
 
                             <div className="flexBetween flexS">

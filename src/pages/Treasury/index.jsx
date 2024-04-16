@@ -157,8 +157,8 @@ function App(props) {
                     BigInt(inputValue * boxPrice) * 10n ** 18n
                 ],
                 // 20000 = 2BTC
-                gas: 100000n,
-                gasPrice: 1000000000n,
+                // gas: 100000n,
+                // gasPrice: 1000000000n,
             });
 
             const approveResult = await waitForTransactionReceipt(config, {hash: approveHash, pollingInterval: 1_000,});
