@@ -197,7 +197,7 @@ function App(props) {
                 gasPrice: 1000000000n,
             })
 
-            const approveResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
+            const approveResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
             console.log("approve result: ", approveResult.toString())
 
             if (approveResult.status === "success") {
@@ -217,19 +217,12 @@ function App(props) {
             gasPrice: 1000000000n,
         })
 
-        const interval = setInterval(async () => {
-            try {
-                const stakeResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
-                if (stakeResult.status === "success") {
-                    setHash(hash);
-                    console.log("stake result: ", stakeResult);
-                    clearInterval(interval);
-                }
-            } catch
-                (e) {
-                console.log("error: ", e);
-            }
-        }, 2000)
+        const stakeResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        if (stakeResult.status === "success") {
+            setHash(hash);
+            console.log("stake result: ", stakeResult);
+        }
+
     }
 
     const claim = async (type, id) => {
@@ -248,18 +241,13 @@ function App(props) {
             gas: 1000000n,
             gasPrice: 1000000000n,
         })
-        const interval = setInterval(async () => {
-            try {
-                const claimResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
-                if (claimResult.status === "success") {
-                    setHash(hash);
-                    console.log("claim result: ", claimResult);
-                    clearInterval(interval)
-                }
-            } catch (e) {
-                console.log("error: ", e);
-            }
-        }, 2000)
+
+        const claimResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        if (claimResult.status === "success") {
+            setHash(hash);
+            console.log("claim result: ", claimResult);
+        }
+
 
     };
 
@@ -296,45 +284,30 @@ function App(props) {
                 gasPrice: 1000000000n,
             })
 
-            const interval1 = setInterval(async () => {
-                try {
-                    const approveResult = await waitForTransactionReceipt(config, {hash: approveHash,  pollingInterval: 1_000, });
-                    if (approveResult.status === "success") {
-                        clearInterval(interval1);
-                    }
-                    console.log("approve result: ", approveResult)
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-            }, 2000)
+            const approveResult = await waitForTransactionReceipt(config, {
+                hash: approveHash,
+                pollingInterval: 1_000,
+            });
+
+            console.log("approve result: ", approveResult)
 
         }
 
-        setTimeout(async () => {
+        const hash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "stakeOwldinalNft",
+            args: [id],
+            gas: 1000000n,
+            gasPrice: 1000000000n,
+        })
 
-            const hash = await writeContract(config, {
-                address: ContractAddress.owlGameAddress,
-                abi: ContractAbi.owlGame,
-                functionName: "stakeOwldinalNft",
-                args: [id],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
-            })
+        const stakeResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+        if (stakeResult.status === "success") {
+            setHash(hash);
+            console.log("stake NFT result: ", stakeResult);
+        }
 
-            const interval2 = setInterval(async () => {
-                try {
-                    const stakeResult = await waitForTransactionReceipt(config, {hash: hash,  pollingInterval: 1_000, });
-                    if (stakeResult.status === "success") {
-                        setHash(hash);
-                        console.log("stake NFT result: ", stakeResult);
-                        clearInterval(interval2);
-                    }
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-            }, 2000)
-
-        }, 2000)
     }
 
     const claimNFT = async (id) => {
@@ -360,19 +333,12 @@ function App(props) {
             return;
         }
 
-        const interval = setInterval(async () => {
-            try {
-                const unstakeResult = await getTransactionReceipt(config, {hash: unstakeHash});
-                if (unstakeResult.status === "success") {
-                    setHash(hash);
-                    console.log("unstake NFT result: ", unstakeResult);
-                    clearInterval(interval)
-                }
-            } catch (e) {
-                console.log("error: ", e);
-            }
-
-        }, 2000)
+        const unstakeResult = await waitForTransactionReceipt(config, {hash: unstakeHash, pollingInterval: 1_000});
+        if (unstakeResult.status === "success") {
+            setHash(hash);
+            console.log("unstake NFT result: ", unstakeResult);
+            clearInterval(interval)
+        }
 
     }
 
