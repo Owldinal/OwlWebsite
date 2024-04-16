@@ -153,7 +153,7 @@ function App(props) {
 
         getData.getUserOwldinals(address, 1, 100).then(result => {
             console.log("user owldinals result: ", result);
-            const noMoreStaking = result.data.list.map((item) => item.is_staking === true).length > 3;
+            const noMoreStaking = result.data.list.filter((item) => item.is_staking === true) > 3;
             console.log("noMoreStaking: ", noMoreStaking);
             result.data.noMoreStaking = noMoreStaking;
             result.code === 0 && setUserOwldinals(result.data);
@@ -277,7 +277,7 @@ function App(props) {
             return;
         }
 
-        if (userOwldinals.noMoreStaking) {
+        if (userOwldinals.noMoreStaking === true) {
             setModelText("You cannot stake more than 3 at the same time")
             setDialogVisible(true);
             return;
@@ -353,7 +353,7 @@ function App(props) {
 
         let unstakeHash;
         try {
-             unstakeHash = await writeContract(config, {
+            unstakeHash = await writeContract(config, {
                 address: ContractAddress.owlGameAddress,
                 abi: ContractAbi.owlGame,
                 functionName: "unstakeOwldinalNft",
@@ -614,7 +614,7 @@ function App(props) {
                                                 justifyContent: "center",
                                                 flexDirection: "column",
                                             }}>
-                                                <div style={{marginBottom: "20px",marginTop: "20px"}}>
+                                                <div style={{marginBottom: "20px", marginTop: "20px"}}>
                                                     <h4>{modelText}</h4>
                                                 </div>
                                                 <OwlButton size={"small"} text={"OK"}
