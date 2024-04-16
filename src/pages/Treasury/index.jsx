@@ -13,7 +13,13 @@ import { coin, ContractAbi, ContractAddress, getData } from "@/config.js";
 import { addCommaInNumber } from "@/util.js";
 import DisplayBlock from "@components/DisplayBlock.jsx";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { getTransactionConfirmations, getTransactionReceipt, readContracts, writeContract } from "@wagmi/core";
+import {
+    getTransactionConfirmations,
+    getTransactionReceipt,
+    readContracts,
+    waitForTransactionReceipt,
+    writeContract
+} from "@wagmi/core";
 import { config } from "@/main.jsx";
 import Popup from "@components/Popup/index.jsx"
 import { parseGwei } from "viem";
@@ -154,65 +160,45 @@ function App(props) {
                 // gas: 100000n,
                 // gasPrice: 1000000000n,
             });
-            // const transaction = await getTransactionConfirmations(config, {
-            //     hash: approveHash,
-            // })
-            // console.log("approve transaction: ", transaction);
-            const interval = setInterval(async () => {
-                try {
-                    const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-                    console.log("approve owl result: ", approveResult)
-                    if (approveResult.status === "success") {
-                        clearInterval(interval);
-                    }
-                } catch (e) {
-                    console.log("approve owl error: ", e);
-                }
-            }, 2000)
+
+            const approveResult = await waitForTransactionReceipt(config, {hash: approveHash, pollingInterval: 1_000,});
+            console.log("approve owl result: ", approveResult)
+
         }
 
-        setTimeout(async () => {
-            const mintHash = await writeContract(config, {
-                address: ContractAddress.owlGameAddress,
-                abi: ContractAbi.owlGame,
-                functionName: 'mintMysteryBox',
-                args: [
-                    BigInt(inputValue)
-                ],
-                // gas: 1000000n,
-                // gasPrice: 10000000000n,
-            })
-            const interval2 = setInterval(async () => {
+        const mintHash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: 'mintMysteryBox',
+            args: [
+                BigInt(inputValue)
+            ],
+            // gas: 1000000n,
+            // gasPrice: 10000000000n,
+        })
 
-                try {
-                    const mintResult = await getTransactionReceipt(config, {hash: mintHash});
-                    console.log("mint result: ", mintResult)
-                    if (mintResult && mintResult.status === "success" && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
+        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash,  pollingInterval: 1_000, });
+        console.log("mint result: ", mintResult)
+        if (mintResult && mintResult.status === "success" && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
-                        let count = [0, 0, 0, 0];
-                        const logs = mintResult.logs;
-                        for (let i = 1; i < logs.length; i++) {
-                            if (logs[i].topics[0] === "0x4cce2d7ca388465a90e71f76235d389abe1ede028b09c07d4f86519e5adb078c") {
-                                const tokenId = Number(parseInt(logs[i].data.slice(2, 66), 16))
-                                const boxType = Number(parseInt(logs[i].data.slice(66), 16));
-                                // console.log("tokenId: ", tokenId, "boxType: ", boxType);
-                                count[boxType]++;
-                            }
-                        }
-
-                        clearInterval(interval2);
-
-                        setElf(count[1]);
-                        setMagic(count[2]);
-                        setNothing(count[3]);
-                        setShow(true);
-
-                    }
-                } catch (e) {
-                    console.log("mint error: ", e);
+            let count = [0, 0, 0, 0];
+            const logs = mintResult.logs;
+            for (let i = 1; i < logs.length; i++) {
+                if (logs[i].topics[0] === "0x4cce2d7ca388465a90e71f76235d389abe1ede028b09c07d4f86519e5adb078c") {
+                    const tokenId = Number(parseInt(logs[i].data.slice(2, 66), 16))
+                    const boxType = Number(parseInt(logs[i].data.slice(66), 16));
+                    // console.log("tokenId: ", tokenId, "boxType: ", boxType);
+                    count[boxType]++;
                 }
-            }, 2000)
-        }, 2000)
+            }
+
+            setElf(count[1]);
+            setMagic(count[2]);
+            setNothing(count[3]);
+            setShow(true);
+
+        }
+
 
     }
 

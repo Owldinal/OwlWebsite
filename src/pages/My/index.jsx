@@ -21,7 +21,7 @@ import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import { addCommaInNumber } from "@/util.js";
 import BoxRow from "@components/BoxRow.jsx";
 import OwlRow from "@components/OwlRow.jsx";
-import { getTransactionReceipt, readContracts, writeContract } from "@wagmi/core";
+import { getTransactionReceipt, readContracts, waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { config } from "@/main.jsx";
 
 const {TabPane} = Tabs;
@@ -153,7 +153,7 @@ function App(props) {
 
         getData.getUserOwldinals(address, 1, 100).then(result => {
             console.log("user owldinals result: ", result);
-            const noMoreStaking = result.data.list.filter((item) => item.is_staking === true) > 3;
+            const noMoreStaking = result.data.list.filter((item) => item.is_staking === true).length >= 3;
             console.log("noMoreStaking: ", noMoreStaking);
             result.data.noMoreStaking = noMoreStaking;
             result.code === 0 && setUserOwldinals(result.data);
@@ -179,6 +179,7 @@ function App(props) {
         return encoded;
     }
 
+
     const stake = async (type, id) => {
 
         if (!address || !userInfo) {
@@ -187,7 +188,7 @@ function App(props) {
 
         if (!isApprove) {
 
-            const hash = await writeContract(config, {
+            const stakeHash = await writeContract(config, {
                 address: ContractAddress.genOneBoxAddress,
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
@@ -196,27 +197,18 @@ function App(props) {
                 // gasPrice: 1000000000n,
             })
 
-            const interval = setInterval(async () => {
+            const approveResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
+            console.log("approve result: ", approveResult.toString())
 
-                try {
-                    const approveResult = await getTransactionReceipt(config, {hash: hash});
-                    console.log("approve result: ", approveResult.toString())
-
-                    if (approveResult.status === "success") {
-                        setIsApprove(true);
-                        clearInterval(interval);
-                    }
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-
-            }, 2000)
+            if (approveResult.status === "success") {
+                setIsApprove(true);
+            }
 
         }
 
         const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
 
-        const hash = await writeContract(config, {
+        const stakeHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
@@ -225,19 +217,12 @@ function App(props) {
             // gasPrice: 1000000000n,
         })
 
-        const interval = setInterval(async () => {
-            try {
-                const stakeResult = await getTransactionReceipt(config, {hash: hash});
-                if (stakeResult.status === "success") {
-                    setHash(hash);
-                    console.log("stake result: ", stakeResult);
-                    clearInterval(interval);
-                }
-            } catch
-                (e) {
-                console.log("error: ", e);
-            }
-        }, 2000)
+        const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
+        if (stakeResult.status === "success") {
+            setHash(stakeHash);
+            console.log("stake result: ", stakeResult);
+        }
+
     }
 
     const claim = async (type, id) => {
@@ -246,9 +231,9 @@ function App(props) {
             return;
         }
 
-        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list : userInfo.fruit_info.staked_id_list
 
-        const hash = await writeContract(config, {
+        const claimHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
@@ -256,18 +241,13 @@ function App(props) {
             // gas: 1000000n,
             // gasPrice: 1000000000n,
         })
-        const interval = setInterval(async () => {
-            try {
-                const claimResult = await getTransactionReceipt(config, {hash: hash});
-                if (claimResult.status === "success") {
-                    setHash(hash);
-                    console.log("claim result: ", claimResult);
-                    clearInterval(interval)
-                }
-            } catch (e) {
-                console.log("error: ", e);
-            }
-        }, 2000)
+
+        const claimResult = await waitForTransactionReceipt(config, {hash: claimHash, pollingInterval: 1_000,});
+        if (claimResult.status === "success") {
+            setHash(claimHash);
+            console.log("claim result: ", claimResult);
+        }
+
 
     };
 
@@ -304,45 +284,30 @@ function App(props) {
                 // gasPrice: 1000000000n,
             })
 
-            const interval1 = setInterval(async () => {
-                try {
-                    const approveResult = await getTransactionReceipt(config, {hash: approveHash});
-                    if (approveResult.status === "success") {
-                        clearInterval(interval1);
-                    }
-                    console.log("approve result: ", approveResult)
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-            }, 2000)
+            const approveResult = await waitForTransactionReceipt(config, {
+                hash: approveHash,
+                pollingInterval: 1_000,
+            });
+
+            console.log("approve result: ", approveResult)
 
         }
 
-        setTimeout(async () => {
+        const stakeHash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "stakeOwldinalNft",
+            args: [id],
+            // gas: 1000000n,
+            // gasPrice: 1000000000n,
+        })
 
-            const stakeHash = await writeContract(config, {
-                address: ContractAddress.owlGameAddress,
-                abi: ContractAbi.owlGame,
-                functionName: "stakeOwldinalNft",
-                args: [id],
-                // gas: 1000000n,
-                // gasPrice: 1000000000n,
-            })
+        const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
+        if (stakeResult.status === "success") {
+            setHash(stakeHash);
+            console.log("stake NFT result: ", stakeResult);
+        }
 
-            const interval2 = setInterval(async () => {
-                try {
-                    const stakeResult = await getTransactionReceipt(config, {hash: stakeHash});
-                    if (stakeResult.status === "success") {
-                        setHash(stakeHash);
-                        console.log("stake NFT result: ", stakeResult);
-                        clearInterval(interval2);
-                    }
-                } catch (e) {
-                    console.log("error: ", e);
-                }
-            }, 2000)
-
-        }, 2000)
     }
 
     const claimNFT = async (id) => {
@@ -368,19 +333,11 @@ function App(props) {
             return;
         }
 
-        const interval = setInterval(async () => {
-            try {
-                const unstakeResult = await getTransactionReceipt(config, {hash: unstakeHash});
-                if (unstakeResult.status === "success") {
-                    setHash(unstakeHash);
-                    console.log("unstake NFT result: ", unstakeResult);
-                    clearInterval(interval)
-                }
-            } catch (e) {
-                console.log("error: ", e);
-            }
-
-        }, 2000)
+        const unstakeResult = await waitForTransactionReceipt(config, {hash: unstakeHash, pollingInterval: 1_000});
+        if (unstakeResult.status === "success") {
+            setHash(unstakeHash);
+            console.log("unstake NFT result: ", unstakeResult);
+        }
 
     }
 
