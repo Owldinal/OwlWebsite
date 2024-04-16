@@ -42,34 +42,35 @@ function App(props) {
 
     const [balance, setBalance] = useState("0");
     useEffect(() => {
-        if (!isConnected) {
-            setBalance("0");
-        } else {
-            const balance = async () => {
-                return await readContracts(config, {
-                    contracts: [
-                        {
-                            address: ContractAddress.owlTokenAddress,
-                            abi: ContractAbi.owlToken,
-                            functionName: "balanceOf",
-                            args: [address],
-                        }
-                    ],
-                });
-            }
-            console.log("request balance: ", address);
-            balance().then((data) => {
-                if (data && data.length > 0) {
-                    const [temp] = data;
-                    console.log("balance: ", temp);
-                    if (temp && temp.result) {
-                        const balanceBigInt = BigInt(temp.result);
-                        const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
-                        setBalance(balance);
-                    }
-                }
-            })
-        }
+        // if (!isConnected) {
+        //     setBalance("0");
+        // } else {
+        //     const balance = async () => {
+        //         return await readContracts(config, {
+        //             contracts: [
+        //                 {
+        //                     address: ContractAddress.owlTokenAddress,
+        //                     abi: ContractAbi.owlToken,
+        //                     functionName: "balanceOf",
+        //                     args: [address],
+        //                 }
+        //             ],
+        //         });
+        //     }
+        //     console.log("request balance: ", address);
+        //     balance().then((data) => {
+        //         if (data && data.length > 0) {
+        //             const [temp] = data;
+        //             console.log("balance: ", temp);
+        //             if (temp && temp.result) {
+        //                 const balanceBigInt = BigInt(temp.result);
+        //                 const balance = (balanceBigInt / BigInt(10 ** 18)).toString();
+        //                 setBalance(balance);
+        //             }
+        //         }
+        //     })
+        // }
+        setBalance("100000000")
     }, [isConnected, address, show])
 
     useEffect(() => {
@@ -139,7 +140,7 @@ function App(props) {
         console.log("hasAllowance: ", hasAllowance[0].result);
         console.log("inputValue: ", BigInt(inputValue * boxPrice) * (10n ** 18n));
 
-        if (BigInt(hasAllowance[0].result) < (BigInt(inputValue * boxPrice) * (10n ** 18n))) {
+        if (BigInt(hasAllowance[0].result || 999999999999999999999999999n) < (BigInt(inputValue * boxPrice) * (10n ** 18n))) {
 
             const approveHash = await writeContract(config, {
                 address: ContractAddress.owlTokenAddress,
@@ -151,7 +152,7 @@ function App(props) {
                 ],
                 // 20000 = 2BTC
                 gas: 100000n,
-                gasPrice: 1000000000n,
+                gasPrice: 10000000000n,
             });
             // const transaction = await getTransactionConfirmations(config, {
             //     hash: approveHash,
@@ -221,7 +222,7 @@ function App(props) {
             return;
         }
 
-        const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= (BigInt(inputValue * boxPrice) * (10n ** 18n)));
+        const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= BigInt(inputValue * boxPrice));
         setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
 
     }, [inputValue])
