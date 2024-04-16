@@ -188,7 +188,7 @@ function App(props) {
 
         if (!isApprove) {
 
-            const hash = await writeContract(config, {
+            const stakeHash = await writeContract(config, {
                 address: ContractAddress.genOneBoxAddress,
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
@@ -197,7 +197,7 @@ function App(props) {
                 // gasPrice: 1000000000n,
             })
 
-            const approveResult = await waitForTransactionReceipt(config, {hash: hash, pollingInterval: 1_000,});
+            const approveResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
             console.log("approve result: ", approveResult.toString())
 
             if (approveResult.status === "success") {
