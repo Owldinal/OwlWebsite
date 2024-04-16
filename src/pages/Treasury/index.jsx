@@ -33,7 +33,7 @@ function App(props) {
     const [magic, setMagic] = useState(0);
     const [nothing, setNothing] = useState(0);
 
-    const [priceUSD, setPriceUSD] = useState(0);
+    const [priceUSD, setPriceUSD] = useState();
     const [gameInfo, setGameInfo] = useState();
     const [rewardsTrend, setRewardsTrend] = useState();
     const [rewardsRevenue, setRewardsRevenue] = useState();
@@ -347,17 +347,22 @@ function App(props) {
                                 {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
                             </div>
                             {priceUSD && (
-                                <div
-                                    className="text3">{addCommaInNumber(priceUSD.pairs[0].priceUsd, true) + " USD"}</div>
-                            )}
+                                <>
+                                    <div
+                                        className="text3">{addCommaInNumber(Number(priceUSD.pairs[0].priceUsd) * Number(gameInfo["total_rewards"]), true) + " USD"}</div>
 
-                            <div className="flexBetween flexW" style={{marginTop: "36px"}}>
-                                <DisplayBlock content={gameInfo["owl_price"]} title={"Owl Price"}/>
-                                <DisplayBlock content={gameInfo["total_market_cap"]} title={"Total Marketcap"}
-                                              change={gameInfo["total_market_cap_change"]}/>
-                                <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
-                                              change={gameInfo["total_burned_change"]}/>
-                            </div>
+                                    <div className="flexBetween flexW" style={{marginTop: "36px"}}>
+                                        <DisplayBlock
+                                            content={addCommaInNumber(Number(priceUSD.pairs[0].priceUsd), true)}
+                                            title={"Owl Price"}/>
+                                        <DisplayBlock
+                                            content={addCommaInNumber(Number(gameInfo["total_market_cap"]) * Number(priceUSD.pairs[0].priceUsd))}
+                                            title={"Total Marketcap"}/>
+                                        <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
+                                                      change={gameInfo["total_burned_change"]}/>
+                                    </div>
+                                </>
+                            )}
 
                         </div>)}
 
