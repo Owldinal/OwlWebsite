@@ -120,8 +120,8 @@ function App(props) {
                         abi: ContractAbi.owlGame,
                         functionName: "handleInviteCode",
                         args: [encodeInviteCode(code)],
-                        gas: 1000000n,
-                        gasPrice: 1000000000n,
+                        gas: 100000n,
+                        gasPrice: 100000000n,
                     })
                 }
                 invite().then(result => {
@@ -192,8 +192,8 @@ function App(props) {
                 abi: ContractAbi.genOneBox,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                gas: 100000n,
+                gasPrice: 100000000n,
             })
 
             const interval = setInterval(async () => {
@@ -221,8 +221,8 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "stakeMysteryBox",
             args: [list],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
+            gas: 100000n,
+            gasPrice: 100000000n,
         })
 
         const interval = setInterval(async () => {
@@ -253,8 +253,8 @@ function App(props) {
             abi: ContractAbi.owlGame,
             functionName: "claimAndUnstakeMysteryBox",
             args: [list],
-            gas: 1000000n,
-            gasPrice: 1000000000n,
+            gas: 100000n,
+            gasPrice: 100000000n,
         })
         const interval = setInterval(async () => {
             try {
@@ -300,8 +300,8 @@ function App(props) {
                 abi: ContractAbi.owldinalNft,
                 functionName: "setApprovalForAll",
                 args: [ContractAddress.owlGameAddress, true],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                gas: 100000n,
+                gasPrice: 100000000n,
             })
 
             const interval1 = setInterval(async () => {
@@ -325,8 +325,8 @@ function App(props) {
                 abi: ContractAbi.owlGame,
                 functionName: "stakeOwldinalNft",
                 args: [id],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                gas: 100000n,
+                gasPrice: 100000000n,
             })
 
             const interval2 = setInterval(async () => {
@@ -351,14 +351,15 @@ function App(props) {
             return;
         }
 
+        let unstakeHash;
         try {
-            const hash = await writeContract(config, {
+             unstakeHash = await writeContract(config, {
                 address: ContractAddress.owlGameAddress,
                 abi: ContractAbi.owlGame,
                 functionName: "unstakeOwldinalNft",
                 args: [id],
-                gas: 1000000n,
-                gasPrice: 1000000000n,
+                gas: 100000n,
+                gasPrice: 100000000n,
             })
         } catch (e) {
             console.warn(e);
@@ -369,7 +370,7 @@ function App(props) {
 
         const interval = setInterval(async () => {
             try {
-                const unstakeResult = await getTransactionReceipt(config, {hash: hash});
+                const unstakeResult = await getTransactionReceipt(config, {hash: unstakeHash});
                 if (unstakeResult.status === "success") {
                     setHash(hash);
                     console.log("unstake NFT result: ", unstakeResult);
