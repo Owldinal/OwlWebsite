@@ -221,24 +221,8 @@ function App(props) {
             return;
         }
 
-        const owlBalance = async () => {
-            return await readContracts(config, {
-                contracts: [
-                    {
-                        address: ContractAddress.owlTokenAddress,
-                        abi: ContractAbi.owlToken,
-                        functionName: 'balanceOf',
-                        args: [address]
-                    },
-                ],
-            })
-        }
-
-        owlBalance().then(result => {
-            const balance = result[0].result;
-            const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= (BigInt(inputValue * boxPrice) * (10n ** 18n)));
-            setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
-        })
+        const canMintAndOpenBox = balance > 0 && (BigInt(balance) >= (BigInt(inputValue * boxPrice) * (10n ** 18n)));
+        setModelText(canMintAndOpenBox ? "Mint" : "Not enough Owl");
 
     }, [inputValue])
 
