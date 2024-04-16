@@ -153,7 +153,7 @@ function App(props) {
 
         getData.getUserOwldinals(address, 1, 1000).then(result => {
             console.log("user owldinals result: ", result);
-            const noMoreStaking = result.data.list.filter((item) => item.is_staking === true) > 3;
+            const noMoreStaking = result.data.list.filter((item) => item.is_staking === true).length >= 3;
             console.log("noMoreStaking: ", noMoreStaking);
             result.data.noMoreStaking = noMoreStaking;
             result.code === 0 && setUserOwldinals(result.data);
