@@ -320,7 +320,7 @@ function App(props) {
 
         setTimeout(async () => {
 
-            const hash = await writeContract(config, {
+            const stakeHash = await writeContract(config, {
                 address: ContractAddress.owlGameAddress,
                 abi: ContractAbi.owlGame,
                 functionName: "stakeOwldinalNft",
@@ -331,9 +331,9 @@ function App(props) {
 
             const interval2 = setInterval(async () => {
                 try {
-                    const stakeResult = await getTransactionReceipt(config, {hash: hash});
+                    const stakeResult = await getTransactionReceipt(config, {hash: stakeHash});
                     if (stakeResult.status === "success") {
-                        setHash(hash);
+                        setHash(stakeHash);
                         console.log("stake NFT result: ", stakeResult);
                         clearInterval(interval2);
                     }
@@ -372,7 +372,7 @@ function App(props) {
             try {
                 const unstakeResult = await getTransactionReceipt(config, {hash: unstakeHash});
                 if (unstakeResult.status === "success") {
-                    setHash(hash);
+                    setHash(unstakeHash);
                     console.log("unstake NFT result: ", unstakeResult);
                     clearInterval(interval)
                 }
@@ -438,18 +438,18 @@ function App(props) {
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
                                 <img src={bage1} width="48" alt=""
-                                     style={userInfo["buff_level"] === 1 || userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
+                                     style={userInfo["buff_level"] >= 1 ? {} : {filter: "grayscale(1)"}}/>
                                 <img
                                     src={bage2}
                                     width="48"
                                     alt=""
-                                    style={userInfo["buff_level"] === 2 || userInfo["buff_level"] === 3 ? {margin: "0 16px"} : {
+                                    style={userInfo["buff_level"] >= 2 ? {margin: "0 16px"} : {
                                         margin: "0 16px",
                                         filter: "grayscale(1)"
                                     }}
                                 />
                                 <img src={bage3} width="48" alt=""
-                                     style={userInfo["buff_level"] === 3 ? {} : {filter: "grayscale(1)"}}/>
+                                     style={userInfo["buff_level"] >= 3 ? {} : {filter: "grayscale(1)"}}/>
                             </div>
 
                             <div className="flexBetween flexS">
