@@ -231,7 +231,7 @@ function App(props) {
             return;
         }
 
-        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list : userInfo.fruit_info.staked_id_list
 
         const claimHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
