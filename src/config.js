@@ -17,10 +17,11 @@ export const ContractAddress = {
     // owlGameAddress: "0xC0E5d058eeF687B0c3cEf2967D0B55AD81eb9C21",
     // genOneBoxAddress: "0xC9761572c264ADE5253d4F56a574fa0F4905ca5d",
     // local
-    owlTokenAddress: "0xf8bB8324Cd226f6229dbB8792C66119832791A59",
-    owldinalNftAddress: "0x73a11097dCf0817909039d2661a15cbc8F6624eF",
-    owlGameAddress: "0x8338B3295f87DEBa418c2F0bb7497414b0D73AC2",
-    genOneBoxAddress: "0xB9D8660b4a45aA24EC6dB53485E4334364C773A6",
+    owlTokenAddress: "0x9Ce1f653ED7825e6312F7943d42D3354173A512F",
+    owldinalNftAddress: "0xb0A05E3e79D18EC3cE23fF4C79230589fc8bCFfC",
+    owlGameAddress: "0x33a818fb37B1Fc25ce99EaeE1eB79f0633ec3B58",
+    genOneBoxAddress: "0x8b8069058f36A2b458B6C6DEe4F7A7F80296388a",
+
 }
 
 export const ContractAbi = {
