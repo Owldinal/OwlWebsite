@@ -155,7 +155,7 @@ function App(props) {
             result.code === 0 && setUserInfo(result.data);
         })
 
-        getData.getUserOwldinals(address, 1, 100).then(result => {
+        getData.getUserOwldinals(address, 1, 1000).then(result => {
             console.log("user owldinals result: ", result);
             const noMoreStaking = result.data.list.filter((item) => item.is_staking === true).length >= 3;
             console.log("noMoreStaking: ", noMoreStaking);
@@ -163,7 +163,7 @@ function App(props) {
             result.code === 0 && setUserOwldinals(result.data);
         })
 
-        getData.getUserBoxes(address, 1, 100).then(result => {
+        getData.getUserBoxes(address, 1, 1000).then(result => {
             console.log("user boxes result: ", result);
             result.code === 0 && setUserFruitAndELf(result.data);
         })
