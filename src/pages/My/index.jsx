@@ -386,8 +386,9 @@ function App(props) {
             })
         } catch (e) {
             console.warn(e);
-            clearInterval(interval)
+            // clearInterval(interval)
             setModelText("Unstaking Owldinal is only allowed after claiming all rewards.");
+            setOwlGif(false)
             setModelButton(true);
             setDialogVisible(true);
             return;
@@ -412,7 +413,7 @@ function App(props) {
         }
 
         setModelText("")
-        setModelButton(true)
+        setOwlGif(true)
         setDialogVisible(true)
         // let i = 0
         // const interval = setInterval(() => {
