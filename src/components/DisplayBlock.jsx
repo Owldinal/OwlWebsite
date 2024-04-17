@@ -13,7 +13,7 @@ export default function (props) {
                 </div>
                 {props.change && (
                     <ArrowAndNumber arrow={props.change >= 0 ? 1 : 0}
-                                    text={addCommaInNumber(props.change.toString().split('.')[0]) + "%"}/>
+                                    text={addCommaInNumber((Number(props.change) * 100).toString().split('.')[0]) + "%"}/>
                 )}
             </div>
         </>

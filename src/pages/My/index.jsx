@@ -206,7 +206,10 @@ function App(props) {
 
         }
 
-        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.unstaked_id_list : userInfo.fruit_info.unstaked_id_list
+        const list =
+            id >= 0 ? [id] :
+                type === 1 ? userInfo.elf_info.unstaked_id_list.slice(0, 20)
+                    : userInfo.fruit_info.unstaked_id_list.slice(0, 20)
 
         const stakeHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
@@ -231,7 +234,7 @@ function App(props) {
             return;
         }
 
-        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list : userInfo.fruit_info.staked_id_list
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list.slice(0, 20) : userInfo.fruit_info.staked_id_list.slice(0, 20)
 
         const claimHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
@@ -247,7 +250,6 @@ function App(props) {
             setHash(claimHash);
             console.log("claim result: ", claimResult);
         }
-
 
     };
 
@@ -415,7 +417,6 @@ function App(props) {
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
                                                         text={"APR: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
-
                                     </div>
 
                                     <div
@@ -424,13 +425,13 @@ function App(props) {
 
                                     <OwlButton
                                         type="dark"
-                                        text="Stake All"
+                                        text={userInfo["elf_info"]["total"] - userInfo["elf_info"]["staked"] <= 20 ? "Stake All" : "Stake 20"}
                                         style={{width: "100%", marginTop: "24px"}}
                                         func={() => stake(1, -1)}
                                     />
                                     <OwlButton
                                         type="dark"
-                                        text="Claim All"
+                                        text={userInfo["elf_info"]["staked"] <= 20 ? "Claim All" : "Claim 20"}
                                         style={{width: "100%", marginTop: "8px"}}
                                         func={() => claim(1, -1)}
                                     />
@@ -449,13 +450,13 @@ function App(props) {
 
                                     <OwlButton
                                         type="dark"
-                                        text="Stake All"
+                                        text={userInfo["fruit_info"]["total"] - userInfo["fruit_info"]["staked"] <= 20 ? "Stake All" : "Stake 20"}
                                         style={{width: "100%", marginTop: "24px"}}
                                         func={() => stake(2, -1)}
                                     />
                                     <OwlButton
                                         type="dark"
-                                        text="Claim All"
+                                        text={userInfo["fruit_info"]["staked"] <= 20 ? "Claim All" : "Claim 20"}
                                         style={{width: "100%", marginTop: "8px"}}
                                         func={() => claim(2, -1)}
                                     />
@@ -494,15 +495,18 @@ function App(props) {
                                         if (!address || !userInfo || userInfo["referral_rewards"]["available"] <= 0) {
                                             return;
                                         }
-                                        const hash = await writeContract(config, {
+                                        const rewardsHash = await writeContract(config, {
                                             address: ContractAddress.owlGameAddress,
                                             abi: ContractAbi.owlGame,
                                             functionName: "claimInviterReward",
                                         })
 
-                                        const rewardsResult = await getTransactionReceipt(config, {hash: hash});
+                                        const rewardsResult = await waitForTransactionReceipt(config, {
+                                            hash: rewardsHash,
+                                            pollingInterval: 1_000,
+                                        });
                                         if (rewardsResult.status === "success") {
-                                            setHash(hash);
+                                            setHash(rewardsHash);
                                             console.log("rewards result: ", rewardsResult);
                                         }
                                     }}
