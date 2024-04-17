@@ -177,7 +177,7 @@ function App(props) {
             // gasPrice: 10000000000n,
         })
 
-        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash,  pollingInterval: 1_000, });
+        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,});
         console.log("mint result: ", mintResult)
         if (mintResult && mintResult.status === "success" && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
@@ -398,7 +398,7 @@ function App(props) {
                                 {/*</div>*/}
                             </div>
                             <Input
-                                placeholder="Enter Amount"
+                                placeholder="Enter Amount (x100 max)"
                                 // type="number"
                                 size="large"
                                 style={{margin: "12px 0"}}
@@ -406,7 +406,7 @@ function App(props) {
                                 onChange={(e) => {
                                     const v = Math.ceil(Number(e.target.value));
                                     if (!isNaN(v)) {
-                                        setInputValue(v.toString());
+                                        setInputValue(v > 100 ? "100" : v.toString());
                                     } else {
                                         setInputValue("0");
                                     }
