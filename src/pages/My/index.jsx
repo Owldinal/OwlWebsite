@@ -476,11 +476,11 @@ function App(props) {
                    onCancel={() => setDialogVisible(false)}
                    style={{
                        // display: "flex",
+                       height: "500px",
+                       width: "500px",
                        alignItems: "center",
                        justifyContent: "center",
-                       height: "100vh",
-                       top: "40%",
-                       width: 200,
+                       top: "30%",
                        overflow: "auto"
                    }}>
                 <div style={{
@@ -488,11 +488,14 @@ function App(props) {
                     alignItems: "center",
                     justifyContent: "center",
                     flexDirection: "column",
+                    height: "300px",
                 }}>
-                    {owlGif === true && <img src={gif} alt="" width={"100%"}/>}
-                    <div style={{marginBottom: "20px", marginTop: "20px", width: "100"}}>
-                        <h4>{modelText}</h4>
-                    </div>
+                    {owlGif === true && (<div style={{height: "250px"}}><img src={gif} alt=""/></div>)}
+                    {modelText && (
+                        <div style={{marginBottom: "20px", marginTop: "100px", height: "50%"}}>
+                            <h3>{modelText}</h3>
+                        </div>
+                    )}
                     {modelButton === true && (
                         <OwlButton size={"small"} text={"OK"}
                                    func={() => {
