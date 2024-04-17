@@ -13,8 +13,9 @@ export default function (props) {
                     </div>
                     {(props.box_type === 1 ? "Elf" : "Magic Fruit") + " # " + props.token_id}
                 </div>
+                <div style={{width: '70px'}}>{props.earning.toString().split('.')[0]}</div>
                 <div
-                    style={{width: '132px'}}>{props.earning.toString().split('.')[0]}</div>
+                    style={{width: '70px'}}>{props.earning.toString().split('.')[0]}</div>
                 <div style={{width: '37px'}}>{props.apr.toString().split('.')[0] + "%"}</div>
                 <div style={{width: '56px'}}>{props.is_staking === true ? 'Staked' : 'Available'}</div>
                 <OwlButton text={props.is_staking === true ? 'Claim' : 'Stake'} size="small"

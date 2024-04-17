@@ -550,7 +550,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APY: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
+                                                        text={"APY: " + addCommaInNumber(userInfo["elf_info"]["apy"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -575,7 +575,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APY: " + addCommaInNumber(userInfo["fruit_info"]["apr"]) + "%" || "0%"}/>
+                                                        text={"APY: " + addCommaInNumber(userInfo["fruit_info"]["apy"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -651,7 +651,8 @@ function App(props) {
                                 <TabPane tab="Treasury Revenue" key="1">
                                     <div className="tableItem flexBetween tableHeaderItem">
                                         <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
-                                        <div className="tableHeaderItem" style={{width: '132px'}}>Earning</div>
+                                        <div className="tableHeaderItem" style={{width: '70px'}}>Claimed</div>
+                                        <div className="tableHeaderItem" style={{width: '70px'}}>Earning</div>
                                         <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
                                         <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
                                         <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
@@ -659,9 +660,9 @@ function App(props) {
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
                                         {userFruitAndELf && (userFruitAndELf.list.map((item, index) => {
-                                            const {token_id, box_type, earning, apr, is_staking} = item;
+                                            const {token_id, box_type, claimed, earning, apr, is_staking} = item;
                                             return <BoxRow key={index} token_id={token_id} box_type={box_type}
-                                                           earning={earning} apr={apr}
+                                                           claimed={claimed} earning={earning} apr={apr}
                                                            is_staking={is_staking}
                                                            func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}/>
                                         }))}
