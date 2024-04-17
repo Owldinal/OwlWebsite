@@ -65,6 +65,7 @@ function App(props) {
 
     const [dialogVisible, setDialogVisible] = useState(false);
     const [modelText, setModelText] = useState("");
+    const [modelButton, setModelButton] = useState(false);
 
     const [balance, setBalance] = useState("0");
     useEffect(() => {
@@ -187,6 +188,13 @@ function App(props) {
             return;
         }
 
+        setModelText("Progress...")
+        setDialogVisible(true)
+        let i = 0
+        const interval = setInterval(() => {
+            setModelText("Progress" + ".".repeat(++i % 3))
+        }, 1000)
+
         if (!isApprove) {
 
             const stakeHash = await writeContract(config, {
@@ -222,10 +230,17 @@ function App(props) {
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
+        clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
             console.log("stake result: ", stakeResult);
+            setModelText("Success");
+            setModelButton(true)
+        } else {
+            setModelText("Something went wrong");
+            setModelButton(true)
         }
+
 
     }
 
@@ -234,6 +249,13 @@ function App(props) {
         if (!address || !userInfo) {
             return;
         }
+
+        setModelText("Progress...")
+        setDialogVisible(true)
+        let i = 0
+        const interval = setInterval(() => {
+            setModelText("Progress" + ".".repeat(++i % 3))
+        }, 1000)
 
         const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list.slice(0, 20) : userInfo.fruit_info.staked_id_list.slice(0, 20)
 
@@ -247,9 +269,15 @@ function App(props) {
         })
 
         const claimResult = await waitForTransactionReceipt(config, {hash: claimHash, pollingInterval: 1_000,});
+        clearInterval(interval);
         if (claimResult.status === "success") {
             setHash(claimHash);
             console.log("claim result: ", claimResult);
+            setModelText("Success");
+            setModelButton(true)
+        } else {
+            setModelText("Something went wrong");
+            setModelButton(true)
         }
 
     };
@@ -262,9 +290,17 @@ function App(props) {
 
         if (userOwldinals.noMoreStaking === true) {
             setModelText("You cannot stake more than 3 at the same time")
+            setModelButton(true)
             setDialogVisible(true);
             return;
         }
+
+        setModelText("Progress...")
+        setDialogVisible(true)
+        let i = 0
+        const interval = setInterval(() => {
+            setModelText("Progress" + ".".repeat(++i % 3))
+        }, 1000)
 
         const approveForAll = await readContracts(config, {
             contracts: [{
@@ -306,9 +342,15 @@ function App(props) {
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
+        clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
             console.log("stake NFT result: ", stakeResult);
+            setModelText("Success");
+            setModelButton(true)
+        } else {
+            setModelText("Something went wrong");
+            setModelButton(true)
         }
 
     }
@@ -318,6 +360,13 @@ function App(props) {
         if (!address || !userOwldinals) {
             return;
         }
+
+        setModelText("Progress...")
+        setDialogVisible(true)
+        let i = 0
+        const interval = setInterval(() => {
+            setModelText("Progress" + ".".repeat(++i % 3))
+        }, 1000)
 
         let unstakeHash;
         try {
@@ -331,17 +380,58 @@ function App(props) {
             })
         } catch (e) {
             console.warn(e);
+            clearInterval(interval)
             setModelText("Unstaking Owldinal is only allowed after claiming all rewards.");
+            setModelButton(true);
             setDialogVisible(true);
             return;
         }
 
         const unstakeResult = await waitForTransactionReceipt(config, {hash: unstakeHash, pollingInterval: 1_000});
+        clearInterval(interval);
         if (unstakeResult.status === "success") {
             setHash(unstakeHash);
             console.log("unstake NFT result: ", unstakeResult);
+            setModelText("Success");
+            setModelButton(true)
+        } else {
+            setModelText("Something went wrong");
+            setModelButton(true)
+        }
+    }
+
+    const claimReferralRewards = async () => {
+        if (!address || !userInfo || userInfo["referral_rewards"]["available"] <= 0) {
+            return;
         }
 
+        setModelText("Progress...")
+        setDialogVisible(true)
+        let i = 0
+        const interval = setInterval(() => {
+            setModelText("Progress" + ".".repeat(++i % 6))
+        }, 1000)
+
+        const rewardsHash = await writeContract(config, {
+            address: ContractAddress.owlGameAddress,
+            abi: ContractAbi.owlGame,
+            functionName: "claimInviterReward",
+        })
+
+        const rewardsResult = await waitForTransactionReceipt(config, {
+            hash: rewardsHash,
+            pollingInterval: 1_000,
+        });
+        clearInterval(interval)
+        if (rewardsResult.status === "success") {
+            setHash(rewardsHash);
+            console.log("rewards result: ", rewardsResult);
+            setModelText("Success");
+            setModelButton(true)
+        } else {
+            setModelText("Something went wrong");
+            setModelButton(true)
+        }
     }
 
     const copyOnClick = (address, i) => {
@@ -370,7 +460,41 @@ function App(props) {
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain} balance={balance}/>
+
+            <Modal title={null}
+                   open={dialogVisible}
+                   footer={null}
+                   onOk={() => setDialogVisible(false)}
+                   onCancel={() => setDialogVisible(false)}
+                   style={{
+                       // display: "flex",
+                       alignItems: "center",
+                       justifyContent: "center",
+                       height: "100vh",
+                       top: "40%",
+                       width: 200,
+                       overflow: "auto"
+                   }}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                }}>
+                    <div style={{marginBottom: "20px", marginTop: "20px", width: "100"}}>
+                        <h4>{modelText}</h4>
+                    </div>
+                    {modelButton === true && (
+                        <OwlButton size={"small"} text={"OK"}
+                                   func={() => {
+                                       setDialogVisible(false);
+                                       setModelButton(false);
+                                   }}/>)}
+                </div>
+            </Modal>
+
             <div className="flexStart">
+
                 <Sider/>
                 <div style={{width: '100%', padding: '16px', height: "100%"}}>
                     <div className="flexBetween flexC" style={{margin: "24px 0", alignItems: "flex-start"}}>
@@ -397,24 +521,24 @@ function App(props) {
                             <div className="text3">Total Earned</div>
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
-                                <img src={bage1} width="48" alt="buff level 1" title={"buff level 1"}
+                                <img src={bage1} width="48" alt="" title={"Owl's Protection"}
                                      style={userInfo["buff_level"] >= 1 ? {marginRight: "16px",} : {
                                          marginRight: "16px",
                                          filter: "grayscale(1)"
                                      }}/>
                                 <img
-                                    src={bage2} width="48" alt="buff level 2" title={"buff level 2"}
+                                    src={bage2} width="48" alt="" title={"Owl's Blessing"}
                                     style={userInfo["buff_level"] >= 2 ? {marginRight: "16px",} : {
                                         marginRight: "16px",
                                         filter: "grayscale(1)"
                                     }}
                                 />
-                                <img src={bage3} width="48" alt="buff level 3" title={"buff level 3"}
+                                <img src={bage3} width="48" alt="" title={"Owl's Deterrence"}
                                      style={userInfo["buff_level"] >= 3 ? {marginRight: "16px",} : {
                                          marginRight: "16px",
                                          filter: "grayscale(1)"
                                      }}/>
-                                <img src={buff4} width="48" alt={"moon boost"} title={"moon boost"}
+                                <img src={buff4} width="48" alt={""} title={"Moon Boost"}
                                      style={userInfo["is_moon_boost"] === true ? {marginRight: "16px",} : {
                                          marginRight: "16px",
                                          filter: "grayscale(1)"
@@ -426,7 +550,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
+                                                        text={"APY: " + addCommaInNumber(userInfo["elf_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -451,7 +575,7 @@ function App(props) {
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
-                                                        text={"APR: " + addCommaInNumber(userInfo["fruit_info"]["apr"]) + "%" || "0%"}/>
+                                                        text={"APY: " + addCommaInNumber(userInfo["fruit_info"]["apr"]) + "%" || "0%"}/>
                                     </div>
 
                                     <div
@@ -501,25 +625,7 @@ function App(props) {
                                     type="dark"
                                     text={"Claim " + addCommaInNumber(userInfo["referral_rewards"]["available"]) + " Owl"}
                                     style={{width: "100%", marginTop: "36px", color: "#9EFF00"}}
-                                    func={async () => {
-                                        if (!address || !userInfo || userInfo["referral_rewards"]["available"] <= 0) {
-                                            return;
-                                        }
-                                        const rewardsHash = await writeContract(config, {
-                                            address: ContractAddress.owlGameAddress,
-                                            abi: ContractAbi.owlGame,
-                                            functionName: "claimInviterReward",
-                                        })
-
-                                        const rewardsResult = await waitForTransactionReceipt(config, {
-                                            hash: rewardsHash,
-                                            pollingInterval: 1_000,
-                                        });
-                                        if (rewardsResult.status === "success") {
-                                            setHash(rewardsHash);
-                                            console.log("rewards result: ", rewardsResult);
-                                        }
-                                    }}
+                                    func={claimReferralRewards}
                                 />
 
                                 <div className="flexBetween" style={{margin: "32px 0 8px"}}>
@@ -564,35 +670,6 @@ function App(props) {
                                 </TabPane>
                                 <TabPane tab="My Owldinal" key="2">
                                     <div style={{height: "100%"}}>
-
-                                        <Modal title={null}
-                                               open={dialogVisible}
-                                               footer={null}
-                                               onOk={() => setDialogVisible(false)}
-                                               onCancel={() => setDialogVisible(false)}
-                                               style={{
-                                                   display: "flex",
-                                                   alignItems: "center",
-                                                   justifyContent: "center",
-                                                   height: "100vh",
-                                                   top: 0,
-                                                   width: "70%",
-                                                   overflow: "auto"
-                                               }}>
-                                            <div style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                flexDirection: "column",
-                                            }}>
-                                                <div style={{marginBottom: "20px", marginTop: "20px"}}>
-                                                    <h4>{modelText}</h4>
-                                                </div>
-                                                <OwlButton size={"small"} text={"OK"}
-                                                           func={() => setDialogVisible(false)}/>
-                                            </div>
-                                        </Modal>
-
                                         <div className="tableItem flexBetween tableHeaderItem">
                                             <div className="tableHeaderItem" style={{width: '40%'}}>NFT</div>
                                             <div className="tableHeaderItem" style={{width: '40%'}}>Status</div>
@@ -603,7 +680,8 @@ function App(props) {
                                             {userOwldinals && (
                                                 userOwldinals.list.map((item, index) => {
                                                     const {token_id, token_url, is_staking} = item;
-                                                    return <OwlRow key={index} token_id={token_id} token_url={token_url}
+                                                    return <OwlRow key={index} token_id={token_id}
+                                                                   token_url={token_url}
                                                                    is_staking={is_staking}
                                                                    noMoreStaking={userOwldinals.noMoreStaking}
                                                                    func={is_staking ? (() => claimNFT([token_id])) : (() => stakeNFT([token_id]))}/>
