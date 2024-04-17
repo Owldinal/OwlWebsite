@@ -11,6 +11,7 @@ import copy_success from "@/assets/copy_success.png";
 import bage1 from "@/assets/bage1.png";
 import bage2 from "@/assets/bage2.png";
 import bage3 from "@/assets/bage3.png";
+import buff4 from "@/assets/buff4.png";
 import { useNavigate } from "react-router-dom";
 
 import { Modal, Tabs } from "antd";
@@ -396,19 +397,28 @@ function App(props) {
                             <div className="text3">Total Earned</div>
 
                             <div className="flexStart" style={{margin: "16px 0 32px"}}>
-                                <img src={bage1} width="48" alt=""
-                                     style={userInfo["buff_level"] >= 1 ? {} : {filter: "grayscale(1)"}}/>
+                                <img src={bage1} width="48" alt="buff level 1" title={"buff level 1"}
+                                     style={userInfo["buff_level"] >= 1 ? {marginRight: "16px",} : {
+                                         marginRight: "16px",
+                                         filter: "grayscale(1)"
+                                     }}/>
                                 <img
-                                    src={bage2}
-                                    width="48"
-                                    alt=""
-                                    style={userInfo["buff_level"] >= 2 ? {margin: "0 16px"} : {
-                                        margin: "0 16px",
+                                    src={bage2} width="48" alt="buff level 2" title={"buff level 2"}
+                                    style={userInfo["buff_level"] >= 2 ? {marginRight: "16px",} : {
+                                        marginRight: "16px",
                                         filter: "grayscale(1)"
                                     }}
                                 />
-                                <img src={bage3} width="48" alt=""
-                                     style={userInfo["buff_level"] >= 3 ? {} : {filter: "grayscale(1)"}}/>
+                                <img src={bage3} width="48" alt="buff level 3" title={"buff level 3"}
+                                     style={userInfo["buff_level"] >= 3 ? {marginRight: "16px",} : {
+                                         marginRight: "16px",
+                                         filter: "grayscale(1)"
+                                     }}/>
+                                <img src={buff4} width="48" alt={"moon boost"} title={"moon boost"}
+                                     style={userInfo["is_moon_boost"] === true ? {marginRight: "16px",} : {
+                                         marginRight: "16px",
+                                         filter: "grayscale(1)"
+                                     }}/>
                             </div>
 
                             <div className="flexBetween flexS">
