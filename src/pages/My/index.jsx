@@ -255,7 +255,7 @@ function App(props) {
         }
 
         setModelText("")
-        setModelButton(true)
+        setOwlGif(true)
         setDialogVisible(true)
         // let i = 0
         // const interval = setInterval(() => {
@@ -301,7 +301,7 @@ function App(props) {
         }
 
         setModelText("")
-        setModelButton(true)
+        setOwlGif(true)
         setDialogVisible(true)
         // let i = 0
         // const interval = setInterval(() => {
@@ -367,7 +367,7 @@ function App(props) {
         }
 
         setModelText("")
-        setModelButton(true)
+        setOwlGif(true)
         setDialogVisible(true)
         // let i = 0
         // const interval = setInterval(() => {
