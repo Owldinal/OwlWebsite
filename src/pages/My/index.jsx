@@ -12,6 +12,7 @@ import bage1 from "@/assets/bage1.png";
 import bage2 from "@/assets/bage2.png";
 import bage3 from "@/assets/bage3.png";
 import buff4 from "@/assets/buff4.png";
+import gif from "@/assets/owl.gif";
 import { useNavigate } from "react-router-dom";
 
 import { Modal, Tabs } from "antd";
@@ -66,6 +67,7 @@ function App(props) {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [modelText, setModelText] = useState("");
     const [modelButton, setModelButton] = useState(false);
+    const [owlGif, setOwlGif] = useState(false);
 
     const [balance, setBalance] = useState("0");
     useEffect(() => {
@@ -188,12 +190,13 @@ function App(props) {
             return;
         }
 
-        setModelText("Progress...")
+        setModelText("")
+        setOwlGif(true);
         setDialogVisible(true)
-        let i = 0
-        const interval = setInterval(() => {
-            setModelText("Progress" + ".".repeat(++i % 3))
-        }, 1000)
+        // let i = 0
+        // const interval = setInterval(() => {
+        //     setModelText("Progress" + ".".repeat(++i % 3))
+        // }, 1000)
 
         if (!isApprove) {
 
@@ -230,17 +233,18 @@ function App(props) {
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
-        clearInterval(interval);
+        // clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
             console.log("stake result: ", stakeResult);
             setModelText("Success");
-            setModelButton(true)
+
         } else {
             setModelText("Something went wrong");
-            setModelButton(true)
-        }
 
+        }
+        setOwlGif(false);
+        setModelButton(true)
 
     }
 
@@ -250,13 +254,14 @@ function App(props) {
             return;
         }
 
-        setModelText("Progress...")
+        setModelText("")
+        setModelButton(true)
         setDialogVisible(true)
-        let i = 0
-        const interval = setInterval(() => {
-            setModelText("Progress" + ".".repeat(++i % 3))
-        }, 1000)
-
+        // let i = 0
+        // const interval = setInterval(() => {
+        //     setModelText("Progress" + ".".repeat(++i % 3))
+        // }, 1000)
+        //
         const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list.slice(0, 20) : userInfo.fruit_info.staked_id_list.slice(0, 20)
 
         const claimHash = await writeContract(config, {
@@ -269,16 +274,16 @@ function App(props) {
         })
 
         const claimResult = await waitForTransactionReceipt(config, {hash: claimHash, pollingInterval: 1_000,});
-        clearInterval(interval);
+        // clearInterval(interval);
         if (claimResult.status === "success") {
             setHash(claimHash);
             console.log("claim result: ", claimResult);
             setModelText("Success");
-            setModelButton(true)
         } else {
             setModelText("Something went wrong");
-            setModelButton(true)
         }
+        setOwlGif(false);
+        setModelButton(true)
 
     };
 
@@ -295,12 +300,13 @@ function App(props) {
             return;
         }
 
-        setModelText("Progress...")
+        setModelText("")
+        setModelButton(true)
         setDialogVisible(true)
-        let i = 0
-        const interval = setInterval(() => {
-            setModelText("Progress" + ".".repeat(++i % 3))
-        }, 1000)
+        // let i = 0
+        // const interval = setInterval(() => {
+        //     setModelText("Progress" + ".".repeat(++i % 3))
+        // }, 1000)
 
         const approveForAll = await readContracts(config, {
             contracts: [{
@@ -342,17 +348,16 @@ function App(props) {
         })
 
         const stakeResult = await waitForTransactionReceipt(config, {hash: stakeHash, pollingInterval: 1_000,});
-        clearInterval(interval);
+        // clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
             console.log("stake NFT result: ", stakeResult);
             setModelText("Success");
-            setModelButton(true)
         } else {
             setModelText("Something went wrong");
-            setModelButton(true)
         }
-
+        setOwlGif(false);
+        setModelButton(true)
     }
 
     const claimNFT = async (id) => {
@@ -361,12 +366,13 @@ function App(props) {
             return;
         }
 
-        setModelText("Progress...")
+        setModelText("")
+        setModelButton(true)
         setDialogVisible(true)
-        let i = 0
-        const interval = setInterval(() => {
-            setModelText("Progress" + ".".repeat(++i % 3))
-        }, 1000)
+        // let i = 0
+        // const interval = setInterval(() => {
+        //     setModelText("Progress" + ".".repeat(++i % 3))
+        // }, 1000)
 
         let unstakeHash;
         try {
@@ -388,16 +394,16 @@ function App(props) {
         }
 
         const unstakeResult = await waitForTransactionReceipt(config, {hash: unstakeHash, pollingInterval: 1_000});
-        clearInterval(interval);
+        // clearInterval(interval);
         if (unstakeResult.status === "success") {
             setHash(unstakeHash);
             console.log("unstake NFT result: ", unstakeResult);
             setModelText("Success");
-            setModelButton(true)
         } else {
             setModelText("Something went wrong");
-            setModelButton(true)
         }
+        setOwlGif(false);
+        setModelButton(true)
     }
 
     const claimReferralRewards = async () => {
@@ -405,12 +411,13 @@ function App(props) {
             return;
         }
 
-        setModelText("Progress...")
+        setModelText("")
+        setModelButton(true)
         setDialogVisible(true)
-        let i = 0
-        const interval = setInterval(() => {
-            setModelText("Progress" + ".".repeat(++i % 6))
-        }, 1000)
+        // let i = 0
+        // const interval = setInterval(() => {
+        //     setModelText("Progress" + ".".repeat(++i % 6))
+        // }, 1000)
 
         const rewardsHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
@@ -422,16 +429,16 @@ function App(props) {
             hash: rewardsHash,
             pollingInterval: 1_000,
         });
-        clearInterval(interval)
+        // clearInterval(interval)
         if (rewardsResult.status === "success") {
             setHash(rewardsHash);
             console.log("rewards result: ", rewardsResult);
             setModelText("Success");
-            setModelButton(true)
         } else {
             setModelText("Something went wrong");
-            setModelButton(true)
         }
+        setOwlGif(false);
+        setModelButton(true)
     }
 
     const copyOnClick = (address, i) => {
@@ -481,6 +488,7 @@ function App(props) {
                     justifyContent: "center",
                     flexDirection: "column",
                 }}>
+                    {owlGif === true && <img src={gif} alt="" width={"100%"}/>}
                     <div style={{marginBottom: "20px", marginTop: "20px", width: "100"}}>
                         <h4>{modelText}</h4>
                     </div>
