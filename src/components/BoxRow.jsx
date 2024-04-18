@@ -13,7 +13,7 @@ export default function (props) {
                     </div>
                     {(props.box_type === 1 ? "Elf" : "Magic Fruit") + " # " + props.token_id}
                 </div>
-                <div style={{width: '70px'}}>{props.earning.toString().split('.')[0]}</div>
+                <div style={{width: '70px'}}>{props.claimed.toString().split('.')[0]}</div>
                 <div
                     style={{width: '70px'}}>{props.earning.toString().split('.')[0]}</div>
                 <div style={{width: '37px'}}>{props.apr.toString().split('.')[0] + "%"}</div>
