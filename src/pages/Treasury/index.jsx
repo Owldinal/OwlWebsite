@@ -328,9 +328,33 @@ function App(props) {
 
                         {gameInfo && (<div className='leftInfo'>
 
-                            <div className="text1">Total Rewards</div>
-                            <div className="text2">
-                                {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                                <div>
+                                    <div className="text1">Total Rewards</div>
+                                    <div className="text2">
+                                        {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
+                                    </div>
+                                </div>
+                                <div style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    // justifyContent: "space-between",
+                                    flexWrap: "warp"
+                                }}>
+                                    <div className={"text3"}
+                                         style={{
+                                             display: "flex",
+                                             flexDirection: "column",
+                                             textAlign: "right",
+                                             marginRight: "16px"
+                                         }}>
+                                        <div>{"Staked Elf: "}</div>
+                                        <div>{gameInfo["staked_elf_count"]}</div>
+                                        <div>{"Staked Magic Fruit: "}</div>
+                                        <div>{gameInfo["staked_fruit_count"]}</div>
+                                    </div>
+                                </div>
                             </div>
                             {priceUSD && (
                                 <>
