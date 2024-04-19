@@ -229,7 +229,7 @@ function App(props) {
 
             }, 15000)
 
-        }
+        })
 
     }
 
@@ -429,7 +429,7 @@ function App(props) {
                                 {/*</div>*/}
                             </div>
                             <Input
-                                placeholder="Enter Amount (x100 max)"
+                                placeholder="Enter Amount ( x100 max )"
                                 // type="number"
                                 size="large"
                                 style={{margin: "12px 0"}}
