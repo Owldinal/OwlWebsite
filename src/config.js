@@ -17,10 +17,11 @@ export const ContractAddress = {
     // owlGameAddress: "0xC0E5d058eeF687B0c3cEf2967D0B55AD81eb9C21",
     // genOneBoxAddress: "0xC9761572c264ADE5253d4F56a574fa0F4905ca5d",
     // local
-    owldinalNftAddress: "0x9792924dC19178C7Ac14aF755B3C3a33E438507B",
-    owlTokenAddress: "0x565F0346D0747b4766069933Cb8d2e9fbD0e2A43",
-    genOneBoxAddress: "0xe7E26b6b007E3B31429C3aF1233fD80AF3A6CfD7",
-    owlGameAddress: "0x07716738535CDe926Aa96292c1391Eff2c42a55e",
+    owldinalNftAddress: "0x12C21F9b0B768a908eDfD11e577e63F13AfA4f4b",
+    owlTokenAddress: "0x6D6ab11aE001D4e020090f5887614D3478B63277",
+    genOneBoxAddress: "0xCa39928F67F177c173503E9CB71223741da307CA",
+    owlGameAddress: "0x67B4Fb04eBC23F1a2fdFd63f6Ab46155E7CfCE0B",
+
 
 }
 
