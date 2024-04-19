@@ -183,9 +183,13 @@ function App(props) {
         });
         console.log("request mint result: ", requestMintResult)
 
-        setModelText("Waiting for opening box...");
+        setModelText("Waiting for the box to open");
         const mintHash = await waitForMintHash(requestMintHash)
         console.log("mintHash: ", mintHash)
+        if (!mintHash) {
+            setModelText("Mint")
+            return;
+        }
 
         const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,})
 
@@ -219,7 +223,7 @@ function App(props) {
 
                 const interval = setInterval(async () => {
 
-                    const result = await getData.getMintHash(requestMintHash)
+                    const result = await getData.getMintHash()
                     console.log("mint hash result:", result)
                     if (result.code === 0 && result.data.mint_tx.length > 0) {
                         clearInterval(interval);
@@ -227,6 +231,12 @@ function App(props) {
                     }
 
                 }, 1000)
+
+                setTimeout(() => {
+                    console.log("mint hash timeout");
+                    clearInterval(interval);
+                    resolve()
+                }, 15000)
 
             }, 15000)
 
