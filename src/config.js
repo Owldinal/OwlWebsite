@@ -17,10 +17,15 @@ export const ContractAddress = {
     // owlGameAddress: "0xC0E5d058eeF687B0c3cEf2967D0B55AD81eb9C21",
     // genOneBoxAddress: "0xC9761572c264ADE5253d4F56a574fa0F4905ca5d",
     // local
-    owlTokenAddress: "0xf8bB8324Cd226f6229dbB8792C66119832791A59",
-    owldinalNftAddress: "0x73a11097dCf0817909039d2661a15cbc8F6624eF",
-    owlGameAddress: "0x8338B3295f87DEBa418c2F0bb7497414b0D73AC2",
-    genOneBoxAddress: "0xB9D8660b4a45aA24EC6dB53485E4334364C773A6",
+    // owlTokenAddress: "0xf8bB8324Cd226f6229dbB8792C66119832791A59",
+    // owldinalNftAddress: "0x73a11097dCf0817909039d2661a15cbc8F6624eF",
+    // owlGameAddress: "0x8338B3295f87DEBa418c2F0bb7497414b0D73AC2",
+    // genOneBoxAddress: "0xB9D8660b4a45aA24EC6dB53485E4334364C773A6",
+    // prod
+    owldinalNftAddress: "0x3cb8094fb209d21Aab2E474e91476EE9EEc332C9",
+    owlTokenAddress: "0xf254dcD9e270B8E0B92A68e197BE7C6355e8d87b",
+    genOneBoxAddress: "0xeF73c34E79BDb6b2f614ed163CFCA51237Ea83A3",
+    owlGameAddress: "0xDe10BDb5912502117eb0Ad4387ae94Ac0Cd9D1d3",
 
 }
 

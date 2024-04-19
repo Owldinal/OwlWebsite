@@ -6,9 +6,9 @@ import { merlin } from "viem/chains";
 import { merlinLocal, merlinTest } from "@/config.js";
 import MyItem from "@/pages/MyItem/index.jsx";
 
-const environment = "test";
+const environment = "prod";
 
-const targetChain = merlinLocal;
+const targetChain = merlin;
 const contractAddress = environment === "test" ?
     // test
     "0x6a8a00E25A388162Bf1C495225D1046243666607" :
