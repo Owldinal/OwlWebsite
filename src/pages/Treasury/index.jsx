@@ -24,7 +24,6 @@ import {
 } from "@wagmi/core";
 import { config } from "@/main.jsx";
 import Popup from "@components/Popup/index.jsx"
-import { parseGwei } from "viem";
 
 function App(props) {
 
@@ -168,19 +167,34 @@ function App(props) {
 
         }
 
-        const mintHash = await writeContract(config, {
+        const requestMintHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
-            functionName: 'mintMysteryBox',
+            functionName: 'requestMint',
             args: [
                 BigInt(inputValue)
             ],
             // gas: 1000000n,
             // gasPrice: 10000000000n,
         })
+        console.log("request hash: ", requestMintHash)
 
-        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,});
-        console.log("mint result: ", mintResult)
+        const requestMintResult = await waitForTransactionReceipt(config, {
+            hash: requestMintHash,
+            pollingInterval: 1_000,
+        });
+        console.log("request mint result: ", requestMintResult)
+
+        setModelText("Waiting for the box to open");
+        const mintHash = await waitForMintHash(requestMintHash)
+        console.log("mintHash: ", mintHash)
+        if (!mintHash) {
+            setModelText("Mint")
+            return;
+        }
+
+        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,})
+
         if (mintResult && mintResult.status === "success" && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
             let count = [0, 0, 0, 0];
@@ -201,6 +215,34 @@ function App(props) {
 
         }
 
+    }
+
+    const waitForMintHash = async (requestMintHash) => {
+
+        return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+                const interval = setInterval(async () => {
+
+                    const result = await getData.getMintHash()
+                    console.log("mint hash result:", result)
+                    if (result.code === 0 && result.data.mint_tx.length > 0) {
+                        clearInterval(interval);
+                        resolve(result.data.mint_tx)
+                    }
+
+                }, 1000)
+
+                setTimeout(() => {
+                    console.log("mint hash timeout");
+                    clearInterval(interval);
+                    resolve()
+                }, 15000)
+
+            }, 15000)
+
+        })
 
     }
 
@@ -437,7 +479,7 @@ function App(props) {
                                 {/*</div>*/}
                             </div>
                             <Input
-                                placeholder="Enter Amount (x100 max)"
+                                placeholder="Enter Amount ( x100 max )"
                                 // type="number"
                                 size="large"
                                 style={{margin: "12px 0"}}
@@ -484,7 +526,7 @@ function App(props) {
                                     let {address, amount, count, description, operation, transaction_hash} = item;
                                     return (
                                         <div key={index}>
-                                            <a href={"https://testnet-scan.merlinchain.io/tx/" + transaction_hash}
+                                            <a href={"https://scan.merlinchain.io/tx/" + transaction_hash}
                                                target={"_blank"} style={{textDecoration: 'none'}}>
                                                 <div className="tableItem flexBetween">
                                                     <div
