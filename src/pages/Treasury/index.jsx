@@ -6,6 +6,8 @@ import Sider from "@/components/Sider/index.jsx";
 import box from "@/assets/box.png";
 import share from "@/assets/share.png";
 import * as echarts from "echarts";
+import elf_mini from "@/assets/elf_mini.png";
+import fruit_mini from "@/assets/fruit_mini.png";
 
 import { Input } from "antd";
 import { useAccount, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
@@ -328,9 +330,46 @@ function App(props) {
 
                         {gameInfo && (<div className='leftInfo'>
 
-                            <div className="text1">Total Rewards</div>
-                            <div className="text2">
-                                {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                                <div>
+                                    <div className="text1">Total Rewards</div>
+                                    <div className="text2">
+                                        {addCommaInNumber(gameInfo["total_rewards"])}<span>{coin}</span>
+                                    </div>
+                                </div>
+                                <div style={{display: "flex", flexDirection: "row", alignItems: "start"}}>
+                                    <div style={{marginRight: "5px", marginTop: "5px"}}>{"Staked "}</div>
+                                    <div className={"countTab"}>
+                                        <img src={elf_mini} alt={""} width={"20px"}/>
+                                        <div className={"text5"}
+                                             style={{marginLeft: "5px"}}> {"x " + (gameInfo["staked_elf_count"])}</div>
+                                    </div>
+                                    <div className={"countTab"} style={{marginRight: "10px"}}>
+                                        <img src={fruit_mini} alt={""} width={"20px"}/>
+                                        <div className={"text5"}
+                                             style={{marginLeft: "5px"}}> {"x " + (gameInfo["staked_fruit_count"])}</div>
+                                    </div>
+                                </div>
+                                {/*<div style={{*/}
+                                {/*    display: "flex",*/}
+                                {/*    alignItems: "center",*/}
+                                {/*    flexDirection: "row",*/}
+                                {/*    // justifyContent: "space-between",*/}
+                                {/*    flexWrap: "warp"*/}
+                                {/*}}>*/}
+                                {/*    <div className={"text3"}*/}
+                                {/*         style={{*/}
+                                {/*             display: "flex",*/}
+                                {/*             flexDirection: "column",*/}
+                                {/*             textAlign: "right",*/}
+                                {/*             marginRight: "16px"*/}
+                                {/*         }}>*/}
+                                {/*        <div>{"Staked Elf: "}</div>*/}
+                                {/*        <div>{gameInfo["staked_elf_count"]}</div>*/}
+                                {/*        <div>{"Staked Magic Fruit: "}</div>*/}
+                                {/*        <div>{gameInfo["staked_fruit_count"]}</div>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                             </div>
                             {priceUSD && (
                                 <>
