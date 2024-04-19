@@ -22,7 +22,6 @@ import {
 } from "@wagmi/core";
 import { config } from "@/main.jsx";
 import Popup from "@components/Popup/index.jsx"
-import { parseGwei } from "viem";
 
 function App(props) {
 
@@ -166,10 +165,10 @@ function App(props) {
 
         }
 
-        const mintHash = await writeContract(config, {
+        const requestMintHash = await writeContract(config, {
             address: ContractAddress.owlGameAddress,
             abi: ContractAbi.owlGame,
-            functionName: 'mintMysteryBox',
+            functionName: 'requestMint',
             args: [
                 BigInt(inputValue)
             ],
@@ -177,8 +176,18 @@ function App(props) {
             // gasPrice: 10000000000n,
         })
 
-        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,});
-        console.log("mint result: ", mintResult)
+        const requestMintResult = await waitForTransactionReceipt(config, {
+            hash: requestMintHash,
+            pollingInterval: 1_000,
+        });
+        console.log("request mint result: ", requestMintResult)
+
+        setModelText("Waiting for opening box...");
+        const mintHash = await waitForMintHash(requestMintHash)
+        console.log("mintHash: ", mintHash)
+
+        const mintResult = await waitForTransactionReceipt(config, {hash: mintHash, pollingInterval: 1_000,})
+
         if (mintResult && mintResult.status === "success" && mintResult.logs[0].topics[0] === "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") {
 
             let count = [0, 0, 0, 0];
@@ -199,6 +208,28 @@ function App(props) {
 
         }
 
+    }
+
+    const waitForMintHash = async (requestMintHash) => {
+
+        return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+                const interval = setInterval(async () => {
+
+                    const result = await getData.getMintHash()
+                    console.log("mint hash result:", result)
+                    if (result.code === 0 && result.data.mint_tx.length > 0) {
+                        clearInterval(interval);
+                        resolve(result.data.mint_tx)
+                    }
+
+                }, 1000)
+
+            }, 15000)
+
+        }
 
     }
 
