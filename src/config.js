@@ -21,8 +21,6 @@ export const ContractAddress = {
     owlTokenAddress: "0x6D6ab11aE001D4e020090f5887614D3478B63277",
     genOneBoxAddress: "0xCa39928F67F177c173503E9CB71223741da307CA",
     owlGameAddress: "0x67B4Fb04eBC23F1a2fdFd63f6Ab46155E7CfCE0B",
-
-
 }
 
 export const ContractAbi = {
