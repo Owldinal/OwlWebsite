@@ -58,7 +58,7 @@ function App(props) {
     const [userFruitAndELf, setUserFruitAndELf] = useState();
 
     const [isApprove, setIsApprove] = useState(false);
-    const [hash, setHash] = useState();
+    const [hash, setHash] = useState("");
 
     const [assumeNew, setAssumeNew] = useState(false);
     const [copySuccess1, setCopySuccess1] = useState(false);
@@ -236,6 +236,9 @@ function App(props) {
         // clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
+            setTimeout(() => {
+                setHash(stakeHash + "refresh");
+            }, 3000)
             console.log("stake result: ", stakeResult);
             setModelText("Success");
 
@@ -277,6 +280,9 @@ function App(props) {
         // clearInterval(interval);
         if (claimResult.status === "success") {
             setHash(claimHash);
+            setTimeout(() => {
+                setHash(claimHash + "refresh");
+            }, 3000)
             console.log("claim result: ", claimResult);
             setModelText("Success");
         } else {
@@ -351,6 +357,9 @@ function App(props) {
         // clearInterval(interval);
         if (stakeResult.status === "success") {
             setHash(stakeHash);
+            setTimeout(() => {
+                setHash(stakeHash + "refresh");
+            }, 3000)
             console.log("stake NFT result: ", stakeResult);
             setModelText("Success");
         } else {
@@ -398,6 +407,9 @@ function App(props) {
         // clearInterval(interval);
         if (unstakeResult.status === "success") {
             setHash(unstakeHash);
+            setTimeout(() => {
+                setHash(unstakeHash + "refresh");
+            }, 3000)
             console.log("unstake NFT result: ", unstakeResult);
             setModelText("Success");
         } else {
@@ -433,6 +445,9 @@ function App(props) {
         // clearInterval(interval)
         if (rewardsResult.status === "success") {
             setHash(rewardsHash);
+            setTimeout(() => {
+                setHash(rewardsHash + "refresh");
+            }, 3000)
             console.log("rewards result: ", rewardsResult);
             setModelText("Success");
         } else {
