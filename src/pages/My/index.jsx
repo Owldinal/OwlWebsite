@@ -69,6 +69,8 @@ function App(props) {
     const [modelButton, setModelButton] = useState(false);
     const [owlGif, setOwlGif] = useState(false);
 
+    const [infoVisible, setInfoVisible] = useState(false);
+
     const [balance, setBalance] = useState("0");
     useEffect(() => {
         if (!isConnected) {
@@ -520,6 +522,39 @@ function App(props) {
                 </div>
             </Modal>
 
+            <Modal title={null}
+                   open={infoVisible}
+                   footer={null}
+                   onOk={() => setInfoVisible(false)}
+                   onCancel={() => setInfoVisible(false)}
+                   style={{
+                       // display: "flex",
+                       height: "500px",
+                       width: "500px",
+                       alignItems: "center",
+                       justifyContent: "center",
+                       top: "30%",
+                       // overflow: "auto"
+                   }}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    height: "300px",
+                }}>
+                    <div style={{marginBottom: "20px", height: "50%"}}>
+                        <h3>
+                            {"Referral rewards are unlocked by minting Gen1 blind boxes. Accumulate n mints to unlock k*n referral rewards:"}<br/>
+                            {"- If n ≤ 10, k = 3"}<br/>
+                            {"- If 10 < n ≤ 50, k = 5.5"}<br/>
+                            {"- If 50 < n ≤ 100, k = 7"}<br/>
+                            {"- If n > 100, k = 8.5"}
+                        </h3>
+                    </div>
+                </div>
+            </Modal>
+
             <div className="flexStart">
 
                 <Sider/>
@@ -625,8 +660,15 @@ function App(props) {
                             </div>
 
                             <div className="infoItem2" style={{margin: "16px 0"}}>
-                                <div className="text5" style={{marginBottom: "30px"}}>
-                                    Referral Rewards
+                                <div style={{flexDirection: "row", display: "flex"}}>
+                                    <div className="text5" style={{marginBottom: "30px"}}>
+                                        Referral Rewards
+                                    </div>
+                                    <div className={"text5"} style={{marginLeft: "10px", cursor: "pointer"}}
+                                         onClick={() => {
+                                             setInfoVisible(true)
+                                         }}>i
+                                    </div>
                                 </div>
 
                                 <div className="flexBetween" style={{width: "100%"}}>
