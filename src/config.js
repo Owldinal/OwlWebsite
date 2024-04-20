@@ -46,6 +46,7 @@ export const list = {
     GAME_INFO: `${API_URL}/game/info`,
     REWARDS_TREND: `${API_URL}/game/rewards_trend`,
     REWARDS_HISTORY: `${API_URL}/game/rewards_history`,
+    MINT_HASH: `${API_URL}/user/mint_tx`,
 }
 
 export const getData = {
@@ -82,7 +83,12 @@ export const getData = {
     getPriceUSD: async () => {
         const response = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB")
         return await response.json()
-    }
+    },
+    getMintHash: async (requestHash) => {
+        const request = list.MINT_HASH + "?tx=" + requestHash;
+        const response = await fetch(request);
+        return await response.json();
+    },
 }
 
 export const merlinTest = defineChain({

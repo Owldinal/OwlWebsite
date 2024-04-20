@@ -225,7 +225,7 @@ function App(props) {
 
                 const interval = setInterval(async () => {
 
-                    const result = await getData.getMintHash()
+                    const result = await getData.getMintHash(requestMintHash)
                     console.log("mint hash result:", result)
                     if (result.code === 0 && result.data.mint_tx.length > 0) {
                         clearInterval(interval);
