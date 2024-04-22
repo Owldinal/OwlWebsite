@@ -226,7 +226,7 @@ function App(props) {
                 const interval = setInterval(async () => {
 
                     const result = await getData.getMintHash(requestMintHash)
-                    console.log("mint hash result:", result)
+                    console.log("wait for mint hash result:", result)
                     if (result.code === 0 && result.data.mint_tx.length > 0) {
                         clearInterval(interval);
                         resolve(result.data.mint_tx)
@@ -235,7 +235,7 @@ function App(props) {
                 }, 1000)
 
                 setTimeout(() => {
-                    console.log("mint hash timeout");
+                    console.log("wait for mint hash timeout");
                     clearInterval(interval);
                     resolve()
                 }, 15000)
@@ -479,7 +479,7 @@ function App(props) {
                                 {/*</div>*/}
                             </div>
                             <Input
-                                placeholder="Enter Amount ( x100 max )"
+                                placeholder="Enter Amount ( x20 max )"
                                 // type="number"
                                 size="large"
                                 style={{margin: "12px 0"}}
@@ -487,7 +487,7 @@ function App(props) {
                                 onChange={(e) => {
                                     const v = Math.ceil(Number(e.target.value));
                                     if (!isNaN(v)) {
-                                        setInputValue(v > 100 ? "100" : v.toString());
+                                        setInputValue(v > 20 ? "20" : v.toString());
                                     } else {
                                         setInputValue("0");
                                     }
