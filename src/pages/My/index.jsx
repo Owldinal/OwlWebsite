@@ -6,6 +6,7 @@ import TopHeader from "@/components/TopHeader/index.jsx";
 import Sider from "@/components/Sider/index.jsx";
 import arrup from "@/assets/arrup.png";
 import a1 from "@/assets/a1.png";
+import i from "@/assets/i.png";
 import copy from "@/assets/copy.png";
 import copy_success from "@/assets/copy_success.png";
 import bage1 from "@/assets/bage1.png";
@@ -664,10 +665,11 @@ function App(props) {
                                     <div className="text5" style={{marginBottom: "30px"}}>
                                         Referral Rewards
                                     </div>
-                                    <div className={"text5"} style={{marginLeft: "10px", cursor: "pointer"}}
+                                    <div className={"text5"} style={{marginLeft: "15px", cursor: "pointer"}}
                                          onClick={() => {
                                              setInfoVisible(true)
-                                         }}>i
+                                         }}>
+                                        <img src={i} alt={""} style={{ width: "16px"}}/>
                                     </div>
                                 </div>
 
