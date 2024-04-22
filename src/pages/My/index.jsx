@@ -669,7 +669,7 @@ function App(props) {
                                          onClick={() => {
                                              setInfoVisible(true)
                                          }}>
-                                        <img src={i} alt={""} style={{ width: "16px"}}/>
+                                        <img src={i} alt={""} style={{width: "16px"}}/>
                                     </div>
                                 </div>
 
@@ -721,12 +721,12 @@ function App(props) {
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Treasury Revenue" key="1">
                                     <div className="tableItem flexBetween tableHeaderItem">
-                                        <div className="tableHeaderItem" style={{width: '136px'}}>NFT</div>
-                                        <div className="tableHeaderItem" style={{width: '70px'}}>Claimed</div>
-                                        <div className="tableHeaderItem" style={{width: '70px'}}>Earning</div>
-                                        <div className="tableHeaderItem" style={{width: '37px'}}>APR</div>
-                                        <div className="tableHeaderItem" style={{width: '56px'}}>Status</div>
-                                        <div className="tableHeaderItem" style={{width: '78px'}}>Operate</div>
+                                        <div className="tableHeaderItem" style={{width: '200px'}}>NFT</div>
+                                        <div className="tableHeaderItem" style={{width: '100px'}}>Claimed</div>
+                                        <div className="tableHeaderItem" style={{width: '100px'}}>Earning</div>
+                                        <div className="tableHeaderItem" style={{width: '100px'}}>APR</div>
+                                        <div className="tableHeaderItem" style={{width: '80px'}}>Status</div>
+                                        <div className="tableHeaderItem" style={{width: '75px'}}>Operate</div>
                                     </div>
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
