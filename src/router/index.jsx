@@ -8,7 +8,7 @@ import MyItem from "@/pages/MyItem/index.jsx";
 
 const environment = "prod";
 
-const targetChain = merlin;
+const targetChain = merlinLocal;
 const contractAddress = environment === "test" ?
     // test
     "0x6a8a00E25A388162Bf1C495225D1046243666607" :

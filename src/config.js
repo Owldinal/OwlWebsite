@@ -6,7 +6,7 @@ import OwlToken from "./abi/OwlToken.json";
 
 export const coin = "Owl";
 
-const API_URL = 'https://api.owldinal.xyz/api';
+const API_URL = 'https://api-new.owldinal.xyz/api';
 
 export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
@@ -17,17 +17,15 @@ export const ContractAddress = {
     // owlGameAddress: "0xC0E5d058eeF687B0c3cEf2967D0B55AD81eb9C21",
     // genOneBoxAddress: "0xC9761572c264ADE5253d4F56a574fa0F4905ca5d",
     // local
-    // owlTokenAddress: "0xf8bB8324Cd226f6229dbB8792C66119832791A59",
-    // owldinalNftAddress: "0x73a11097dCf0817909039d2661a15cbc8F6624eF",
-    // owlGameAddress: "0x8338B3295f87DEBa418c2F0bb7497414b0D73AC2",
-    // genOneBoxAddress: "0xB9D8660b4a45aA24EC6dB53485E4334364C773A6",
+    owldinalNftAddress : "0x3FD1e177e98017902fc1a0F51De10Dc28645D034",
+    owlTokenAddress : "0xe13481571787F0fdb2C7AD8D295c18856cA76494",
+    genOneBoxAddress : "0xB73b4C72Dfc10B46cdF4CCDe63Def3336566B3BD",
+    owlGameAddress : "0xfF454DbF7aBe0aF44C78c16DDccD6f3F80166F12",
     // prod
-    owldinalNftAddress: "0x3cb8094fb209d21Aab2E474e91476EE9EEc332C9",
-    owlTokenAddress: "0xf254dcD9e270B8E0B92A68e197BE7C6355e8d87b",
-    genOneBoxAddress: "0x850DA4D6cC3d1EdADA39C48d42B4b664d51F3c4d",
-    owlGameAddress: "0xf0d330DB633b58446c895ff957a355FEC45b9511",
-
-
+    // owldinalNftAddress: "0x3cb8094fb209d21Aab2E474e91476EE9EEc332C9",
+    // owlTokenAddress: "0xf254dcD9e270B8E0B92A68e197BE7C6355e8d87b",
+    // genOneBoxAddress: "0x850DA4D6cC3d1EdADA39C48d42B4b664d51F3c4d",
+    // owlGameAddress: "0xf0d330DB633b58446c895ff957a355FEC45b9511",
 }
 
 export const ContractAbi = {
