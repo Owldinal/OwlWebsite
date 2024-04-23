@@ -19,7 +19,7 @@ export default function (props) {
                 <div style={{width: "10%"}}>
                     <OwlButton text={props.is_staking === true ? 'Unstake' : 'Stake'} size="small"
                                type={props.is_staking === true ? "primary" : props.noMoreStaking === true ? "light" : "primary"}
-                               />
+                               func={props.func}/>
                 </div>
             </div>
         </>
