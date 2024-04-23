@@ -239,7 +239,7 @@ function App(props) {
                     console.log("wait for mint hash timeout");
                     clearInterval(interval);
                     resolve()
-                }, 15000)
+                }, 30000)
 
             }, 15000)
 

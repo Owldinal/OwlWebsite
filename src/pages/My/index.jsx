@@ -189,7 +189,7 @@ function App(props) {
 
     const stake = async (type, id) => {
 
-        return;
+        // return;
 
         if (!address || !userInfo) {
             return;
@@ -300,7 +300,7 @@ function App(props) {
 
     const stakeNFT = async (id) => {
 
-        return;
+        // return;
 
         if (!address || !userOwldinals) {
             return;
