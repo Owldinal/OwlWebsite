@@ -527,7 +527,7 @@ function App(props) {
                                     let {address, amount, count, description, operation, transaction_hash} = item;
                                     return (
                                         <div key={index}>
-                                            <a href={"https://testnet-scan.merlinchain.io/tx/" + transaction_hash}
+                                            <a href={"https://scan.merlinchain.io/tx/" + transaction_hash}
                                                target={"_blank"} style={{textDecoration: 'none'}}>
                                                 <div className="tableItem flexBetween">
                                                     <div

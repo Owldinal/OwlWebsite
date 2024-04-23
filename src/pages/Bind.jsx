@@ -3,7 +3,6 @@ import logo from "@/assets/logo.png";
 import OwlButton from "@components/Button/index.jsx";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import b1 from "@/assets/b1.png";
-import { merlinTest } from "@/main.jsx";
 import { useEffect, useState } from "react";
 import { Modal } from "antd";
 import HomeHeader from "@components/Header.jsx";
