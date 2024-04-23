@@ -21,15 +21,16 @@ import {
     useWaitForTransactionReceipt,
     useWriteContract,
 } from "wagmi";
-import { merlin, sepolia } from "viem/chains";
-import mabi from "./abi.json";
-import { merlinTest } from "@/main.jsx";
+import abi from "./abi.json";
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
+import { hKey, list } from "./config.js";
 
 
-function App() {
+function App(props) {
+
+    const {contractAddress, targetChain} = props;
 
     const navigate = useNavigate();
     const {openConnectModal, connectModalOpen} = useConnectModal();
@@ -39,18 +40,9 @@ function App() {
     const {chains, switchChain} = useSwitchChain();
     const {data: hash, writeContract, isPending, error} = useWriteContract()
 
-    const environment = "prod";
-    const targetChain = environment === "test" ? merlinTest : merlin;
-    const abi = mabi;
-    const contractAddress = environment === "test" ?
-        // test
-        "0x6a8a00E25A388162Bf1C495225D1046243666607" :
-        // prod
-        "0x6B18e87beb44a72eB48dA76a881F9104cb97A180";
     const totalNFT = 999;
     const price = 0.0045;
     const maxMint = 1;
-    const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
     const [check, setCheck] = useState(1);
     const [passHcaptcha, setPassHcaptcha] = useState("");
@@ -66,53 +58,54 @@ function App() {
 
     const ipfsURL = "https://ipfs.io/ipfs/QmZPvN9YwEjLkrczWgRiPFshBxgx8Z4WXwheoErSKjJiGi/Owldinal";
 
-    useEffect(() => {
-        console.log("account:", address);
-        console.log("chain:", chain);
-    }, [address, chain])
-
-    // const handleScrollNew = (event) => {
-    //
-    //     // window.removeEventListener("wheel", handleScrollNew);
-    //     exec && clearTimeout(exec);
-    //     // console.log("window.onwheel: ", event.deltaY);
-    //
-    //     if (open) {
-    //
-    //         let next;
-    //         if (event.deltaY > 0) {
-    //             next = Math.min(3, tab + 1);
-    //         } else if (event.deltaY < 0) {
-    //             next = Math.max(1, tab - 1);
-    //         }
-    //
-    //         if (next && next !== tab) {
-    //             setTab(next);
-    //             window.removeEventListener("wheel", handleScrollNew);
-    //             open = false;
-    //         }
-    //
-    //     }
-    //
-    //     exec = setTimeout(() => {
-    //         open = true;
-    //         // window.addEventListener("wheel", handleScrollNew);
-    //         // addListener();
-    //     }, 50);
-    //
-    // };
-
-    // just pause for now
     // useEffect(() => {
-    //
-    //     setTimeout(() => {
-    //         window.addEventListener("wheel", handleScrollNew);
-    //     }, 800);
-    //     return () => {
-    //         window.removeEventListener("wheel", handleScrollNew);
-    //     };
-    //
-    // }, [tab]);
+    //     console.log("account:", address);
+    //     console.log("chain:", chain);
+    //     console.log("targetChain:", targetChain);
+    //     console.log("chains:", chains);
+    // }, [address, chain])
+
+    const handleScrollNew = (event) => {
+
+        // window.removeEventListener("wheel", handleScrollNew);
+        exec && clearTimeout(exec);
+        // console.log("window.onwheel: ", event.deltaY);
+
+        if (open) {
+
+            let next;
+            if (event.deltaY > 0) {
+                next = Math.min(3, tab + 1);
+            } else if (event.deltaY < 0) {
+                next = Math.max(1, tab - 1);
+            }
+
+            if (next && next !== tab) {
+                setTab(next);
+                window.removeEventListener("wheel", handleScrollNew);
+                open = false;
+            }
+
+        }
+
+        exec = setTimeout(() => {
+            open = true;
+            // window.addEventListener("wheel", handleScrollNew);
+            // addListener();
+        }, 50);
+
+    };
+
+    useEffect(() => {
+
+        setTimeout(() => {
+            window.addEventListener("wheel", handleScrollNew);
+        }, 800);
+        return () => {
+            window.removeEventListener("wheel", handleScrollNew);
+        };
+
+    }, [tab]);
 
     // const gas = useEstimateGas({
     //     address: contractAddress,
@@ -131,7 +124,7 @@ function App() {
 
         console.log("hcaptcha: ", passHcaptcha);
 
-        const url = 'https://api.owldinal.xyz/api/generateSignature';
+        const url = list.GENERATE_SIGNATURE
         const data = {
             wallet: address,
             hcaptcha: passHcaptcha
@@ -536,10 +529,10 @@ function App() {
                     </div>
 
 
-                    {/*<div className="tab flexCenter" onClick={() => navigate("/treasury")}>*/}
-                    {/*    Play*/}
-                    {/*</div>*/}
-                    <div className="disabledTab flexCenter">Play</div>
+                    <div className="tab flexCenter" onClick={() => navigate("/treasury")}>
+                        Play
+                    </div>
+                    {/*<div className="disabledTab flexCenter">Play</div>*/}
 
 
                 </div>
