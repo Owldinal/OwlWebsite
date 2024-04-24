@@ -258,6 +258,8 @@ function App(props) {
 
     const claim = async (type, id) => {
 
+        return;
+
         if (!address || !userInfo) {
             return;
         }
