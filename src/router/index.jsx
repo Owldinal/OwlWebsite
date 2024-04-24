@@ -13,7 +13,7 @@ const contractAddress = environment === "test" ?
     // test
     "0x6a8a00E25A388162Bf1C495225D1046243666607" :
     // prod
-    "0xECcD2b378567f97E5a0B6d93d944Ab9ba67d82B0";
+    "0x6b18e87beb44a72eb48da76a881f9104cb97a180";
 
 const router = createBrowserRouter([
     {
