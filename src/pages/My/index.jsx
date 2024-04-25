@@ -32,8 +32,8 @@ const {TabPane} = Tabs;
 
 function App(props) {
 
-    const navigate = useNavigate();
     const {contractAddress, targetChain} = props;
+    const navigate = useNavigate();
     const {isConnected, address, chain} = useAccount();
 
     const [userInfo, setUserInfo] = useState({

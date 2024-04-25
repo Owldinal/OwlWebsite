@@ -9,7 +9,6 @@ import { addCommaInNumber } from "@/util.js";
 export default function (props) {
 
     const targetChain = props.targetChain;
-    const balance = props.balance;
 
     const navigate = useNavigate()
     const {openConnectModal, connectModalOpen} = useConnectModal();
@@ -32,12 +31,6 @@ export default function (props) {
                 </div>
 
                 <div className="flexCenter">
-
-                    <OwlButton text={addCommaInNumber(balance) + " Owl"} type="dark"/>
-                    <a href="https://merlinswap.org/trade/swap?tokenFrom=0x62e99191071fc1c5947cf1e21aa95708dcc51adb&tokenTo=0xf6d226f9dc15d9bb51182815b320d3fbe324e1ba&chainId=4200"
-                       target="_blank" style={{textDecoration: 'none'}}>
-                        <OwlButton text="Buy Owl" type="dark" style={{margin: "0 16px"}}/>
-                    </a>
 
                     {!isConnected &&
                         <OwlButton func={openConnectModal} text="Connect wallet"/>}

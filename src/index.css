@@ -220,9 +220,10 @@
 
     .tableWrapper {
         width: 100% !important;
-        margin-left: 0px !important;
+        margin-left: 12px !important;
         margin-top: 12px !important;
         position: relative;
+        background: #8C919F;
     }
 
     .leftInfo {
