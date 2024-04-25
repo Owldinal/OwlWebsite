@@ -3,15 +3,12 @@ import OwlButton from "./components/Button/index.jsx";
 import { Modal, Tabs } from "antd";
 import TopHeader from "@components/TopHeader/index.jsx";
 import gif from "@/assets/owl.gif";
-import BoxRow from "@components/BoxRow.jsx";
 import OwlRow from "@components/OwlRow.jsx";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { config } from "@/main.jsx";
 import { ContractAbi, ContractAddress } from "@/config.js";
-
-const {TabPane} = Tabs;
 
 function App(props) {
 
@@ -161,7 +158,7 @@ function App(props) {
             console.warn(e);
             // clearInterval(interval)
             setModelText("Something went wrong, please contact us with message below.");
-            setErrorMessage(e);
+            setErrorMessage(e.toString());
             setOwlGif(false)
             setModelButton(true);
             setDialogVisible(true);
@@ -179,7 +176,7 @@ function App(props) {
             setModelText("Success");
         } else {
             setModelText("Something went wrong, please contact us with message below.");
-            setErrorMessage(unstakeResult);
+            setErrorMessage(unstakeResult.toString());
 
         }
         setOwlGif(false);
@@ -214,9 +211,9 @@ function App(props) {
                 }}>
                     {owlGif === true && (<div style={{height: "250px"}}><img src={gif} alt=""/></div>)}
                     {modelText && (
-                        <div style={{marginBottom: "20px", marginTop: "100px", height: "50%"}}>
+                        <div style={{marginBottom: "20px", marginTop: "20px", height: "50%"}}>
                             <h3>{modelText}</h3>
-                            <div>{errorMessage}</div>
+                            <div style={{marginTop: "10px", fontSize: "10px"}}>{errorMessage}</div>
                         </div>
                     )}
                     {modelButton === true && (
@@ -249,18 +246,17 @@ function App(props) {
 
                         <div style={{overflowY: "scroll", height: "770px"}}>
                             {userOwldinals.length > 0 ?
-                                userOwldinals.map((item, index) => {
-                                    console.log("item:", item);
+                                (userOwldinals.map((item, index) => {
                                     const id = item;
                                     return <OwlRow key={index} tokenId={id} address={address}
                                                    func={() => claimNFT([id])}/>
-                                })
-                                : <div style={{
+                                }))
+                                : (<div style={{
                                     textAlign: "center",
                                     marginTop: "20px"
                                 }}>
                                     {address ? "No Owldinal to claim" : "Please connect wallet to check"}
-                                </div>
+                                </div>)
                             }
 
                         </div>
