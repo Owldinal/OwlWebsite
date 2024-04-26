@@ -426,7 +426,8 @@ function App(props) {
                                         <DisplayBlock
                                             content={addCommaInNumber(Number(gameInfo["total_market_cap"]) * Number(priceUSD.pairs[0].priceUsd))}
                                             title={"Total Marketcap"}/>
-                                        <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
+                                        <DisplayBlock content={addCommaInNumber(Number(gameInfo["total_burned"]))}
+                                                      title={"Total Burn"}
                                                       change={gameInfo["total_burned_change"]}/>
                                     </div>
                                 </>
@@ -518,8 +519,18 @@ function App(props) {
 
                         </div>
                         <div className="tableWrapper">
-                            <div className="text1" style={{marginBottom: "16px"}}>
-                                Treasury Revenue
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center"
+                            }}>
+                                <div className="text1" style={{marginBottom: "16px"}}>
+                                    Treasury Revenue
+                                </div>
+                                <OwlButton style={{height: "30px", marginRight: "8px", marginBottom: "8px"}}
+                                           text={"My"} size={"middle"} type={"dark"}/>
                             </div>
 
                             <div style={{overflowY: "scroll", height: "400px"}}>
