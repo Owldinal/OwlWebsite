@@ -272,9 +272,6 @@ function App(props) {
         }
         // console.log("data: ", data);
 
-        let chartDom = document.getElementById("chart");
-        let myChart = echarts.init(chartDom);
-
         // date process here
         const timeline = data.map(item => {
             const date = new Date(item.date);
@@ -397,6 +394,9 @@ function App(props) {
         };
 
         option && myChart.setOption(option);
+
+        let chartDom = document.getElementById("chart");
+        let myChart = echarts.init(chartDom);
 
         window.onresize = function () {
             myChart.resize();
