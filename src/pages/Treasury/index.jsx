@@ -285,7 +285,6 @@ function App(props) {
 
         let myChart = echarts.init(document.getElementById("chart"));
         myChart.setOption({
-
             xAxis: {
                 type: "category",
                 data: timeline,
@@ -345,7 +344,9 @@ function App(props) {
             legend: {
                 data: ["Treasury", "Daily Rewards"],
                 textStyle: {
-                    fontSize: 10
+                    fontSize: 12,
+                    // font: "BIG SHOT",
+                    color: "#8C919F",
                 },
                 itemWidth: 10,
                 itemHeight: 10,
