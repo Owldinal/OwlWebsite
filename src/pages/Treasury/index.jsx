@@ -283,9 +283,8 @@ function App(props) {
 
         // console.log("timeline: ", timeline, "totalPoolAmount: ", totalPoolAmount, "allocatedRewards: ", allocatedRewards);
 
-        let option;
-
-        option = {
+        let myChart = echarts.init(document.getElementById("chart"));
+        myChart.setOption({
 
             xAxis: {
                 type: "category",
@@ -392,15 +391,13 @@ function App(props) {
                     },
                 },
             ],
-        };
-
-        let chartDom = document.getElementById("chart");
-        let myChart = echarts.init(chartDom);
-        option && myChart.setOption(option);
+        });
 
         window.onresize = function () {
             myChart.resize();
         };
+
+        myChart.resize();
     };
 
     // useEffect(() => {
