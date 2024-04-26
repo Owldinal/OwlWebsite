@@ -63,14 +63,14 @@ export const getData = {
         const response = await fetch(request);
         return await response.json();
     },
-    getRewardsHistory: async (cursor, limit) => {
-        const request = list.REWARDS_HISTORY + "?cursor=" + cursor + "&limit=" + limit;
+    getRewardsHistory: async (cursor, limit, address) => {
+        const request = list.REWARDS_HISTORY + "?cursor=" + cursor + "&limit=" + limit + "&address=" + (address ? address : "");
         const response = await fetch(request);
         return await response.json();
     },
     getPriceUSD: async () => {
         const response = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB")
-        return await response.json()
+        return await response.json();
     },
     getMintHash: async (requestHash) => {
         const request = list.MINT_HASH + "?tx=" + requestHash;
