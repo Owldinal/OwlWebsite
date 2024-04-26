@@ -596,11 +596,11 @@ function App(props) {
                                                target={"_blank"} style={{textDecoration: 'none'}}>
                                                 <div className="tableItem flexBetween">
                                                     <div
-                                                        style={{width: "18%"}}>{address.slice(0, 6)}...{address.slice(-4)}</div>
+                                                        style={{width: "28%"}}>{address.slice(0, 6)}...{address.slice(-4)}</div>
                                                     <div style={{width: "15%"}}>{amount}</div>
                                                     <div style={{width: "15%"}}>{operation}</div>
-                                                    <div style={{width: "15%"}}>{count}</div>
-                                                    <div style={{width: "40%"}}>{"Gen 1 Blind Box"}</div>
+                                                    <div style={{width: "10%"}}>{count}</div>
+                                                    <div style={{width: "30%"}}>{"Gen 1 Blind Box"}</div>
                                                     <div
                                                         style={{width: "18%"}}>{transaction_hash.slice(0, 6)}...{transaction_hash.slice(-4)}</div>
                                                     <div>
