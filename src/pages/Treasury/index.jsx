@@ -394,10 +394,9 @@ function App(props) {
             ],
         };
 
-        option && myChart.setOption(option);
-
         let chartDom = document.getElementById("chart");
         let myChart = echarts.init(chartDom);
+        option && myChart.setOption(option);
 
         window.onresize = function () {
             myChart.resize();
