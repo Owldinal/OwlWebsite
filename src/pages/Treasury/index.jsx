@@ -282,10 +282,8 @@ function App(props) {
 
         // console.log("timeline: ", timeline, "totalPoolAmount: ", totalPoolAmount, "allocatedRewards: ", allocatedRewards);
 
-        let option;
-
-        option = {
-
+        let myChart = echarts.init(document.getElementById("chart"));
+        myChart.setOption({
             xAxis: {
                 type: "category",
                 data: timeline,
@@ -345,7 +343,9 @@ function App(props) {
             legend: {
                 data: ["Treasury", "Daily Rewards"],
                 textStyle: {
-                    fontSize: 10
+                    fontSize: 12,
+                    // font: "BIG SHOT",
+                    color: "#8C919F",
                 },
                 itemWidth: 10,
                 itemHeight: 10,
@@ -391,15 +391,13 @@ function App(props) {
                     },
                 },
             ],
-        };
-
-        let chartDom = document.getElementById("chart");
-        let myChart = echarts.init(chartDom);
-        option && myChart.setOption(option);
+        });
 
         window.onresize = function () {
             myChart.resize();
         };
+
+        myChart.resize();
     };
 
     // useEffect(() => {
