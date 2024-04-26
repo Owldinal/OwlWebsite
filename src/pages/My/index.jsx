@@ -189,6 +189,8 @@ function App(props) {
 
     const stake = async (type, id) => {
 
+        // return;
+
         if (!address || !userInfo) {
             return;
         }
@@ -256,6 +258,8 @@ function App(props) {
 
     const claim = async (type, id) => {
 
+        // return;
+
         if (!address || !userInfo) {
             return;
         }
@@ -297,6 +301,8 @@ function App(props) {
     };
 
     const stakeNFT = async (id) => {
+
+        // return;
 
         if (!address || !userOwldinals) {
             return;

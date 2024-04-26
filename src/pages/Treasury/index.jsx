@@ -44,6 +44,7 @@ function App(props) {
     const [gameInfo, setGameInfo] = useState();
     const [rewardsTrend, setRewardsTrend] = useState();
     const [rewardsRevenue, setRewardsRevenue] = useState();
+    const [myRewards, setMyRewards] = useState(0);
 
     const boxPrice = 100_000;
 
@@ -92,7 +93,7 @@ function App(props) {
             console.log("rewardsTrend: ", result)
         })
 
-        getData.getRewardsHistory(0, 1000).then(result => {
+        getData.getRewardsHistory(0, 1000, myRewards === 1 ? address : "").then(result => {
             setRewardsRevenue(result.data);
             console.log("rewardsRevenue: ", result)
         })
@@ -103,6 +104,13 @@ function App(props) {
         })
 
     }, [show])
+
+    useEffect(() => {
+        getData.getRewardsHistory(0, 1000, myRewards === 1 ? address : "").then(result => {
+            setRewardsRevenue(result.data);
+            console.log("rewardsRevenue: ", result)
+        })
+    }, [myRewards])
 
     useEffect(() => {
 
@@ -280,18 +288,24 @@ function App(props) {
         let option;
 
         option = {
+
             xAxis: {
                 type: "category",
-                // data: ["May 5", "May 6", "May 7", "May 8", "May 9", "May 10", "May 11"],
                 data: timeline,
                 axisTick: {
                     show: false,
                 },
             },
-            yAxis: {
+            yAxis: [{
+                // name: "Treasury",
                 type: "value",
                 axisTick: {
                     show: false,
+                },
+                axisLabel: {
+                    textStyle: {
+                        fontSize: 10
+                    },
                 },
                 splitLine: {
                     show: true,
@@ -300,17 +314,58 @@ function App(props) {
                         color: ["#191919"],
                     },
                 },
+            }, {
+                // name: "Daily Rewards",
+                type: "value",
+                axisTick: {
+                    show: false,
+                },
+                max: 5000_0000,
+                axisLabel: {
+                    textStyle: {
+                        fontSize: 10
+                    },
+                },
+                splitLine: {
+                    show: false,
+                    lineStyle: {
+                        type: "dashed",
+                        color: ["#191919"],
+                    }
+                }
+            }],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    animation: true,
+                    label: {
+                        backgroundColor: '#505765'
+                    }
+                },
+            },
+            color: ["#55B76E", "#E0A238"],
+            legend: {
+                data: ["Treasury", "Daily Rewards"],
+                textStyle: {
+                    fontSize: 10
+                },
+                itemWidth: 10,
+                itemHeight: 10,
+                lineStyle: {
+                    width: 0
+                }
             },
             grid: {
                 borderColor: "#8C919F",
                 top: '15%',
                 left: '15%',
-                right: '5%',
+                right: '15%',
                 bottom: '10%',
             },
             series: [
                 {
-                    // data: [110, 150, 155, 170, 200, 130, 120],
+                    name: "Treasury",
                     data: totalPoolAmount,
                     type: "line",
                     symbol: "none",
@@ -324,7 +379,8 @@ function App(props) {
                     },
                 },
                 {
-                    // data: [100, 130, 165, 120, 180, 100, 100],
+                    name: "Daily Rewards",
+                    yAxisIndex: 1,
                     data: allocatedRewards,
                     type: "line",
                     symbol: "none",
@@ -425,7 +481,8 @@ function App(props) {
                                         <DisplayBlock
                                             content={addCommaInNumber(Number(gameInfo["total_market_cap"]) * Number(priceUSD.pairs[0].priceUsd))}
                                             title={"Total Marketcap"}/>
-                                        <DisplayBlock content={gameInfo["total_burned"]} title={"Total Burn"}
+                                        <DisplayBlock content={addCommaInNumber(Number(gameInfo["total_burned"]))}
+                                                      title={"Total Burn"}
                                                       change={gameInfo["total_burned_change"]}/>
                                     </div>
                                 </>
@@ -517,8 +574,19 @@ function App(props) {
 
                         </div>
                         <div className="tableWrapper">
-                            <div className="text1" style={{marginBottom: "16px"}}>
-                                Treasury Revenue
+
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center"
+                            }}>
+                                <div className="text1" style={{marginBottom: "16px"}}>
+                                    Treasury Revenue
+                                </div>
+                                <OwlButton style={{height: "30px", marginRight: "8px", marginBottom: "8px"}}
+                                           text={"My"} size={"middle"} type={myRewards === 1 ? "primary" : "dark"}
+                                           func={() => address && setMyRewards((myRewards + 1) % 2)}/>
                             </div>
 
                             <div style={{overflowY: "scroll", height: "400px"}}>

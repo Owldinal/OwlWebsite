@@ -88,6 +88,18 @@
         "internalType": "uint256",
         "name": "count",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalFruitCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalElfCount",
+        "type": "uint256"
       }
     ],
     "name": "FruitRewardUpdated",
@@ -120,6 +132,12 @@
         "internalType": "address",
         "name": "user",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestId",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -1016,6 +1034,19 @@
       }
     ],
     "name": "setMoonBoost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "server",
+        "type": "address"
+      }
+    ],
+    "name": "setServer",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

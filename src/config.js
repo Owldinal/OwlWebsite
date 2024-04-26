@@ -63,14 +63,14 @@ export const getData = {
         const response = await fetch(request);
         return await response.json();
     },
-    getRewardsHistory: async (cursor, limit) => {
-        const request = list.REWARDS_HISTORY + "?cursor=" + cursor + "&limit=" + limit;
+    getRewardsHistory: async (cursor, limit, address) => {
+        const request = list.REWARDS_HISTORY + "?cursor=" + cursor + "&limit=" + limit + "&address=" + (address ? address : "");
         const response = await fetch(request);
         return await response.json();
     },
     getPriceUSD: async () => {
         const response = await fetch("https://api.dexscreener.com/latest/dex/tokens/0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB")
-        return await response.json()
+        return await response.json();
     },
     getMintHash: async (requestHash) => {
         const request = list.MINT_HASH + "?tx=" + requestHash;
@@ -86,12 +86,8 @@ export const merlinTest = defineChain({
     rpcUrls: {
         default: {
             http: [
-                // 'https://testnet-rpc.merlinchain.io',
-                // 'https://merlin-testnet.blockpi.network/v1/rpc/public',
-                // 'https://merlin-testnet.blockpi.network/v1/rpc/264303e0e3d6db049249fc8e12b1eb13ebf37613',
-                // 'https://merlin-testnet.blockpi.network/v1/rpc/97b12c2e9ff1fae02b5a4bcb137fc27a61afb3f1',
-                'https://merlin-testnet.blockpi.network/v1/rpc/23e9f0e00ebe936f2228bb48c83f08ac658a66d6'
-                // 'https://merlin-testnet-enterprise.unifra.io'
+                'https://testnet-rpc.merlinchain.io',
+                'https://merlin-testnet.blockpi.network/v1/rpc/public',
             ]
         },
     },

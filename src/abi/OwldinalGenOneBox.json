@@ -343,6 +343,19 @@
   {
     "inputs": [
       {
+        "internalType": "address[]",
+        "name": "addrs",
+        "type": "address[]"
+      }
+    ],
+    "name": "addTransferWhiteList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -375,6 +388,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "addrs",
+        "type": "address[]"
+      }
+    ],
+    "name": "deleteTransferWhiteList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -490,7 +516,6 @@
     "type": "function"
   },
   {
-    "name": "isApprovedForAll",
     "inputs": [
       {
         "internalType": "address",
@@ -503,6 +528,7 @@
         "type": "address"
       }
     ],
+    "name": "isApprovedForAll",
     "outputs": [
       {
         "internalType": "bool",
@@ -522,6 +548,19 @@
       }
     ],
     "name": "isBoxOpened",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isTransferEnable",
     "outputs": [
       {
         "internalType": "bool",
@@ -684,7 +723,7 @@
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "_data",
         "type": "bytes"
       }
     ],
@@ -707,6 +746,19 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "isEnable",
+        "type": "bool"
+      }
+    ],
+    "name": "setTransferEnable",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -802,6 +854,25 @@
     "name": "transferFrom",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "transferWhiteListMap",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

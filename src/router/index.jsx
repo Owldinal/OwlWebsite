@@ -7,6 +7,7 @@ import { merlinLocal, merlinTest } from "@/config.js";
 import MyItem from "@/pages/MyItem/index.jsx";
 
 const environment = "prod";
+import Bind from "@/pages/Bind.jsx";
 
 const targetChain = merlin;
 const contractAddress = environment === "test" ?
@@ -28,10 +29,10 @@ const router = createBrowserRouter([
         path: "/my",
         element: <My contractAddress={contractAddress} targetChain={targetChain}/>,
     },
-    // {
-    //     path: "/my-item",
-    //     element: <MyItem contractAddress={contractAddress} targetChain={targetChain}/>,
-    // }
+    {
+        path: "/bind",
+        element: <Bind/>
+    }
 ]);
 
 export default router;
