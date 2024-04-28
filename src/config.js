@@ -12,10 +12,10 @@ export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
 export const ContractAddress = {
     // prod
-    owldinalNftAddress: "0x6b18e87beb44a72eb48da76a881f9104cb97a180",
-    owlTokenAddress: "0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB",
-    genOneBoxAddress: "0xaA5afDe31B0AaC9dc7738679Ab512830B6D087A2",
-    owlGameAddress: "0x442801328130A34A8F938d84268a99caF6cfa88d",
+    owldinalNftAddress: "0x3cb8094fb209d21Aab2E474e91476EE9EEc332C9",
+    owlTokenAddress: "0xf254dcD9e270B8E0B92A68e197BE7C6355e8d87b",
+    genOneBoxAddress: "0x850DA4D6cC3d1EdADA39C48d42B4b664d51F3c4d",
+    owlGameAddress: "0xf0d330DB633b58446c895ff957a355FEC45b9511",
 }
 
 export const ContractAbi = {
