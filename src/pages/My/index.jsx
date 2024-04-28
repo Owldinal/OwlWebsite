@@ -727,8 +727,8 @@ function App(props) {
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Treasury Revenue" key="1">
                                     <div className="tableItem flexBetween tableHeaderItem">
-                                        <div className="tableHeaderItem" style={{width: '30%'}}>NFT</div>
-                                        <div className="tableHeaderItem" style={{width: '20%'}}>Claimed</div>
+                                        <div className="tableHeaderItem" style={{width: '35%'}}>NFT</div>
+                                        <div className="tableHeaderItem" style={{width: '15%'}}>Claimed</div>
                                         <div className="tableHeaderItem" style={{width: '20%'}}>Earning</div>
                                         <div className="tableHeaderItem" style={{width: '20%'}}>APR</div>
                                         <div className="tableHeaderItem" style={{width: '10%'}}>Status</div>
