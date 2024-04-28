@@ -614,7 +614,7 @@ function App(props) {
                                      }}/>
                             </div>
 
-                            <div className="flexBetween flexS">
+                            <div className="flexBetween flexS" style={{flexWrap: "wrap"}}>
                                 <div className="infoItem2" style={{textAlign: "center", marginRight: '12px'}}>
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
@@ -727,12 +727,12 @@ function App(props) {
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Treasury Revenue" key="1">
                                     <div className="tableItem flexBetween tableHeaderItem">
-                                        <div className="tableHeaderItem" style={{width: '200px'}}>NFT</div>
-                                        <div className="tableHeaderItem" style={{width: '100px'}}>Claimed</div>
-                                        <div className="tableHeaderItem" style={{width: '100px'}}>Earning</div>
-                                        <div className="tableHeaderItem" style={{width: '100px'}}>APR</div>
-                                        <div className="tableHeaderItem" style={{width: '80px'}}>Status</div>
-                                        <div className="tableHeaderItem" style={{width: '75px'}}>Operate</div>
+                                        <div className="tableHeaderItem" style={{width: '30%'}}>NFT</div>
+                                        <div className="tableHeaderItem" style={{width: '20%'}}>Claimed</div>
+                                        <div className="tableHeaderItem" style={{width: '20%'}}>Earning</div>
+                                        <div className="tableHeaderItem" style={{width: '20%'}}>APR</div>
+                                        <div className="tableHeaderItem" style={{width: '10%'}}>Status</div>
+                                        <div className="tableHeaderItem" style={{width: '10%'}}>Operate</div>
                                     </div>
 
                                     <div style={{overflowY: "scroll", height: "770px"}}>
