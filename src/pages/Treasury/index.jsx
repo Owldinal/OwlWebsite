@@ -420,12 +420,17 @@ function App(props) {
 
             <div className="flexStart">
                 <Sider/>
-                <div className="treasuryContent">
+                <div className="treasuryContent" style={{flexWrap: "wrap"}}>
                     <div className="infoCard flexBetween flexC">
 
                         {gameInfo && (<div className='leftInfo'>
 
-                            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                flexWrap: "wrap",
+                            }}>
                                 <div>
                                     <div className="text1">Total Rewards</div>
                                     <div className="text2">
@@ -445,26 +450,7 @@ function App(props) {
                                              style={{marginLeft: "5px"}}> {"x " + (gameInfo["staked_fruit_count"])}</div>
                                     </div>
                                 </div>
-                                {/*<div style={{*/}
-                                {/*    display: "flex",*/}
-                                {/*    alignItems: "center",*/}
-                                {/*    flexDirection: "row",*/}
-                                {/*    // justifyContent: "space-between",*/}
-                                {/*    flexWrap: "warp"*/}
-                                {/*}}>*/}
-                                {/*    <div className={"text3"}*/}
-                                {/*         style={{*/}
-                                {/*             display: "flex",*/}
-                                {/*             flexDirection: "column",*/}
-                                {/*             textAlign: "right",*/}
-                                {/*             marginRight: "16px"*/}
-                                {/*         }}>*/}
-                                {/*        <div>{"Staked Elf: "}</div>*/}
-                                {/*        <div>{gameInfo["staked_elf_count"]}</div>*/}
-                                {/*        <div>{"Staked Magic Fruit: "}</div>*/}
-                                {/*        <div>{gameInfo["staked_fruit_count"]}</div>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
+
                             </div>
                             {priceUSD && (
                                 <>
