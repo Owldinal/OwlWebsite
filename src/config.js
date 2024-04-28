@@ -6,7 +6,7 @@ import OwlToken from "./abi/OwlToken.json";
 
 export const coin = "Owl";
 
-const API_URL = 'https://api.owldinal.xyz/api';
+const API_URL = 'https://api-new.owldinal.xyz/api';
 
 export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
