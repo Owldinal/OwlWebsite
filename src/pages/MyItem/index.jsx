@@ -10,83 +10,84 @@ import ar13 from "@/assets/ar13.png";
 
 import { tableData } from "./data.jsx";
 
-function App() {
-  const [activeImg, setActiveImg] = useState(1);
+function App(props) {
+    const [activeImg, setActiveImg] = useState(1);
 
-  return (
-    <div className="rootInnerWrapper">
-      <TopHeader />
-      <div className="flexStart">
-        <Sider />
-        <div className="" style={{width:'100%',padding:'16px'}}>
-          <div className="flexBetween flexC" style={{ margin: "24px 0" }}>
-            <div className="infoCard inputCard" style={{ minWidth: "480px" }}>
-              <img src={ar13} className="w50" alt="" />
+    const {contractAddress, targetChain} = props;
 
-              <div className="text7 gh">
-                Owl #53804
-              </div>
+    return (
+        <div className="rootInnerWrapper">
+            <TopHeader targetChain={targetChain}/>
+            <div className="flexStart">
+                <Sider/>
+                <div className="" style={{width: '100%', padding: '16px'}}>
+                    <div className="flexBetween flexC" style={{margin: "24px 0"}}>
+                        <div className="infoCard inputCard" style={{minWidth: "480px"}}>
+                            <img src={ar13} width="100%" alt=""/>
 
-              <div className="text1 flexBetween">
-                <div className="flexBetween">
+                            <div className="text7" style={{margin: "32px 0 16px"}}>
+                                Owl #53804
+                            </div>
+
+                            <div className="text1 flexBetween">
+                                <div className="flexBetween">
                   <span>
-                    <img src={a1} width="32" alt="" className="boderRadius50" />
+                    <img src={a1} width="32" alt="" className="boderRadius50"/>
                   </span>
-                  <span style={{ fontSize: "14px", marginLeft: "12px" }}>
+                                    <span style={{fontSize: "14px", marginLeft: "12px"}}>
                     CryptoGuysNFT
                   </span>
-                </div>
+                                </div>
 
-                <img src={box2} width="24" alt="" />
-              </div>
+                                <img src={box2} width="24" alt=""/>
+                            </div>
 
-              <div className="text3" style={{ margin: "16px 0" }}>
-                Available
-              </div>
+                            <div className="text3" style={{margin: "16px 0"}}>
+                                Available
+                            </div>
 
-              <OwlButton
-                text="Stake"
-                className='mt36'
-                style={{ width: "100%" }}
-              />
-            </div>
-            <div className="tableWrapper">
-              <div className="flexBetween" style={{marginBottom:'36px'}}>
-                <div className="text4">My NFT</div>
-                <div className="flexBetween">
-                  <OwlButton type="dark" text="Owl" size="small" />
-                  <OwlButton
-                    text="ELF"
-                    size="small"
-                    type="dark"
-                    style={{ margin: "0 8px" }}
-                  />
-                  <OwlButton type="dark" text="MF" size="small" />
-                </div>
-              </div>
+                            <OwlButton
+                                text="Stake"
+                                style={{width: "100%", marginTop: "36px"}}
+                            />
+                        </div>
+                        <div className="tableWrapper">
+                            <div className="flexBetween" style={{marginBottom: '36px'}}>
+                                <div className="text4">My NFT</div>
+                                <div className="flexBetween">
+                                    <OwlButton type="dark" text="Owl" size="small"/>
+                                    <OwlButton
+                                        text="ELF"
+                                        size="small"
+                                        type="dark"
+                                        style={{margin: "0 8px"}}
+                                    />
+                                    <OwlButton type="dark" text="MF" size="small"/>
+                                </div>
+                            </div>
 
-              <div className="flexWrap">
-                {tableData.map((item, index) => {
-                  return (
-                    <div
-                      className={cn(
-                        "imgItem",
-                        activeImg === index && "imgItemActive"
-                      )}
-                      key={index}
-                      onClick={() => setActiveImg(index)}
-                    >
-                      <img src={item} width="100%" alt="" />
+                            <div className="flexWrap">
+                                {tableData.map((item, index) => {
+                                    return (
+                                        <div
+                                            className={cn(
+                                                "imgItem",
+                                                activeImg === index && "imgItemActive"
+                                            )}
+                                            key={index}
+                                            onClick={() => setActiveImg(index)}
+                                        >
+                                            <img src={item} width="100%" alt=""/>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
-                  );
-                })}
-              </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default App;

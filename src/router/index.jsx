@@ -1,36 +1,38 @@
-// 导入创建路由的函数
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App.jsx";
 import My from "../pages/My/index.jsx";
-import MyItem from "../pages/MyItem/index.jsx";
 import Treasury from "../pages/Treasury/index.jsx";
+import { merlin } from "viem/chains";
+import { merlinLocal, merlinTest } from "@/config.js";
+import MyItem from "@/pages/MyItem/index.jsx";
 
+const environment = "prod";
+import Bind from "@/pages/Bind.jsx";
 
-// 创建router路由实例对象，并配置路由对应关系（路由数组）
+const targetChain = merlin;
+const contractAddress = environment === "test" ?
+    // test
+    "0x6a8a00E25A388162Bf1C495225D1046243666607" :
+    // prod
+    "0x6b18e87beb44a72eb48da76a881f9104cb97a180";
+
 const router = createBrowserRouter([
-  {
-    // 需要访问的路径
-    path: "/",
-    // 和路径对应的组件
-    // 和 Vue 不同的是，此处是使用 element 接收 组件 或 jsx 的
-    // 此处写 jsx 是为了演示，在实际开发中，这里写的是组件
-    element: <App />,
-  },
-  {
-    path: "/treasury",
-
-    element: <Treasury />,
-  },
-  {
-    path: "/my",
-
-    element: <My />,
-  },
-  {
-    path: "/my-item",
-
-    element: <MyItem />,
-  },
+    {
+        path: "/",
+        element: <App contractAddress={contractAddress} targetChain={targetChain}/>,
+    },
+    {
+        path: "/treasury",
+        element: <Treasury contractAddress={contractAddress} targetChain={targetChain}/>,
+    },
+    {
+        path: "/my",
+        element: <My contractAddress={contractAddress} targetChain={targetChain}/>,
+    },
+    {
+        path: "/bind",
+        element: <Bind/>
+    }
 ]);
 
 export default router;
