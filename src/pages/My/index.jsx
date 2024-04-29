@@ -669,7 +669,7 @@ function App(props) {
                                     />
                                 </div>
 
-                                <div className="infoItem2" style={{textAlign: "center", width: "49%"}}>
+                                <div className="infoItem2" style={{textAlign: "center", width: "50%"}}>
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
