@@ -453,7 +453,7 @@ function App(props) {
                                 </div>
 
                             </div>
-                            {priceUSD && (
+                            {(priceUSD && priceUSD.pairs && priceUSD.pairs[0] && priceUSD.pairs[0].priceUsd) && (
                                 <>
                                     <div
                                         className="text3">{addCommaInNumber(Number(priceUSD.pairs[0].priceUsd) * Number(gameInfo["total_rewards"]), true) + " USD"}</div>
