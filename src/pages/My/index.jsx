@@ -515,7 +515,7 @@ function App(props) {
         const result = await getData.checkSignatureAndClaim(address, "Claim box # " + id, signature,[id]);
         console.log("check signature result: ", result);
 
-        if (result && result.success === "true") {
+        if (result && result.success === true) {
             setHash("claim" + id);
             setModelText("Success");
         } else {
