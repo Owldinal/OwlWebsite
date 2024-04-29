@@ -24,7 +24,13 @@ import ArrowAndNumber from "@components/ArrowAndNumber.jsx";
 import { addCommaInNumber } from "@/util.js";
 import BoxRow from "@components/BoxRow.jsx";
 import OwlRow from "@components/OwlRow.jsx";
-import { getTransactionReceipt, readContracts, waitForTransactionReceipt, writeContract } from "@wagmi/core";
+import {
+    getTransactionReceipt,
+    readContracts,
+    signMessage,
+    waitForTransactionReceipt,
+    writeContract
+} from "@wagmi/core";
 import { config } from "@/main.jsx";
 
 const {TabPane} = Tabs;
@@ -489,6 +495,28 @@ function App(props) {
 
     }
 
+    const signClaim = async (id) => {
+
+        if (!address) {
+            return;
+        }
+
+        const signature = await signMessage(config, {
+            address: address,
+            message: "Claim box # " + id
+        })
+
+        console.log("sign message result: ", signature);
+
+        const result = await getData.checkSignature(address, "Claim box # " + id, signature);
+        console.log("check signature result: ", result);
+
+        if (result.success === "true") {
+            setHash("claim" + id);
+        }
+
+    }
+
     return (
         <div className="rootInnerWrapper">
             <TopHeader targetChain={targetChain} balance={balance}/>
@@ -567,7 +595,7 @@ function App(props) {
                 <Sider/>
                 <div style={{width: '100%', padding: '16px', height: "100%"}}>
                     <div className="flexBetween flexC" style={{margin: "24px 0", alignItems: "flex-start"}}>
-                        <div className="infoCard inputCard width100" style={{minWidth: ""}}>
+                        <div className="infoCard inputCard width100" style={{width: "30%"}}>
                             <div className="text1 flexStartCenter">
                                 {/*<span>*/}
                                 {/*  <img src={a1} width="48" alt="" className="boderRadius50"/>*/}
@@ -615,7 +643,8 @@ function App(props) {
                             </div>
 
                             <div className="flexBetween flexS" style={{flexWrap: "wrap"}}>
-                                <div className="infoItem2" style={{textAlign: "center", marginRight: '12px'}}>
+                                <div className="infoItem2"
+                                     style={{textAlign: "center", marginRight: '1%', width: "49%"}}>
                                     <div className="flexBetween">
                                         <div className="text5">ELF</div>
                                         <ArrowAndNumber arrow={userInfo["elf_info"]["apr"] >= 0 ? 1 : 0}
@@ -640,7 +669,7 @@ function App(props) {
                                     />
                                 </div>
 
-                                <div className="infoItem2" style={{textAlign: "center"}}>
+                                <div className="infoItem2" style={{textAlign: "center", width: "49%"}}>
                                     <div className="flexBetween">
                                         <div className="text5">Magic Fruit</div>
                                         <ArrowAndNumber arrow={userInfo["fruit_info"]["apr"] >= 0 ? 1 : 0}
@@ -731,7 +760,7 @@ function App(props) {
                                         <div className="tableHeaderItem" style={{width: '15%'}}>Claimed</div>
                                         <div className="tableHeaderItem" style={{width: '20%'}}>Earning</div>
                                         <div className="tableHeaderItem" style={{width: '20%'}}>APR</div>
-                                        <div className="tableHeaderItem" style={{width: '10%'}}>Status</div>
+                                        <div className="tableHeaderItem" style={{width: '12%'}}>Status</div>
                                         <div className="tableHeaderItem" style={{width: '10%'}}>Operate</div>
                                     </div>
 
@@ -741,7 +770,8 @@ function App(props) {
                                             return <BoxRow key={index} token_id={token_id} box_type={box_type}
                                                            claimed={claimed} earning={earning} apr={apr}
                                                            is_staking={is_staking}
-                                                           func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}/>
+                                                           func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}
+                                                           funcOfClaim={() => signClaim(token_id)}/>
                                         }))}
                                     </div>
 

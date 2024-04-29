@@ -5,9 +5,9 @@ import Treasury from "../pages/Treasury/index.jsx";
 import { merlin } from "viem/chains";
 import { merlinLocal, merlinTest } from "@/config.js";
 import MyItem from "@/pages/MyItem/index.jsx";
+import Bind from "@/pages/Bind.jsx";
 
 const environment = "prod";
-import Bind from "@/pages/Bind.jsx";
 
 const targetChain = merlinLocal;
 const contractAddress = environment === "test" ?
