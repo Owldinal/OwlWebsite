@@ -512,7 +512,7 @@ function App(props) {
 
         console.log("sign message result: ", signature);
 
-        const result = await getData.checkSignatureAndClaim(address, "Claim box # " + id, signature);
+        const result = await getData.checkSignatureAndClaim(address, "Claim box # " + id, signature,[id]);
         console.log("check signature result: ", result);
 
         if (result && result.success === "true") {
