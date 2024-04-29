@@ -5,11 +5,11 @@ import Treasury from "../pages/Treasury/index.jsx";
 import { merlin } from "viem/chains";
 import { merlinLocal, merlinTest } from "@/config.js";
 import MyItem from "@/pages/MyItem/index.jsx";
-
-const environment = "prod";
 import Bind from "@/pages/Bind.jsx";
 
-const targetChain = merlin;
+const environment = "prod";
+
+const targetChain = merlinLocal;
 const contractAddress = environment === "test" ?
     // test
     "0x6a8a00E25A388162Bf1C495225D1046243666607" :

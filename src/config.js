@@ -12,10 +12,15 @@ export const hKey = "b1e01052-f40d-4e26-a653-1f413767e4d4";
 
 export const ContractAddress = {
     // prod
-    owldinalNftAddress: "0x6b18e87beb44a72eb48da76a881f9104cb97a180",
-    owlTokenAddress: "0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB",
-    genOneBoxAddress: "0xaA5afDe31B0AaC9dc7738679Ab512830B6D087A2",
-    owlGameAddress: "0x442801328130A34A8F938d84268a99caF6cfa88d",
+    // owldinalNftAddress: "0x6b18e87beb44a72eb48da76a881f9104cb97a180",
+    // owlTokenAddress: "0x62e99191071Fc1C5947CF1e21Aa95708dcc51AdB",
+    // genOneBoxAddress: "0xaA5afDe31B0AaC9dc7738679Ab512830B6D087A2",
+    // owlGameAddress: "0x442801328130A34A8F938d84268a99caF6cfa88d",
+    // local
+    owldinalNftAddress : "0x06BAaC534601493C0678Ca81a78Fe1BF03d52Bef",
+    owlTokenAddress : "0xf8bB8324Cd226f6229dbB8792C66119832791A59",
+    genOneBoxAddress : "0xfB3ABE390CE28D7749951f2dA7B0A7487D234396",
+    owlGameAddress : "0x73a11097dCf0817909039d2661a15cbc8F6624eF",
 }
 
 export const ContractAbi = {
@@ -35,6 +40,7 @@ export const list = {
     REWARDS_TREND: `${API_URL}/game/rewards_trend`,
     REWARDS_HISTORY: `${API_URL}/game/rewards_history`,
     MINT_HASH: `${API_URL}/user/mint_tx`,
+    CHECK_SIGNATURE: `${API_URL}/user/check_signature`,
 }
 
 export const getData = {
@@ -77,6 +83,21 @@ export const getData = {
         const response = await fetch(request);
         return await response.json();
     },
+    checkSignature: async (address, message, signature) => {
+        const data = {
+            address: address,
+            message: message,
+            signature: signature
+        };
+        const response = await fetch(list.CHECK_SIGNATURE, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    }
 }
 
 export const merlinTest = defineChain({
