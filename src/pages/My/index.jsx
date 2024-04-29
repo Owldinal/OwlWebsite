@@ -501,6 +501,10 @@ function App(props) {
             return;
         }
 
+        setModelText("")
+        setOwlGif(true)
+        setDialogVisible(true)
+
         const signature = await signMessage(config, {
             address: address,
             message: "Claim box # " + id
@@ -508,12 +512,17 @@ function App(props) {
 
         console.log("sign message result: ", signature);
 
-        const result = await getData.checkSignature(address, "Claim box # " + id, signature);
+        const result = await getData.checkSignatureAndClaim(address, "Claim box # " + id, signature);
         console.log("check signature result: ", result);
 
-        if (result.success === "true") {
+        if (result && result.success === "true") {
             setHash("claim" + id);
+            setModelText("Success");
+        } else {
+            setModelText("Something went wrong");
         }
+        setOwlGif(false);
+        setModelButton(true)
 
     }
 
