@@ -669,22 +669,22 @@ function App(props) {
                                     <div className="infoItemText2">Staked/Total</div>
 
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["elf_info"]["total"] - userInfo["elf_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={userInfo["elf_info"]["total"] - userInfo["elf_info"]["staked"] <= 20 ? "Stake All" : "Stake 20"}
                                         style={{width: "100%", marginTop: "24px"}}
                                         func={() => stake(1, -1)}
                                     />
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["elf_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={userInfo["elf_info"]["staked"] <= 20 ? "Unstake All" : "Unstake 20"}
                                         style={{width: "100%", marginTop: "8px"}}
-                                        func={() => claim(1, -1)}
+                                        func={userInfo["elf_info"]["staked"] > 0 ? () => claim(1, -1) : null}
                                     />
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["elf_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={"Claim All"}
                                         style={{width: "100%", marginTop: "8px"}}
-                                        func={() => signClaim(-1, 1)}
+                                        func={userInfo["elf_info"]["staked"] > 0 ? (() => signClaim(-1, 1)) : null}
                                     />
                                 </div>
 
@@ -700,22 +700,22 @@ function App(props) {
                                     <div className="infoItemText2">Staked/Total</div>
 
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["fruit_info"]["total"] - userInfo["fruit_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={userInfo["fruit_info"]["total"] - userInfo["fruit_info"]["staked"] <= 20 ? "Stake All" : "Stake 20"}
                                         style={{width: "100%", marginTop: "24px"}}
-                                        func={() => stake(2, -1)}
+                                        func={userInfo["fruit_info"]["total"] - userInfo["fruit_info"]["staked"] > 0 ? (() => stake(2, -1)) : null}
                                     />
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["fruit_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={userInfo["fruit_info"]["staked"] <= 20 ? "Unstake All" : "Unstake 20"}
                                         style={{width: "100%", marginTop: "8px"}}
-                                        func={() => claim(2, -1)}
+                                        func={userInfo["fruit_info"]["staked"] > 0 ? (() => claim(2, -1)) : null}
                                     />
                                     <OwlButton
-                                        type="dark"
+                                        type={userInfo["fruit_info"]["staked"] > 0 ? "dark" : "light"}
                                         text={"Claim All"}
                                         style={{width: "100%", marginTop: "8px"}}
-                                        func={() => signClaim(-1, 2)}
+                                        func={userInfo["fruit_info"]["staked"] > 0 ? (() => signClaim(-1, 2)) : null}
                                     />
                                 </div>
                             </div>
@@ -796,7 +796,7 @@ function App(props) {
                                                            claimed={claimed} earning={earning} apr={apr}
                                                            is_staking={is_staking}
                                                            func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}
-                                                           funcOfClaim={() => signClaim([token_id])}/>
+                                                           funcOfClaim={() => signClaim(token_id)}/>
                                         }))}
                                     </div>
 
