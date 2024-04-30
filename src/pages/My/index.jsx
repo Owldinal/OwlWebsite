@@ -495,9 +495,9 @@ function App(props) {
 
     }
 
-    const signClaim = async (id) => {
+    const signClaim = async (id, type) => {
 
-        if (!address) {
+        if (!address || !userInfo) {
             return;
         }
 
@@ -505,15 +505,19 @@ function App(props) {
         setOwlGif(true)
         setDialogVisible(true)
 
+        const message = id >= 0 ? ("Claim # " + id) : "Claim all";
+
         const signature = await signMessage(config, {
             address: address,
-            message: "Claim box # " + id
+            message: message
         })
 
-        console.log("sign message result: ", signature);
+        console.log("sign message result: ", message, signature);
 
-        const result = await getData.checkSignatureAndClaim(address, "Claim box # " + id, signature,[id]);
-        console.log("check signature result: ", result);
+        const list = id >= 0 ? [id] : type === 1 ? userInfo.elf_info.staked_id_list : userInfo.fruit_info.staked_id_list
+
+        const result = await getData.checkSignatureAndClaim(address, message, signature, list);
+        console.log("check signature result: ", list, result);
 
         if (result && result.success === true) {
             setHash("claim" + id);
@@ -672,9 +676,15 @@ function App(props) {
                                     />
                                     <OwlButton
                                         type="dark"
-                                        text={userInfo["elf_info"]["staked"] <= 20 ? "Claim All" : "Claim 20"}
+                                        text={userInfo["elf_info"]["staked"] <= 20 ? "Unstake All" : "Unstake 20"}
                                         style={{width: "100%", marginTop: "8px"}}
                                         func={() => claim(1, -1)}
+                                    />
+                                    <OwlButton
+                                        type="dark"
+                                        text={"Claim All"}
+                                        style={{width: "100%", marginTop: "8px"}}
+                                        func={() => signClaim(-1, 1)}
                                     />
                                 </div>
 
@@ -697,9 +707,15 @@ function App(props) {
                                     />
                                     <OwlButton
                                         type="dark"
-                                        text={userInfo["fruit_info"]["staked"] <= 20 ? "Claim All" : "Claim 20"}
+                                        text={userInfo["fruit_info"]["staked"] <= 20 ? "Unstake All" : "Unstake 20"}
                                         style={{width: "100%", marginTop: "8px"}}
                                         func={() => claim(2, -1)}
+                                    />
+                                    <OwlButton
+                                        type="dark"
+                                        text={"Claim All"}
+                                        style={{width: "100%", marginTop: "8px"}}
+                                        func={() => signClaim(-1, 2)}
                                     />
                                 </div>
                             </div>
@@ -780,7 +796,7 @@ function App(props) {
                                                            claimed={claimed} earning={earning} apr={apr}
                                                            is_staking={is_staking}
                                                            func={is_staking ? (() => claim(0, token_id)) : (() => stake(0, token_id))}
-                                                           funcOfClaim={() => signClaim(token_id)}/>
+                                                           funcOfClaim={() => signClaim([token_id])}/>
                                         }))}
                                     </div>
 
